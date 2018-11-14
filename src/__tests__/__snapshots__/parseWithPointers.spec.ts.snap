@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`json parser parse simple 1`] = `
+Object {
+  "data": Object {
+    "address": Object {
+      "street": 123,
+    },
+    "hello": "world",
+  },
+  "pointers": Object {
+    "": Object {
+      "end": Object {
+        "line": 6,
+      },
+      "start": Object {
+        "line": 1,
+      },
+    },
+    "/address": Object {
+      "end": Object {
+        "line": 5,
+      },
+      "start": Object {
+        "line": 3,
+      },
+    },
+    "/address/street": Object {
+      "end": Object {
+        "line": 4,
+      },
+      "start": Object {
+        "line": 4,
+      },
+    },
+    "/hello": Object {
+      "end": Object {
+        "line": 2,
+      },
+      "start": Object {
+        "line": 2,
+      },
+    },
+  },
+  "validations": Array [],
+}
+`;
