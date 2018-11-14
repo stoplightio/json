@@ -4,7 +4,7 @@
 
 Useful functions when working with JSON.
 
-- Explore the interfaces: [TSDoc](https://github.com/stoplightio/json)
+- Explore the interfaces: [TSDoc](https://stoplightio.github.io/json)
 - View the changelog: [Releases](https://github.com/stoplightio/json/releases)
 
 ### Installation
