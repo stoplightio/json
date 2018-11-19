@@ -42,12 +42,12 @@
   },
   "dependencies": {
     "@stoplight/fast-safe-stringify": "2.1.2",
-    "@stoplight/types": "1.2.0",
+    "@stoplight/types": "2.x.x",
     "json-source-map": "0.4.0",
     "lodash": "4.x.x"
   },
   "devDependencies": {
-    "@stoplight/scripts": "1.x.x",
+    "@stoplight/scripts": "2.x.x",
     "benchmark": "2.1.x",
     "typescript": "3.1.6"
   },
