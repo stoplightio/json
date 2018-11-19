@@ -20,7 +20,8 @@ yarn add @stoplight/json
 
 ```ts
 // basic example of parseWithPointers
-import { parseWithPointers } from "@stoplight/json";
+// note: parseWithPointers is not exported from root, ust import by name
+import { parseWithPointers } from "@stoplight/json/parseWithPointers";
 
 const result = parseWithPointers('{"foo": "bar"'});
 console.log(result.data) // => the {foo: "bar"} JS object
@@ -28,11 +29,9 @@ console.log(result.pointers) // => the source map with a single "#/foo" pointer 
 ```
 
 - **decycle**: Remove circular references with support for an optional replacer.
-- **get**: Wrapper around `lodash.get`.
 - **parseWithPointers**: Like `JSON.parse(val)` but also returns a source map that includes a JSON path pointer for every property in the result (with line information).
 - **safeParse**: Like `JSON.parse(val)` but does not throw on invalid JSON.
 - **safeStringify**: Like `JSON.stringify(val)` but handles circular references.
-- **set**: Wrapper around `lodash.set`.
 - **startsWith**: Like native JS `x.startsWith(y)` but works with strings AND arrays.
 - **trimStart**: Like `lodash.startsWith(x, y)` but works with strings AND arrays.
 
