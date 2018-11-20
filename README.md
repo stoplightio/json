@@ -30,6 +30,8 @@ console.log(result.pointers) // => the source map with a single "#/foo" pointer 
 
 - **decycle**: Remove circular references with support for an optional replacer.
 - **parseWithPointers**: Like `JSON.parse(val)` but also returns a source map that includes a JSON path pointer for every property in the result (with line information).
+- **pathToPointer**: Turns an array of path segments into a json pointer IE `['paths', '/user', 'get']` -> `#/paths/~1/user/get`.
+- **pointerToPath**: Turns a json pointer into an array of path segments IE `#/paths/~1/user/get` -> `['paths', '/user', 'get']`.
 - **safeParse**: Like `JSON.parse(val)` but does not throw on invalid JSON.
 - **safeStringify**: Like `JSON.stringify(val)` but handles circular references.
 - **startsWith**: Like native JS `x.startsWith(y)` but works with strings AND arrays.
