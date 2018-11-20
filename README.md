@@ -28,14 +28,14 @@ console.log(result.data) // => the {foo: "bar"} JS object
 console.log(result.pointers) // => the source map with a single "#/foo" pointer that has position info for the foo property
 ```
 
-- **decycle**: Remove circular references with support for an optional replacer.
-- **parseWithPointers**: Like `JSON.parse(val)` but also returns a source map that includes a JSON path pointer for every property in the result (with line information).
-- **pathToPointer**: Turns an array of path segments into a json pointer IE `['paths', '/user', 'get']` -> `#/paths/~1/user/get`.
-- **pointerToPath**: Turns a json pointer into an array of path segments IE `#/paths/~1/user/get` -> `['paths', '/user', 'get']`.
-- **safeParse**: Like `JSON.parse(val)` but does not throw on invalid JSON.
-- **safeStringify**: Like `JSON.stringify(val)` but handles circular references.
-- **startsWith**: Like native JS `x.startsWith(y)` but works with strings AND arrays.
-- **trimStart**: Like `lodash.startsWith(x, y)` but works with strings AND arrays.
+- **[decycle](https://stoplightio.github.io/json/globals.html#decycle)**: Remove circular references with support for an optional replacer.
+- **[parseWithPointers](https://stoplightio.github.io/json/globals.html#parseWithPointers)**: Like `JSON.parse(val)` but also returns a source map that includes a JSON path pointer for every property in the result (with line information).
+- **[pathToPointer](https://stoplightio.github.io/json/globals.html#pathToPointer)**: Turns an array of path segments into a json pointer IE `['paths', '/user', 'get']` -> `#/paths/~1/user/get`.
+- **[pointerToPath](https://stoplightio.github.io/json/globals.html#pointerToPath)**: Turns a json pointer into an array of path segments IE `#/paths/~1/user/get` -> `['paths', '/user', 'get']`.
+- **[safeParse](https://stoplightio.github.io/json/globals.html#safeParse)**: Like `JSON.parse(val)` but does not throw on invalid JSON.
+- **[safeStringify](https://stoplightio.github.io/json/globals.html#safeStringify)**: Like `JSON.stringify(val)` but handles circular references.
+- **[startsWith](https://stoplightio.github.io/json/globals.html#startsWith)**: Like native JS `x.startsWith(y)` but works with strings AND arrays.
+- **[trimStart](https://stoplightio.github.io/json/globals.html#trimStart)**: Like `lodash.startsWith(x, y)` but works with strings AND arrays.
 
 ### Contributing
 

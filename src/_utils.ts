@@ -1,4 +1,6 @@
 /**
+ * @hidden
+ *
  * Internal helper for now.
  *
  * At some point, if we have enough string helpers, this might go in a string repo? Or this repo becomes more generic utils.
