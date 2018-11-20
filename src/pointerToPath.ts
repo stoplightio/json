@@ -6,11 +6,11 @@ export const pointerToPath = (pointer: string): string[] => {
 
 const decodeFragmentSegments = (segments: string[]): string[] => {
   const len = segments.length;
-  const res = new Array(len);
+  const res = [];
   let i = -1;
 
   while (++i < len) {
-    res[i] = replaceInString(replaceInString(decodeURIComponent('' + segments[i]), '~1', '/'), '~0', '~');
+    res.push(replaceInString(replaceInString(decodeURIComponent('' + segments[i]), '~1', '/'), '~0', '~'));
   }
 
   return res;
