@@ -1,4 +1,6 @@
 export * from './decycle';
+export * from './pathToPointer';
+export * from './pointerToPath';
 export * from './safeParse';
 export * from './safeStringify';
 export * from './startsWith';
