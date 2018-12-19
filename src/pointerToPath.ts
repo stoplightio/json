@@ -1,4 +1,4 @@
-import { replaceInString } from './_utils';
+import { decodePointer } from './decodePointer';
 
 export const pointerToPath = (pointer: string): string[] => {
   return decodeUriFragmentIdentifier(pointer);
@@ -10,7 +10,7 @@ const decodeFragmentSegments = (segments: string[]): string[] => {
   let i = -1;
 
   while (++i < len) {
-    res.push(replaceInString(replaceInString(decodeURIComponent('' + segments[i]), '~1', '/'), '~0', '~'));
+    res.push(decodePointer(segments[i]));
   }
 
   return res;

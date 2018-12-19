@@ -46,7 +46,7 @@
     "lodash": "4.x.x"
   },
   "devDependencies": {
-    "@stoplight/scripts": "3.1.0",
+    "@stoplight/scripts": "3.1.1",
     "benchmark": "2.1.x",
     "typescript": "3.2.2"
   },

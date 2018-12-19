@@ -1,4 +1,6 @@
 export * from './decycle';
+export * from './decodePointer';
+export * from './encodePointer';
 export * from './pathToPointer';
 export * from './pointerToPath';
 export * from './safeParse';
