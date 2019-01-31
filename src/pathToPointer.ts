@@ -1,4 +1,4 @@
-import { encodePointer } from './encodePointer';
+import { encodePointerFragment } from './encodePointerFragment';
 
 export const pathToPointer = (path: string[]): string => {
   return encodeUriFragmentIdentifier(path);
@@ -13,5 +13,5 @@ const encodeUriFragmentIdentifier = (path: string[]): string => {
     return '#';
   }
 
-  return `#/${encodePointer(path.join('/'))}`;
+  return `#/${path.map(encodePointerFragment).join('/')}`;
 };
