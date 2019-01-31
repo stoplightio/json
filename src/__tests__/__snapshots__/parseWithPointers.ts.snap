@@ -7,11 +7,18 @@ Object {
       "street": 123,
     },
     "hello": "world",
+    "paths": Object {
+      "/users/{id}": Object {
+        "get": Object {
+          "operationId": "get-user",
+        },
+      },
+    },
   },
   "pointers": Object {
     "": Object {
       "end": Object {
-        "line": 6,
+        "line": 13,
       },
       "start": Object {
         "line": 1,
@@ -39,6 +46,38 @@ Object {
       },
       "start": Object {
         "line": 2,
+      },
+    },
+    "/paths": Object {
+      "end": Object {
+        "line": 12,
+      },
+      "start": Object {
+        "line": 6,
+      },
+    },
+    "/paths/~1users~1{id}": Object {
+      "end": Object {
+        "line": 11,
+      },
+      "start": Object {
+        "line": 7,
+      },
+    },
+    "/paths/~1users~1{id}/get": Object {
+      "end": Object {
+        "line": 10,
+      },
+      "start": Object {
+        "line": 8,
+      },
+    },
+    "/paths/~1users~1{id}/get/operationId": Object {
+      "end": Object {
+        "line": 9,
+      },
+      "start": Object {
+        "line": 9,
       },
     },
   },

@@ -7,6 +7,13 @@ describe('json parser', () => {
   "hello": "world",
   "address": {
     "street": 123
+  },
+  "paths": {
+    "/users/{id}": {
+      "get": {
+        "operationId": "get-user"
+      }
+    }
   }
 }`)
     ).toMatchSnapshot();
