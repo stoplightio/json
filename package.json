@@ -46,9 +46,9 @@
     "lodash": "4.x.x"
   },
   "devDependencies": {
-    "@stoplight/scripts": "3.1.1",
+    "@stoplight/scripts": "4.2.1",
     "benchmark": "2.1.x",
-    "typescript": "3.2.2"
+    "typescript": "3.3.3"
   },
   "lint-staged": {
     "*.{ts,tsx}$": [
