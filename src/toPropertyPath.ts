@@ -1,7 +1,7 @@
-import { decodePointer } from './decodePointer';
+import { decodePointerFragment } from './decodePointerFragment';
 
 export function toPropertyPath(path: string) {
-  return decodePointer(path)
+  return decodePointerFragment(path)
     .replace(/\/(\/*)/g, '.$1')
     .replace(/^\./, '');
 }
