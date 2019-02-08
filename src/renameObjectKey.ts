@@ -4,19 +4,13 @@ export const renameObjectKey = (obj: object, oldKey: string, newKey: string) => 
     return obj;
   }
 
-  const values = [];
-  for (const key in obj) {
-    if (key !== newKey) {
-      values.push({
-        name: key === oldKey ? newKey : key,
-        value: obj[key],
-      });
-    }
-  }
-
   const newObj = {};
-  for (const value of values) {
-    newObj[value.name] = value.value;
+  for (const [key, value] of Object.entries(obj)) {
+    if (key === oldKey) {
+      newObj[newKey] = value;
+    } else if (!(key in newObj)) {
+      newObj[key] = value;
+    }
   }
 
   return newObj;

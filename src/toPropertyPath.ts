@@ -2,7 +2,7 @@ import { decodePointerFragment } from './decodePointerFragment';
 
 export function toPropertyPath(path: string) {
   return path
-    .replace(/^\//, '')
+    .replace(/^(\/|#\/)/, '')
     .split('/')
     .map(decodePointerFragment)
     .join('.');

@@ -11,5 +11,6 @@ describe('getLastPathSegment', () => {
     expect(getLastPathSegment('/paths/~1pets/post')).toEqual('post');
     expect(getLastPathSegment('/paths/~1~1~1~1pets/post')).toEqual('post');
     expect(getLastPathSegment('/paths/foo~0users')).toEqual('foo~users');
+    expect(getLastPathSegment('#/definitions/Error')).toEqual('Error');
   });
 });
