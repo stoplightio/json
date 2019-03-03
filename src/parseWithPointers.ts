@@ -1,11 +1,12 @@
 import { IParserResult, SourceMapParser } from '@stoplight/types/parsers';
+import { IValidationResult, ValidationSeverity, ValidationSeverityLabel } from '@stoplight/types/validations';
 import {
   createScanner,
   JSONPath,
   JSONVisitor,
-  ParseError,
   ParseErrorCode,
   ParseOptions,
+  printParseErrorCode,
   ScanError,
   Segment,
   SyntaxKind,
@@ -21,7 +22,7 @@ export const parseWithPointers: SourceMapParser = <T>(value: string): IParserRes
 
   if (!value || !value.trim().length) return parsed;
 
-  const validations: ParseError[] = [];
+  const validations: IValidationResult[] = [];
 
   return {
     ...parse(value, validations),
@@ -29,6 +30,7 @@ export const parseWithPointers: SourceMapParser = <T>(value: string): IParserRes
   };
 };
 
+// based on jsonc-parser source code
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -46,7 +48,7 @@ function toPointer(...fragments: Segment[]) {
  * Parses the given text and returns the object the JSON content represents. On invalid input, the parser tries to be as fault tolerant as possible, but still return a result.
  * Therefore always check the errors list to find out if the input was valid.
  */
-function parse(text: string, errors: ParseError[] = [], options?: ParseOptions): any {
+function parse(text: string, errors: IValidationResult[] = [], options?: ParseOptions): any {
   let currentProperty: string | null = null;
   let currentParent: any = [];
   let currentLineNumber = 1;
@@ -116,7 +118,23 @@ function parse(text: string, errors: ParseError[] = [], options?: ParseOptions):
     },
     onLiteralValue: onValue,
     onError: (error: ParseErrorCode, offset: number, length: number) => {
-      errors.push({ error, offset, length });
+      errors.push({
+        errorCode: error,
+        name: printParseErrorCode(error),
+        severity: ValidationSeverity.Error,
+        severityLabel: ValidationSeverityLabel.Error,
+        // todo: columns...?
+        location: {
+          start: {
+            line: currentLineNumber - 1,
+          },
+          end: {
+            line: currentLineNumber - 1,
+          },
+        },
+        offset,
+        length,
+      });
     },
     onNewLine(lineNumber) {
       currentLineNumber = lineNumber;

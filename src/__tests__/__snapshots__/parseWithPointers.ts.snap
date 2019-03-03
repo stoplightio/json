@@ -1,5 +1,113 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`json parser invalid fixtures parses invalid-schema.json 1`] = `
+Object {
+  "data": Object {
+    "address": Object {},
+    "hello": "world",
+    "paths": Object {
+      "/users/{id}": Object {
+        "get": Object {
+          "operationId": "get-user",
+        },
+      },
+    },
+  },
+  "pointers": Object {
+    "": Object {
+      "end": Object {
+        "line": 14,
+      },
+      "start": Object {
+        "line": 1,
+      },
+    },
+    "/address": Object {
+      "end": Object {
+        "line": 5,
+      },
+      "start": Object {
+        "line": 3,
+      },
+    },
+    "/hello": Object {
+      "end": Object {
+        "line": 2,
+      },
+      "start": Object {
+        "line": 2,
+      },
+    },
+    "/paths": Object {
+      "end": Object {
+        "line": 12,
+      },
+      "start": Object {
+        "line": 6,
+      },
+    },
+    "/paths/~1users~1{id}": Object {
+      "end": Object {
+        "line": 11,
+      },
+      "start": Object {
+        "line": 7,
+      },
+    },
+    "/paths/~1users~1{id}/get": Object {
+      "end": Object {
+        "line": 10,
+      },
+      "start": Object {
+        "line": 8,
+      },
+    },
+    "/paths/~1users~1{id}/get/operationId": Object {
+      "end": Object {
+        "line": 9,
+      },
+      "start": Object {
+        "line": 9,
+      },
+    },
+  },
+  "validations": Array [
+    Object {
+      "errorCode": 4,
+      "length": 1,
+      "location": Object {
+        "end": Object {
+          "line": 4,
+        },
+        "start": Object {
+          "line": 4,
+        },
+      },
+      "name": "ValueExpected",
+      "offset": 53,
+      "severity": 50,
+      "severityLabel": "error",
+    },
+    Object {
+      "errorCode": 6,
+      "length": 7,
+      "location": Object {
+        "end": Object {
+          "line": 5,
+        },
+        "start": Object {
+          "line": 5,
+        },
+      },
+      "name": "CommaExpected",
+      "offset": 57,
+      "severity": 50,
+      "severityLabel": "error",
+    },
+  ],
+}
+`;
+
 exports[`json parser parse simple 1`] = `
 Object {
   "data": Object {
