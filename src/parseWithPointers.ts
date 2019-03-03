@@ -66,6 +66,13 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
   };
 
   function onValue(value: any) {
+    if (typeof value === 'object') {
+      parentProperties.set(value, [
+        ...(parentProperties.get(currentParent) || []),
+        encodePointerFragment(currentProperty || ''),
+      ].filter(Boolean) as JSONPath);
+    }
+
     if (Array.isArray(currentParent)) {
       (currentParent as any[]).push(value);
     } else if (currentProperty) {
@@ -83,15 +90,19 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
     }
   }
 
+  function onComplexValueEnd(value: object) {
+    const parentPointer = parentProperties.get(value) || [];
+    const pointer = pointers[toPointer(...parentPointer)];
+    if (pointer) {
+      pointer.end.line = currentLineNumber;
+    }
+  }
+
   const visitor: IJSONVisitor = {
     onObjectBegin: () => {
       const object = {};
       onValue(object);
       previousParents.push(currentParent);
-      parentProperties.set(object, [
-        ...(parentProperties.get(currentParent) || []),
-        encodePointerFragment(currentProperty || ''),
-      ].filter(Boolean) as JSONPath);
       currentParent = object;
       currentProperty = null;
     },
@@ -99,11 +110,7 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
       currentProperty = name;
     },
     onObjectEnd: () => {
-      const parentPointer = parentProperties.get(currentParent) || [];
-      const pointer = pointers[toPointer(...parentPointer)];
-      if (pointer) {
-        pointer.end.line = currentLineNumber;
-      }
+      onComplexValueEnd(currentParent);
       currentParent = previousParents.pop();
     },
     onArrayBegin: () => {
@@ -114,6 +121,7 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
       currentProperty = null;
     },
     onArrayEnd: () => {
+      onComplexValueEnd(currentParent);
       currentParent = previousParents.pop();
     },
     onLiteralValue: onValue,
@@ -153,7 +161,7 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
 /**
  * Parses the given text and invokes the visitor functions for each object, array and literal reached.
  */
-export function visit(text: string, visitor: IJSONVisitor, options?: ParseOptions): any {
+function visit(text: string, visitor: IJSONVisitor, options?: ParseOptions): any {
   const _scanner = createScanner(text, false);
   // not 0-index based on purpose
   let lineNumber = 1;
