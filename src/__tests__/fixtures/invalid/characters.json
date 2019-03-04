@@ -1,0 +1,6 @@
+{
+  "valid-unicode": "\u017C",
+  "valid-escape": "\\n",
+  "invalid: "\ud800",
+  "invalid-escape": "\s"
+}

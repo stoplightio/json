@@ -52,6 +52,7 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
   let currentProperty: string | null = null;
   let currentParent: any = [];
   let currentLineNumber = 1;
+  const offsets: number[] = [];
   const previousParents: any[] = [];
   const parentProperties = new WeakMap<object, JSONPath>();
   const pointers = {
@@ -126,26 +127,29 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
     },
     onLiteralValue: onValue,
     onError: (error: ParseErrorCode, offset: number, length: number) => {
+      const startColumn = offset - offsets[currentLineNumber - 2];
       errors.push({
         errorCode: error,
         name: printParseErrorCode(error),
         severity: ValidationSeverity.Error,
         severityLabel: ValidationSeverityLabel.Error,
-        // todo: columns...?
         location: {
           start: {
-            line: currentLineNumber - 1,
+            line: currentLineNumber,
+            column: startColumn,
           },
           end: {
-            line: currentLineNumber - 1,
+            line: currentLineNumber,
+            column: startColumn + length,
           },
         },
         offset,
         length,
       });
     },
-    onNewLine(lineNumber) {
+    onNewLine(lineNumber, offset, length) {
       currentLineNumber = lineNumber;
+      offsets.push(offset);
     },
   };
   visit(text, visitor, options);

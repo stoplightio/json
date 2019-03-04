@@ -1,6 +1,115 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`json parser invalid fixtures parses invalid-schema.json 1`] = `
+exports[`json parser invalid fixtures parses characters.json 1`] = `
+Object {
+  "data": Object {
+    "valid-escape": "\\\\n",
+    "valid-unicode": "ż",
+  },
+  "pointers": Object {
+    "": Object {
+      "end": Object {
+        "line": 7,
+      },
+      "start": Object {
+        "line": 1,
+      },
+    },
+    "/valid-escape": Object {
+      "end": Object {
+        "line": 3,
+      },
+      "start": Object {
+        "line": 3,
+      },
+    },
+    "/valid-unicode": Object {
+      "end": Object {
+        "line": 2,
+      },
+      "start": Object {
+        "line": 2,
+      },
+    },
+  },
+  "validations": Array [
+    Object {
+      "errorCode": 1,
+      "length": 6,
+      "location": Object {
+        "end": Object {
+          "column": 20,
+          "line": 4,
+        },
+        "start": Object {
+          "column": 14,
+          "line": 4,
+        },
+      },
+      "name": "InvalidSymbol",
+      "offset": 69,
+      "severity": 50,
+      "severityLabel": "error",
+    },
+    Object {
+      "errorCode": 12,
+      "length": 2,
+      "location": Object {
+        "end": Object {
+          "column": 22,
+          "line": 4,
+        },
+        "start": Object {
+          "column": 20,
+          "line": 4,
+        },
+      },
+      "name": "UnexpectedEndOfString",
+      "offset": 75,
+      "severity": 50,
+      "severityLabel": "error",
+    },
+    Object {
+      "errorCode": 5,
+      "length": 2,
+      "location": Object {
+        "end": Object {
+          "column": 22,
+          "line": 4,
+        },
+        "start": Object {
+          "column": 20,
+          "line": 4,
+        },
+      },
+      "name": "ColonExpected",
+      "offset": 75,
+      "severity": 50,
+      "severityLabel": "error",
+    },
+    Object {
+      "errorCode": 15,
+      "length": 4,
+      "location": Object {
+        "end": Object {
+          "column": 25,
+          "line": 5,
+        },
+        "start": Object {
+          "column": 21,
+          "line": 5,
+        },
+      },
+      "name": "InvalidEscapeCharacter",
+      "offset": 98,
+      "severity": 50,
+      "severityLabel": "error",
+    },
+  ],
+}
+`;
+
+exports[`json parser invalid fixtures parses schema.json 1`] = `
 Object {
   "data": Object {
     "address": Object {},
@@ -77,10 +186,12 @@ Object {
       "length": 1,
       "location": Object {
         "end": Object {
-          "line": 4,
+          "column": 4,
+          "line": 5,
         },
         "start": Object {
-          "line": 4,
+          "column": 3,
+          "line": 5,
         },
       },
       "name": "ValueExpected",
@@ -93,10 +204,12 @@ Object {
       "length": 7,
       "location": Object {
         "end": Object {
-          "line": 5,
+          "column": 10,
+          "line": 6,
         },
         "start": Object {
-          "line": 5,
+          "column": 3,
+          "line": 6,
         },
       },
       "name": "CommaExpected",

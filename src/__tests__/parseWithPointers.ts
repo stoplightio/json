@@ -22,9 +22,9 @@ describe('json parser', () => {
   });
 
   describe('invalid fixtures', () => {
-    it.each(['invalid-schema.json'])('parses %s', async filename => {
+    it.each(['schema.json', 'characters.json'])('parses %s', async filename => {
       expect(
-        parseWithPointers((await fs.promises.readFile(join(__dirname, 'fixtures/', filename), 'utf-8')) as string)
+        parseWithPointers((await fs.promises.readFile(join(__dirname, 'fixtures/invalid', filename), 'utf-8')) as string)
       ).toMatchSnapshot();
     });
   });
