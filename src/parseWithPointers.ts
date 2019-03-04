@@ -41,7 +41,7 @@ interface IJSONVisitor extends JSONVisitor {
 }
 
 function toPointer(...fragments: Segment[]) {
-  return ['', ...fragments].join('/');
+  return ['', ...fragments.filter(item => item !== '')].join('/');
 }
 
 /**
@@ -54,33 +54,36 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
   let currentLineNumber = 1;
   const offsets: number[] = [];
   const previousParents: any[] = [];
-  const parentProperties = new WeakMap<object, JSONPath>();
+  const previousPointers: JSONPath = [];
   const pointers = {
     '': {
       start: {
         line: 1,
       },
       end: {
-        line: 1,
+        line: 0,
       },
     },
   };
 
   function onValue(value: any) {
-    if (typeof value === 'object') {
-      parentProperties.set(value, [
-        ...(parentProperties.get(currentParent) || []),
-        encodePointerFragment(currentProperty || ''),
-      ].filter(Boolean) as JSONPath);
-    }
-
     if (Array.isArray(currentParent)) {
-      (currentParent as any[]).push(value);
+      const index = (currentParent as any[]).push(value) - 1;
+
+      if (previousParents.length > 0) {
+        pointers[toPointer(...previousPointers.slice(0, previousPointers.length - 1), index)] = {
+          start: {
+            line: currentLineNumber,
+          },
+          end: {
+            line: typeof value !== 'object' ? currentLineNumber : 0,
+          },
+        };
+      }
     } else if (currentProperty) {
       currentParent[currentProperty] = value;
 
-      const parentPointer = parentProperties.get(currentParent) || [];
-      pointers[toPointer(...parentPointer, encodePointerFragment(currentProperty))] = {
+      pointers[toPointer(...previousPointers)] = {
         start: {
           line: currentLineNumber,
         },
@@ -92,9 +95,13 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
   }
 
   function onComplexValueEnd(value: object) {
-    const parentPointer = parentProperties.get(value) || [];
-    const pointer = pointers[toPointer(...parentPointer)];
-    if (pointer) {
+    const previousPointersCopy = [...previousPointers];
+    if (value === currentParent) {
+      previousPointersCopy.pop();
+    }
+
+    const pointer = pointers[toPointer(...previousPointersCopy)];
+    if (pointer && pointer.end.line === 0) {
       pointer.end.line = currentLineNumber;
     }
   }
@@ -103,26 +110,39 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
     onObjectBegin: () => {
       const object = {};
       onValue(object);
+      if (Array.isArray(currentParent) && previousPointers.length > 0) {
+        if (previousPointers[previousPointers.length - 1] === '') {
+          previousPointers[previousPointers.length - 1] = 0;
+        } else {
+          previousPointers[previousPointers.length - 1] = Number(previousPointers[previousPointers.length - 1]) + 1;
+        }
+      }
+
+      previousPointers.push('');
       previousParents.push(currentParent);
       currentParent = object;
       currentProperty = null;
     },
     onObjectProperty: (name: string) => {
       currentProperty = name;
+      previousPointers[previousPointers.length - 1] = encodePointerFragment(name);
     },
     onObjectEnd: () => {
       onComplexValueEnd(currentParent);
+      previousPointers.pop();
       currentParent = previousParents.pop();
     },
     onArrayBegin: () => {
       const array: any[] = [];
       onValue(array);
+      previousPointers.push('');
       previousParents.push(currentParent);
       currentParent = array;
       currentProperty = null;
     },
     onArrayEnd: () => {
       onComplexValueEnd(currentParent);
+      previousPointers.pop();
       currentParent = previousParents.pop();
     },
     onLiteralValue: onValue,
@@ -153,8 +173,6 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
     },
   };
   visit(text, visitor, options);
-
-  pointers[''].end.line = currentLineNumber;
 
   return {
     pointers,

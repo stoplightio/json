@@ -1,5 +1,2445 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`json parser fixtures parses main.oas2.json 1`] = `
+Object {
+  "data": Object {
+    "basePath": "/v2",
+    "definitions": Object {
+      "Category": Object {
+        "properties": Object {
+          "name": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+        ],
+        "title": "Category",
+        "type": "object",
+      },
+      "Error": Object {
+        "properties": Object {
+          "code": Object {
+            "type": "string",
+          },
+          "message": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "code",
+        ],
+        "type": "object",
+      },
+      "Pet": Object {
+        "properties": Object {
+          "category": Object {
+            "$ref": "#/definitions/Category",
+          },
+          "id": Object {
+            "format": "int64",
+            "type": "integer",
+          },
+          "name": Object {
+            "example": "doggie",
+            "type": "string",
+          },
+          "photoUrls": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+            "xml": Object {
+              "name": "photoUrl",
+              "wrapped": true,
+            },
+          },
+          "status": Object {
+            "description": "pet status in the store",
+            "enum": Array [
+              "available",
+              "pending",
+              "sold",
+            ],
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+          "photoUrls",
+        ],
+        "type": "object",
+        "xml": Object {
+          "name": "Pet",
+        },
+      },
+    },
+    "externalDocs": Object {
+      "description": "Find out more about Swagger",
+      "url": "http://swagger.io",
+    },
+    "host": "petstore.swagger.io",
+    "info": Object {
+      "contact": Object {
+        "email": "apiteam@swagger.io",
+      },
+      "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key \`special-key\` to test the authorization filters.",
+      "license": Object {
+        "name": "Apache 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.html",
+      },
+      "termsOfService": "http://swagger.io/terms/",
+      "title": "Swagger Petstore",
+      "version": "1.0.0",
+    },
+    "parameters": Object {
+      "limit": Object {
+        "in": "query",
+        "name": "limit",
+        "type": "string",
+      },
+      "pet-id": Object {
+        "in": "path",
+        "name": "petId",
+        "required": true,
+        "type": "string",
+      },
+      "rate-limit": Object {
+        "in": "header",
+        "name": "Rate-Limit",
+        "type": "string",
+      },
+      "skip": Object {
+        "in": "query",
+        "name": "skip",
+        "type": "string",
+      },
+    },
+    "paths": Object {
+      "/pet/{petId}": Object {
+        "parameters": Array [
+          Object {
+            "$ref": "#/parameters/pet-id",
+          },
+        ],
+        "put": Object {
+          "consumes": Array [
+            "application/json",
+            "application/xml",
+          ],
+          "description": "",
+          "operationId": "updatePet",
+          "parameters": Array [
+            Object {
+              "description": "Pet object that needs to be added to the store",
+              "in": "body",
+              "name": "body",
+              "required": true,
+              "schema": Object {
+                "$ref": "#/definitions/Pet",
+              },
+            },
+          ],
+          "produces": Array [
+            "application/xml",
+            "application/json",
+          ],
+          "responses": Object {
+            "400": Object {
+              "description": "Invalid ID supplied",
+            },
+            "404": Object {
+              "$ref": "#/responses/404",
+            },
+            "405": Object {
+              "description": "Validation exception",
+            },
+          },
+          "security": Array [
+            Object {
+              "petstore_auth": Array [
+                "write:pets",
+                "read:pets",
+              ],
+            },
+          ],
+          "summary": "Update an existing pet",
+          "tags": Array [
+            "pet",
+          ],
+        },
+      },
+      "/pets": Object {
+        "get": Object {
+          "parameters": Array [
+            Object {
+              "$ref": "#/parameters/skip",
+            },
+            Object {
+              "$ref": "#/parameters/limit",
+            },
+            Object {
+              "$ref": "#/parameters/rate-limit",
+            },
+          ],
+          "responses": Object {
+            "200": Object {
+              "description": "",
+              "schema": Object {
+                "properties": Object {},
+                "type": "object",
+              },
+            },
+          },
+          "summary": "List pets",
+        },
+        "post": Object {
+          "consumes": Array [
+            "application/json",
+            "application/xml",
+          ],
+          "description": "",
+          "operationId": "addPet",
+          "parameters": Array [
+            Object {
+              "description": "Pet object that needs to be added to the store",
+              "in": "body",
+              "name": "body",
+              "required": true,
+              "schema": Object {
+                "$ref": "#/definitions/Pet",
+              },
+            },
+          ],
+          "produces": Array [
+            "application/xml",
+            "application/json",
+          ],
+          "responses": Object {
+            "405": Object {
+              "description": "Invalid input",
+            },
+          },
+          "security": Array [
+            Object {
+              "petstore_auth": Array [
+                "write:pets",
+                "read:pets",
+              ],
+            },
+          ],
+          "summary": "Add a new pet to the store",
+          "tags": Array [
+            "pet",
+          ],
+        },
+      },
+    },
+    "responses": Object {
+      "404": Object {
+        "description": "Our shared 404 response.",
+        "schema": Object {
+          "$ref": "#/definitions/Error",
+        },
+      },
+    },
+    "schemes": Array [
+      "https",
+      "http",
+    ],
+    "securityDefinitions": Object {
+      "api_key": Object {
+        "in": "header",
+        "name": "api_key",
+        "type": "apiKey",
+      },
+      "petstore_auth": Object {
+        "authorizationUrl": "https://petstore.swagger.io/oauth/dialog",
+        "flow": "implicit",
+        "scopes": Object {
+          "read:pets": "read your pets",
+          "write:pets": "modify pets in your account",
+        },
+        "type": "oauth2",
+      },
+    },
+    "swagger": "2.0",
+    "tags": Array [
+      Object {
+        "description": "Everything about your Pets",
+        "externalDocs": Object {
+          "description": "Find out more",
+          "url": "http://swagger.io",
+        },
+        "name": "pet",
+      },
+      Object {
+        "description": "Access to Petstore orders",
+        "name": "store",
+      },
+      Object {
+        "description": "Operations about user",
+        "externalDocs": Object {
+          "description": "Find out more about our store",
+          "url": "http://swagger.io",
+        },
+        "name": "user",
+      },
+    ],
+  },
+  "pointers": Object {
+    "": Object {
+      "end": Object {
+        "line": 285,
+      },
+      "start": Object {
+        "line": 1,
+      },
+    },
+    "/basePath": Object {
+      "end": Object {
+        "line": 17,
+      },
+      "start": Object {
+        "line": 17,
+      },
+    },
+    "/definitions": Object {
+      "end": Object {
+        "line": 249,
+      },
+      "start": Object {
+        "line": 180,
+      },
+    },
+    "/definitions/Category": Object {
+      "end": Object {
+        "line": 248,
+      },
+      "start": Object {
+        "line": 237,
+      },
+    },
+    "/definitions/Category/properties": Object {
+      "end": Object {
+        "line": 243,
+      },
+      "start": Object {
+        "line": 239,
+      },
+    },
+    "/definitions/Category/properties/name": Object {
+      "end": Object {
+        "line": 242,
+      },
+      "start": Object {
+        "line": 240,
+      },
+    },
+    "/definitions/Category/properties/name/type": Object {
+      "end": Object {
+        "line": 241,
+      },
+      "start": Object {
+        "line": 241,
+      },
+    },
+    "/definitions/Category/required": Object {
+      "end": Object {
+        "line": 246,
+      },
+      "start": Object {
+        "line": 244,
+      },
+    },
+    "/definitions/Category/required/0": Object {
+      "end": Object {
+        "line": 245,
+      },
+      "start": Object {
+        "line": 245,
+      },
+    },
+    "/definitions/Category/title": Object {
+      "end": Object {
+        "line": 247,
+      },
+      "start": Object {
+        "line": 247,
+      },
+    },
+    "/definitions/Category/type": Object {
+      "end": Object {
+        "line": 238,
+      },
+      "start": Object {
+        "line": 238,
+      },
+    },
+    "/definitions/Error": Object {
+      "end": Object {
+        "line": 236,
+      },
+      "start": Object {
+        "line": 223,
+      },
+    },
+    "/definitions/Error/properties": Object {
+      "end": Object {
+        "line": 232,
+      },
+      "start": Object {
+        "line": 225,
+      },
+    },
+    "/definitions/Error/properties/code": Object {
+      "end": Object {
+        "line": 228,
+      },
+      "start": Object {
+        "line": 226,
+      },
+    },
+    "/definitions/Error/properties/code/type": Object {
+      "end": Object {
+        "line": 227,
+      },
+      "start": Object {
+        "line": 227,
+      },
+    },
+    "/definitions/Error/properties/message": Object {
+      "end": Object {
+        "line": 231,
+      },
+      "start": Object {
+        "line": 229,
+      },
+    },
+    "/definitions/Error/properties/message/type": Object {
+      "end": Object {
+        "line": 230,
+      },
+      "start": Object {
+        "line": 230,
+      },
+    },
+    "/definitions/Error/required": Object {
+      "end": Object {
+        "line": 235,
+      },
+      "start": Object {
+        "line": 233,
+      },
+    },
+    "/definitions/Error/required/0": Object {
+      "end": Object {
+        "line": 234,
+      },
+      "start": Object {
+        "line": 234,
+      },
+    },
+    "/definitions/Error/type": Object {
+      "end": Object {
+        "line": 224,
+      },
+      "start": Object {
+        "line": 224,
+      },
+    },
+    "/definitions/Pet": Object {
+      "end": Object {
+        "line": 222,
+      },
+      "start": Object {
+        "line": 181,
+      },
+    },
+    "/definitions/Pet/properties": Object {
+      "end": Object {
+        "line": 217,
+      },
+      "start": Object {
+        "line": 186,
+      },
+    },
+    "/definitions/Pet/properties/category": Object {
+      "end": Object {
+        "line": 193,
+      },
+      "start": Object {
+        "line": 191,
+      },
+    },
+    "/definitions/Pet/properties/category/$ref": Object {
+      "end": Object {
+        "line": 192,
+      },
+      "start": Object {
+        "line": 192,
+      },
+    },
+    "/definitions/Pet/properties/id": Object {
+      "end": Object {
+        "line": 190,
+      },
+      "start": Object {
+        "line": 187,
+      },
+    },
+    "/definitions/Pet/properties/id/format": Object {
+      "end": Object {
+        "line": 189,
+      },
+      "start": Object {
+        "line": 189,
+      },
+    },
+    "/definitions/Pet/properties/id/type": Object {
+      "end": Object {
+        "line": 188,
+      },
+      "start": Object {
+        "line": 188,
+      },
+    },
+    "/definitions/Pet/properties/name": Object {
+      "end": Object {
+        "line": 197,
+      },
+      "start": Object {
+        "line": 194,
+      },
+    },
+    "/definitions/Pet/properties/name/example": Object {
+      "end": Object {
+        "line": 196,
+      },
+      "start": Object {
+        "line": 196,
+      },
+    },
+    "/definitions/Pet/properties/name/type": Object {
+      "end": Object {
+        "line": 195,
+      },
+      "start": Object {
+        "line": 195,
+      },
+    },
+    "/definitions/Pet/properties/photoUrls": Object {
+      "end": Object {
+        "line": 207,
+      },
+      "start": Object {
+        "line": 198,
+      },
+    },
+    "/definitions/Pet/properties/photoUrls/items": Object {
+      "end": Object {
+        "line": 206,
+      },
+      "start": Object {
+        "line": 204,
+      },
+    },
+    "/definitions/Pet/properties/photoUrls/items/type": Object {
+      "end": Object {
+        "line": 205,
+      },
+      "start": Object {
+        "line": 205,
+      },
+    },
+    "/definitions/Pet/properties/photoUrls/type": Object {
+      "end": Object {
+        "line": 199,
+      },
+      "start": Object {
+        "line": 199,
+      },
+    },
+    "/definitions/Pet/properties/photoUrls/xml": Object {
+      "end": Object {
+        "line": 203,
+      },
+      "start": Object {
+        "line": 200,
+      },
+    },
+    "/definitions/Pet/properties/photoUrls/xml/name": Object {
+      "end": Object {
+        "line": 201,
+      },
+      "start": Object {
+        "line": 201,
+      },
+    },
+    "/definitions/Pet/properties/photoUrls/xml/wrapped": Object {
+      "end": Object {
+        "line": 202,
+      },
+      "start": Object {
+        "line": 202,
+      },
+    },
+    "/definitions/Pet/properties/status": Object {
+      "end": Object {
+        "line": 216,
+      },
+      "start": Object {
+        "line": 208,
+      },
+    },
+    "/definitions/Pet/properties/status/description": Object {
+      "end": Object {
+        "line": 210,
+      },
+      "start": Object {
+        "line": 210,
+      },
+    },
+    "/definitions/Pet/properties/status/enum": Object {
+      "end": Object {
+        "line": 215,
+      },
+      "start": Object {
+        "line": 211,
+      },
+    },
+    "/definitions/Pet/properties/status/enum/0": Object {
+      "end": Object {
+        "line": 212,
+      },
+      "start": Object {
+        "line": 212,
+      },
+    },
+    "/definitions/Pet/properties/status/enum/1": Object {
+      "end": Object {
+        "line": 213,
+      },
+      "start": Object {
+        "line": 213,
+      },
+    },
+    "/definitions/Pet/properties/status/enum/2": Object {
+      "end": Object {
+        "line": 214,
+      },
+      "start": Object {
+        "line": 214,
+      },
+    },
+    "/definitions/Pet/properties/status/type": Object {
+      "end": Object {
+        "line": 209,
+      },
+      "start": Object {
+        "line": 209,
+      },
+    },
+    "/definitions/Pet/required": Object {
+      "end": Object {
+        "line": 221,
+      },
+      "start": Object {
+        "line": 218,
+      },
+    },
+    "/definitions/Pet/required/0": Object {
+      "end": Object {
+        "line": 219,
+      },
+      "start": Object {
+        "line": 219,
+      },
+    },
+    "/definitions/Pet/required/1": Object {
+      "end": Object {
+        "line": 220,
+      },
+      "start": Object {
+        "line": 220,
+      },
+    },
+    "/definitions/Pet/type": Object {
+      "end": Object {
+        "line": 182,
+      },
+      "start": Object {
+        "line": 182,
+      },
+    },
+    "/definitions/Pet/xml": Object {
+      "end": Object {
+        "line": 185,
+      },
+      "start": Object {
+        "line": 183,
+      },
+    },
+    "/definitions/Pet/xml/name": Object {
+      "end": Object {
+        "line": 184,
+      },
+      "start": Object {
+        "line": 184,
+      },
+    },
+    "/externalDocs": Object {
+      "end": Object {
+        "line": 253,
+      },
+      "start": Object {
+        "line": 250,
+      },
+    },
+    "/externalDocs/description": Object {
+      "end": Object {
+        "line": 251,
+      },
+      "start": Object {
+        "line": 251,
+      },
+    },
+    "/externalDocs/url": Object {
+      "end": Object {
+        "line": 252,
+      },
+      "start": Object {
+        "line": 252,
+      },
+    },
+    "/host": Object {
+      "end": Object {
+        "line": 16,
+      },
+      "start": Object {
+        "line": 16,
+      },
+    },
+    "/info": Object {
+      "end": Object {
+        "line": 15,
+      },
+      "start": Object {
+        "line": 3,
+      },
+    },
+    "/info/contact": Object {
+      "end": Object {
+        "line": 10,
+      },
+      "start": Object {
+        "line": 8,
+      },
+    },
+    "/info/contact/email": Object {
+      "end": Object {
+        "line": 9,
+      },
+      "start": Object {
+        "line": 9,
+      },
+    },
+    "/info/description": Object {
+      "end": Object {
+        "line": 4,
+      },
+      "start": Object {
+        "line": 4,
+      },
+    },
+    "/info/license": Object {
+      "end": Object {
+        "line": 14,
+      },
+      "start": Object {
+        "line": 11,
+      },
+    },
+    "/info/license/name": Object {
+      "end": Object {
+        "line": 12,
+      },
+      "start": Object {
+        "line": 12,
+      },
+    },
+    "/info/license/url": Object {
+      "end": Object {
+        "line": 13,
+      },
+      "start": Object {
+        "line": 13,
+      },
+    },
+    "/info/termsOfService": Object {
+      "end": Object {
+        "line": 7,
+      },
+      "start": Object {
+        "line": 7,
+      },
+    },
+    "/info/title": Object {
+      "end": Object {
+        "line": 6,
+      },
+      "start": Object {
+        "line": 6,
+      },
+    },
+    "/info/version": Object {
+      "end": Object {
+        "line": 5,
+      },
+      "start": Object {
+        "line": 5,
+      },
+    },
+    "/parameters": Object {
+      "end": Object {
+        "line": 276,
+      },
+      "start": Object {
+        "line": 254,
+      },
+    },
+    "/parameters/limit": Object {
+      "end": Object {
+        "line": 269,
+      },
+      "start": Object {
+        "line": 265,
+      },
+    },
+    "/parameters/limit/in": Object {
+      "end": Object {
+        "line": 267,
+      },
+      "start": Object {
+        "line": 267,
+      },
+    },
+    "/parameters/limit/name": Object {
+      "end": Object {
+        "line": 266,
+      },
+      "start": Object {
+        "line": 266,
+      },
+    },
+    "/parameters/limit/type": Object {
+      "end": Object {
+        "line": 268,
+      },
+      "start": Object {
+        "line": 268,
+      },
+    },
+    "/parameters/pet-id": Object {
+      "end": Object {
+        "line": 275,
+      },
+      "start": Object {
+        "line": 270,
+      },
+    },
+    "/parameters/pet-id/in": Object {
+      "end": Object {
+        "line": 272,
+      },
+      "start": Object {
+        "line": 272,
+      },
+    },
+    "/parameters/pet-id/name": Object {
+      "end": Object {
+        "line": 271,
+      },
+      "start": Object {
+        "line": 271,
+      },
+    },
+    "/parameters/pet-id/required": Object {
+      "end": Object {
+        "line": 274,
+      },
+      "start": Object {
+        "line": 274,
+      },
+    },
+    "/parameters/pet-id/type": Object {
+      "end": Object {
+        "line": 273,
+      },
+      "start": Object {
+        "line": 273,
+      },
+    },
+    "/parameters/rate-limit": Object {
+      "end": Object {
+        "line": 264,
+      },
+      "start": Object {
+        "line": 260,
+      },
+    },
+    "/parameters/rate-limit/in": Object {
+      "end": Object {
+        "line": 262,
+      },
+      "start": Object {
+        "line": 262,
+      },
+    },
+    "/parameters/rate-limit/name": Object {
+      "end": Object {
+        "line": 261,
+      },
+      "start": Object {
+        "line": 261,
+      },
+    },
+    "/parameters/rate-limit/type": Object {
+      "end": Object {
+        "line": 263,
+      },
+      "start": Object {
+        "line": 263,
+      },
+    },
+    "/parameters/skip": Object {
+      "end": Object {
+        "line": 259,
+      },
+      "start": Object {
+        "line": 255,
+      },
+    },
+    "/parameters/skip/in": Object {
+      "end": Object {
+        "line": 256,
+      },
+      "start": Object {
+        "line": 256,
+      },
+    },
+    "/parameters/skip/name": Object {
+      "end": Object {
+        "line": 258,
+      },
+      "start": Object {
+        "line": 258,
+      },
+    },
+    "/parameters/skip/type": Object {
+      "end": Object {
+        "line": 257,
+      },
+      "start": Object {
+        "line": 257,
+      },
+    },
+    "/paths": Object {
+      "end": Object {
+        "line": 163,
+      },
+      "start": Object {
+        "line": 44,
+      },
+    },
+    "/paths/~1pets": Object {
+      "end": Object {
+        "line": 109,
+      },
+      "start": Object {
+        "line": 45,
+      },
+    },
+    "/paths/~1pets/get": Object {
+      "end": Object {
+        "line": 108,
+      },
+      "start": Object {
+        "line": 86,
+      },
+    },
+    "/paths/~1pets/get/parameters": Object {
+      "end": Object {
+        "line": 107,
+      },
+      "start": Object {
+        "line": 97,
+      },
+    },
+    "/paths/~1pets/get/parameters/0": Object {
+      "end": Object {
+        "line": 100,
+      },
+      "start": Object {
+        "line": 98,
+      },
+    },
+    "/paths/~1pets/get/parameters/0/$ref": Object {
+      "end": Object {
+        "line": 99,
+      },
+      "start": Object {
+        "line": 99,
+      },
+    },
+    "/paths/~1pets/get/parameters/1": Object {
+      "end": Object {
+        "line": 103,
+      },
+      "start": Object {
+        "line": 101,
+      },
+    },
+    "/paths/~1pets/get/parameters/1/$ref": Object {
+      "end": Object {
+        "line": 102,
+      },
+      "start": Object {
+        "line": 102,
+      },
+    },
+    "/paths/~1pets/get/parameters/2": Object {
+      "end": Object {
+        "line": 106,
+      },
+      "start": Object {
+        "line": 104,
+      },
+    },
+    "/paths/~1pets/get/parameters/2/$ref": Object {
+      "end": Object {
+        "line": 105,
+      },
+      "start": Object {
+        "line": 105,
+      },
+    },
+    "/paths/~1pets/get/responses": Object {
+      "end": Object {
+        "line": 95,
+      },
+      "start": Object {
+        "line": 87,
+      },
+    },
+    "/paths/~1pets/get/responses/200": Object {
+      "end": Object {
+        "line": 94,
+      },
+      "start": Object {
+        "line": 88,
+      },
+    },
+    "/paths/~1pets/get/responses/200/description": Object {
+      "end": Object {
+        "line": 89,
+      },
+      "start": Object {
+        "line": 89,
+      },
+    },
+    "/paths/~1pets/get/responses/200/schema": Object {
+      "end": Object {
+        "line": 93,
+      },
+      "start": Object {
+        "line": 90,
+      },
+    },
+    "/paths/~1pets/get/responses/200/schema/properties": Object {
+      "end": Object {
+        "line": 92,
+      },
+      "start": Object {
+        "line": 92,
+      },
+    },
+    "/paths/~1pets/get/responses/200/schema/type": Object {
+      "end": Object {
+        "line": 91,
+      },
+      "start": Object {
+        "line": 91,
+      },
+    },
+    "/paths/~1pets/get/summary": Object {
+      "end": Object {
+        "line": 96,
+      },
+      "start": Object {
+        "line": 96,
+      },
+    },
+    "/paths/~1pets/post": Object {
+      "end": Object {
+        "line": 85,
+      },
+      "start": Object {
+        "line": 46,
+      },
+    },
+    "/paths/~1pets/post/consumes": Object {
+      "end": Object {
+        "line": 56,
+      },
+      "start": Object {
+        "line": 53,
+      },
+    },
+    "/paths/~1pets/post/consumes/0": Object {
+      "end": Object {
+        "line": 54,
+      },
+      "start": Object {
+        "line": 54,
+      },
+    },
+    "/paths/~1pets/post/consumes/1": Object {
+      "end": Object {
+        "line": 55,
+      },
+      "start": Object {
+        "line": 55,
+      },
+    },
+    "/paths/~1pets/post/description": Object {
+      "end": Object {
+        "line": 51,
+      },
+      "start": Object {
+        "line": 51,
+      },
+    },
+    "/paths/~1pets/post/operationId": Object {
+      "end": Object {
+        "line": 52,
+      },
+      "start": Object {
+        "line": 52,
+      },
+    },
+    "/paths/~1pets/post/parameters": Object {
+      "end": Object {
+        "line": 71,
+      },
+      "start": Object {
+        "line": 61,
+      },
+    },
+    "/paths/~1pets/post/parameters/0": Object {
+      "end": Object {
+        "line": 70,
+      },
+      "start": Object {
+        "line": 62,
+      },
+    },
+    "/paths/~1pets/post/parameters/0/description": Object {
+      "end": Object {
+        "line": 65,
+      },
+      "start": Object {
+        "line": 65,
+      },
+    },
+    "/paths/~1pets/post/parameters/0/in": Object {
+      "end": Object {
+        "line": 63,
+      },
+      "start": Object {
+        "line": 63,
+      },
+    },
+    "/paths/~1pets/post/parameters/0/name": Object {
+      "end": Object {
+        "line": 64,
+      },
+      "start": Object {
+        "line": 64,
+      },
+    },
+    "/paths/~1pets/post/parameters/0/required": Object {
+      "end": Object {
+        "line": 66,
+      },
+      "start": Object {
+        "line": 66,
+      },
+    },
+    "/paths/~1pets/post/parameters/0/schema": Object {
+      "end": Object {
+        "line": 69,
+      },
+      "start": Object {
+        "line": 67,
+      },
+    },
+    "/paths/~1pets/post/parameters/0/schema/$ref": Object {
+      "end": Object {
+        "line": 68,
+      },
+      "start": Object {
+        "line": 68,
+      },
+    },
+    "/paths/~1pets/post/produces": Object {
+      "end": Object {
+        "line": 60,
+      },
+      "start": Object {
+        "line": 57,
+      },
+    },
+    "/paths/~1pets/post/produces/0": Object {
+      "end": Object {
+        "line": 58,
+      },
+      "start": Object {
+        "line": 58,
+      },
+    },
+    "/paths/~1pets/post/produces/1": Object {
+      "end": Object {
+        "line": 59,
+      },
+      "start": Object {
+        "line": 59,
+      },
+    },
+    "/paths/~1pets/post/responses": Object {
+      "end": Object {
+        "line": 76,
+      },
+      "start": Object {
+        "line": 72,
+      },
+    },
+    "/paths/~1pets/post/responses/405": Object {
+      "end": Object {
+        "line": 75,
+      },
+      "start": Object {
+        "line": 73,
+      },
+    },
+    "/paths/~1pets/post/responses/405/description": Object {
+      "end": Object {
+        "line": 74,
+      },
+      "start": Object {
+        "line": 74,
+      },
+    },
+    "/paths/~1pets/post/security": Object {
+      "end": Object {
+        "line": 84,
+      },
+      "start": Object {
+        "line": 77,
+      },
+    },
+    "/paths/~1pets/post/security/0": Object {
+      "end": Object {
+        "line": 83,
+      },
+      "start": Object {
+        "line": 78,
+      },
+    },
+    "/paths/~1pets/post/security/0/petstore_auth": Object {
+      "end": Object {
+        "line": 82,
+      },
+      "start": Object {
+        "line": 79,
+      },
+    },
+    "/paths/~1pets/post/security/0/petstore_auth/0": Object {
+      "end": Object {
+        "line": 80,
+      },
+      "start": Object {
+        "line": 80,
+      },
+    },
+    "/paths/~1pets/post/security/0/petstore_auth/1": Object {
+      "end": Object {
+        "line": 81,
+      },
+      "start": Object {
+        "line": 81,
+      },
+    },
+    "/paths/~1pets/post/summary": Object {
+      "end": Object {
+        "line": 50,
+      },
+      "start": Object {
+        "line": 50,
+      },
+    },
+    "/paths/~1pets/post/tags": Object {
+      "end": Object {
+        "line": 49,
+      },
+      "start": Object {
+        "line": 47,
+      },
+    },
+    "/paths/~1pets/post/tags/0": Object {
+      "end": Object {
+        "line": 48,
+      },
+      "start": Object {
+        "line": 48,
+      },
+    },
+    "/paths/~1pet~1{petId}": Object {
+      "end": Object {
+        "line": 162,
+      },
+      "start": Object {
+        "line": 110,
+      },
+    },
+    "/paths/~1pet~1{petId}/parameters": Object {
+      "end": Object {
+        "line": 115,
+      },
+      "start": Object {
+        "line": 111,
+      },
+    },
+    "/paths/~1pet~1{petId}/parameters/0": Object {
+      "end": Object {
+        "line": 114,
+      },
+      "start": Object {
+        "line": 112,
+      },
+    },
+    "/paths/~1pet~1{petId}/parameters/0/$ref": Object {
+      "end": Object {
+        "line": 113,
+      },
+      "start": Object {
+        "line": 113,
+      },
+    },
+    "/paths/~1pet~1{petId}/put": Object {
+      "end": Object {
+        "line": 161,
+      },
+      "start": Object {
+        "line": 116,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/consumes": Object {
+      "end": Object {
+        "line": 126,
+      },
+      "start": Object {
+        "line": 123,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/consumes/0": Object {
+      "end": Object {
+        "line": 124,
+      },
+      "start": Object {
+        "line": 124,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/consumes/1": Object {
+      "end": Object {
+        "line": 125,
+      },
+      "start": Object {
+        "line": 125,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/description": Object {
+      "end": Object {
+        "line": 121,
+      },
+      "start": Object {
+        "line": 121,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/operationId": Object {
+      "end": Object {
+        "line": 122,
+      },
+      "start": Object {
+        "line": 122,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/parameters": Object {
+      "end": Object {
+        "line": 141,
+      },
+      "start": Object {
+        "line": 131,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/parameters/0": Object {
+      "end": Object {
+        "line": 140,
+      },
+      "start": Object {
+        "line": 132,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/parameters/0/description": Object {
+      "end": Object {
+        "line": 135,
+      },
+      "start": Object {
+        "line": 135,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/parameters/0/in": Object {
+      "end": Object {
+        "line": 133,
+      },
+      "start": Object {
+        "line": 133,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/parameters/0/name": Object {
+      "end": Object {
+        "line": 134,
+      },
+      "start": Object {
+        "line": 134,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/parameters/0/required": Object {
+      "end": Object {
+        "line": 136,
+      },
+      "start": Object {
+        "line": 136,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/parameters/0/schema": Object {
+      "end": Object {
+        "line": 139,
+      },
+      "start": Object {
+        "line": 137,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/parameters/0/schema/$ref": Object {
+      "end": Object {
+        "line": 138,
+      },
+      "start": Object {
+        "line": 138,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/produces": Object {
+      "end": Object {
+        "line": 130,
+      },
+      "start": Object {
+        "line": 127,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/produces/0": Object {
+      "end": Object {
+        "line": 128,
+      },
+      "start": Object {
+        "line": 128,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/produces/1": Object {
+      "end": Object {
+        "line": 129,
+      },
+      "start": Object {
+        "line": 129,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/responses": Object {
+      "end": Object {
+        "line": 152,
+      },
+      "start": Object {
+        "line": 142,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/responses/400": Object {
+      "end": Object {
+        "line": 145,
+      },
+      "start": Object {
+        "line": 143,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/responses/400/description": Object {
+      "end": Object {
+        "line": 144,
+      },
+      "start": Object {
+        "line": 144,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/responses/404": Object {
+      "end": Object {
+        "line": 148,
+      },
+      "start": Object {
+        "line": 146,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/responses/404/$ref": Object {
+      "end": Object {
+        "line": 147,
+      },
+      "start": Object {
+        "line": 147,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/responses/405": Object {
+      "end": Object {
+        "line": 151,
+      },
+      "start": Object {
+        "line": 149,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/responses/405/description": Object {
+      "end": Object {
+        "line": 150,
+      },
+      "start": Object {
+        "line": 150,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/security": Object {
+      "end": Object {
+        "line": 160,
+      },
+      "start": Object {
+        "line": 153,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/security/0": Object {
+      "end": Object {
+        "line": 159,
+      },
+      "start": Object {
+        "line": 154,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/security/0/petstore_auth": Object {
+      "end": Object {
+        "line": 158,
+      },
+      "start": Object {
+        "line": 155,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/security/0/petstore_auth/0": Object {
+      "end": Object {
+        "line": 156,
+      },
+      "start": Object {
+        "line": 156,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/security/0/petstore_auth/1": Object {
+      "end": Object {
+        "line": 157,
+      },
+      "start": Object {
+        "line": 157,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/summary": Object {
+      "end": Object {
+        "line": 120,
+      },
+      "start": Object {
+        "line": 120,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/tags": Object {
+      "end": Object {
+        "line": 119,
+      },
+      "start": Object {
+        "line": 117,
+      },
+    },
+    "/paths/~1pet~1{petId}/put/tags/0": Object {
+      "end": Object {
+        "line": 118,
+      },
+      "start": Object {
+        "line": 118,
+      },
+    },
+    "/responses": Object {
+      "end": Object {
+        "line": 284,
+      },
+      "start": Object {
+        "line": 277,
+      },
+    },
+    "/responses/404": Object {
+      "end": Object {
+        "line": 283,
+      },
+      "start": Object {
+        "line": 278,
+      },
+    },
+    "/responses/404/description": Object {
+      "end": Object {
+        "line": 279,
+      },
+      "start": Object {
+        "line": 279,
+      },
+    },
+    "/responses/404/schema": Object {
+      "end": Object {
+        "line": 282,
+      },
+      "start": Object {
+        "line": 280,
+      },
+    },
+    "/responses/404/schema/$ref": Object {
+      "end": Object {
+        "line": 281,
+      },
+      "start": Object {
+        "line": 281,
+      },
+    },
+    "/schemes": Object {
+      "end": Object {
+        "line": 43,
+      },
+      "start": Object {
+        "line": 40,
+      },
+    },
+    "/schemes/0": Object {
+      "end": Object {
+        "line": 41,
+      },
+      "start": Object {
+        "line": 41,
+      },
+    },
+    "/schemes/1": Object {
+      "end": Object {
+        "line": 42,
+      },
+      "start": Object {
+        "line": 42,
+      },
+    },
+    "/securityDefinitions": Object {
+      "end": Object {
+        "line": 179,
+      },
+      "start": Object {
+        "line": 164,
+      },
+    },
+    "/securityDefinitions/api_key": Object {
+      "end": Object {
+        "line": 178,
+      },
+      "start": Object {
+        "line": 174,
+      },
+    },
+    "/securityDefinitions/api_key/in": Object {
+      "end": Object {
+        "line": 177,
+      },
+      "start": Object {
+        "line": 177,
+      },
+    },
+    "/securityDefinitions/api_key/name": Object {
+      "end": Object {
+        "line": 176,
+      },
+      "start": Object {
+        "line": 176,
+      },
+    },
+    "/securityDefinitions/api_key/type": Object {
+      "end": Object {
+        "line": 175,
+      },
+      "start": Object {
+        "line": 175,
+      },
+    },
+    "/securityDefinitions/petstore_auth": Object {
+      "end": Object {
+        "line": 173,
+      },
+      "start": Object {
+        "line": 165,
+      },
+    },
+    "/securityDefinitions/petstore_auth/authorizationUrl": Object {
+      "end": Object {
+        "line": 167,
+      },
+      "start": Object {
+        "line": 167,
+      },
+    },
+    "/securityDefinitions/petstore_auth/flow": Object {
+      "end": Object {
+        "line": 168,
+      },
+      "start": Object {
+        "line": 168,
+      },
+    },
+    "/securityDefinitions/petstore_auth/scopes": Object {
+      "end": Object {
+        "line": 172,
+      },
+      "start": Object {
+        "line": 169,
+      },
+    },
+    "/securityDefinitions/petstore_auth/scopes/read:pets": Object {
+      "end": Object {
+        "line": 171,
+      },
+      "start": Object {
+        "line": 171,
+      },
+    },
+    "/securityDefinitions/petstore_auth/scopes/write:pets": Object {
+      "end": Object {
+        "line": 170,
+      },
+      "start": Object {
+        "line": 170,
+      },
+    },
+    "/securityDefinitions/petstore_auth/type": Object {
+      "end": Object {
+        "line": 166,
+      },
+      "start": Object {
+        "line": 166,
+      },
+    },
+    "/swagger": Object {
+      "end": Object {
+        "line": 2,
+      },
+      "start": Object {
+        "line": 2,
+      },
+    },
+    "/tags": Object {
+      "end": Object {
+        "line": 39,
+      },
+      "start": Object {
+        "line": 18,
+      },
+    },
+    "/tags/0": Object {
+      "end": Object {
+        "line": 26,
+      },
+      "start": Object {
+        "line": 19,
+      },
+    },
+    "/tags/0/description": Object {
+      "end": Object {
+        "line": 21,
+      },
+      "start": Object {
+        "line": 21,
+      },
+    },
+    "/tags/0/externalDocs": Object {
+      "end": Object {
+        "line": 25,
+      },
+      "start": Object {
+        "line": 22,
+      },
+    },
+    "/tags/0/externalDocs/description": Object {
+      "end": Object {
+        "line": 23,
+      },
+      "start": Object {
+        "line": 23,
+      },
+    },
+    "/tags/0/externalDocs/url": Object {
+      "end": Object {
+        "line": 24,
+      },
+      "start": Object {
+        "line": 24,
+      },
+    },
+    "/tags/0/name": Object {
+      "end": Object {
+        "line": 20,
+      },
+      "start": Object {
+        "line": 20,
+      },
+    },
+    "/tags/1": Object {
+      "end": Object {
+        "line": 30,
+      },
+      "start": Object {
+        "line": 27,
+      },
+    },
+    "/tags/1/description": Object {
+      "end": Object {
+        "line": 29,
+      },
+      "start": Object {
+        "line": 29,
+      },
+    },
+    "/tags/1/name": Object {
+      "end": Object {
+        "line": 28,
+      },
+      "start": Object {
+        "line": 28,
+      },
+    },
+    "/tags/2": Object {
+      "end": Object {
+        "line": 38,
+      },
+      "start": Object {
+        "line": 31,
+      },
+    },
+    "/tags/2/description": Object {
+      "end": Object {
+        "line": 33,
+      },
+      "start": Object {
+        "line": 33,
+      },
+    },
+    "/tags/2/externalDocs": Object {
+      "end": Object {
+        "line": 37,
+      },
+      "start": Object {
+        "line": 34,
+      },
+    },
+    "/tags/2/externalDocs/description": Object {
+      "end": Object {
+        "line": 35,
+      },
+      "start": Object {
+        "line": 35,
+      },
+    },
+    "/tags/2/externalDocs/url": Object {
+      "end": Object {
+        "line": 36,
+      },
+      "start": Object {
+        "line": 36,
+      },
+    },
+    "/tags/2/name": Object {
+      "end": Object {
+        "line": 32,
+      },
+      "start": Object {
+        "line": 32,
+      },
+    },
+  },
+  "validations": Array [],
+}
+`;
+
+exports[`json parser fixtures parses user.jschema.json 1`] = `
+Object {
+  "data": Object {
+    "properties": Object {
+      "age": Object {
+        "maximum": 150,
+        "minimum": 0,
+        "type": "number",
+      },
+      "completed_at": Object {
+        "format": "date-time",
+        "type": "string",
+      },
+      "email": Object {
+        "format": "email",
+        "minLength": 2,
+        "type": "string",
+      },
+      "items": Object {
+        "items": Object {
+          "type": Array [
+            "string",
+            "number",
+          ],
+        },
+        "type": Array [
+          "null",
+          "array",
+        ],
+      },
+      "name": Object {
+        "description": "The user's full name.",
+        "type": "string",
+      },
+      "permissions": Object {
+        "properties": Object {
+          "ids": Object {
+            "items": Object {
+              "type": "integer",
+            },
+            "type": "array",
+          },
+        },
+        "type": Array [
+          "string",
+          "object",
+        ],
+      },
+      "plan": Object {
+        "anyOf": Array [
+          Object {
+            "properties": Object {
+              "bar": Object {
+                "type": "string",
+              },
+              "foo": Object {
+                "type": "string",
+              },
+            },
+            "required": Array [
+              "foo",
+              "bar",
+            ],
+            "type": "object",
+          },
+          Object {
+            "items": Object {
+              "type": "integer",
+            },
+            "type": "array",
+          },
+        ],
+      },
+      "ref": Object {
+        "$ref": "#/definitions/error-response",
+      },
+    },
+    "required": Array [
+      "name",
+      "age",
+      "completed_at",
+    ],
+    "title": "User",
+    "type": "object",
+  },
+  "pointers": Object {
+    "": Object {
+      "end": Object {
+        "line": 83,
+      },
+      "start": Object {
+        "line": 1,
+      },
+    },
+    "/properties": Object {
+      "end": Object {
+        "line": 77,
+      },
+      "start": Object {
+        "line": 4,
+      },
+    },
+    "/properties/age": Object {
+      "end": Object {
+        "line": 13,
+      },
+      "start": Object {
+        "line": 9,
+      },
+    },
+    "/properties/age/maximum": Object {
+      "end": Object {
+        "line": 12,
+      },
+      "start": Object {
+        "line": 12,
+      },
+    },
+    "/properties/age/minimum": Object {
+      "end": Object {
+        "line": 11,
+      },
+      "start": Object {
+        "line": 11,
+      },
+    },
+    "/properties/age/type": Object {
+      "end": Object {
+        "line": 10,
+      },
+      "start": Object {
+        "line": 10,
+      },
+    },
+    "/properties/completed_at": Object {
+      "end": Object {
+        "line": 17,
+      },
+      "start": Object {
+        "line": 14,
+      },
+    },
+    "/properties/completed_at/format": Object {
+      "end": Object {
+        "line": 16,
+      },
+      "start": Object {
+        "line": 16,
+      },
+    },
+    "/properties/completed_at/type": Object {
+      "end": Object {
+        "line": 15,
+      },
+      "start": Object {
+        "line": 15,
+      },
+    },
+    "/properties/email": Object {
+      "end": Object {
+        "line": 34,
+      },
+      "start": Object {
+        "line": 30,
+      },
+    },
+    "/properties/email/format": Object {
+      "end": Object {
+        "line": 32,
+      },
+      "start": Object {
+        "line": 32,
+      },
+    },
+    "/properties/email/minLength": Object {
+      "end": Object {
+        "line": 33,
+      },
+      "start": Object {
+        "line": 33,
+      },
+    },
+    "/properties/email/type": Object {
+      "end": Object {
+        "line": 31,
+      },
+      "start": Object {
+        "line": 31,
+      },
+    },
+    "/properties/items": Object {
+      "end": Object {
+        "line": 29,
+      },
+      "start": Object {
+        "line": 18,
+      },
+    },
+    "/properties/items/items": Object {
+      "end": Object {
+        "line": 28,
+      },
+      "start": Object {
+        "line": 23,
+      },
+    },
+    "/properties/items/items/type": Object {
+      "end": Object {
+        "line": 27,
+      },
+      "start": Object {
+        "line": 24,
+      },
+    },
+    "/properties/items/items/type/0": Object {
+      "end": Object {
+        "line": 25,
+      },
+      "start": Object {
+        "line": 25,
+      },
+    },
+    "/properties/items/items/type/1": Object {
+      "end": Object {
+        "line": 26,
+      },
+      "start": Object {
+        "line": 26,
+      },
+    },
+    "/properties/items/type": Object {
+      "end": Object {
+        "line": 22,
+      },
+      "start": Object {
+        "line": 19,
+      },
+    },
+    "/properties/items/type/0": Object {
+      "end": Object {
+        "line": 20,
+      },
+      "start": Object {
+        "line": 20,
+      },
+    },
+    "/properties/items/type/1": Object {
+      "end": Object {
+        "line": 21,
+      },
+      "start": Object {
+        "line": 21,
+      },
+    },
+    "/properties/name": Object {
+      "end": Object {
+        "line": 8,
+      },
+      "start": Object {
+        "line": 5,
+      },
+    },
+    "/properties/name/description": Object {
+      "end": Object {
+        "line": 7,
+      },
+      "start": Object {
+        "line": 7,
+      },
+    },
+    "/properties/name/type": Object {
+      "end": Object {
+        "line": 6,
+      },
+      "start": Object {
+        "line": 6,
+      },
+    },
+    "/properties/permissions": Object {
+      "end": Object {
+        "line": 73,
+      },
+      "start": Object {
+        "line": 60,
+      },
+    },
+    "/properties/permissions/properties": Object {
+      "end": Object {
+        "line": 72,
+      },
+      "start": Object {
+        "line": 65,
+      },
+    },
+    "/properties/permissions/properties/ids": Object {
+      "end": Object {
+        "line": 71,
+      },
+      "start": Object {
+        "line": 66,
+      },
+    },
+    "/properties/permissions/properties/ids/items": Object {
+      "end": Object {
+        "line": 70,
+      },
+      "start": Object {
+        "line": 68,
+      },
+    },
+    "/properties/permissions/properties/ids/items/type": Object {
+      "end": Object {
+        "line": 69,
+      },
+      "start": Object {
+        "line": 69,
+      },
+    },
+    "/properties/permissions/properties/ids/type": Object {
+      "end": Object {
+        "line": 67,
+      },
+      "start": Object {
+        "line": 67,
+      },
+    },
+    "/properties/permissions/type": Object {
+      "end": Object {
+        "line": 64,
+      },
+      "start": Object {
+        "line": 61,
+      },
+    },
+    "/properties/permissions/type/0": Object {
+      "end": Object {
+        "line": 62,
+      },
+      "start": Object {
+        "line": 62,
+      },
+    },
+    "/properties/permissions/type/1": Object {
+      "end": Object {
+        "line": 63,
+      },
+      "start": Object {
+        "line": 63,
+      },
+    },
+    "/properties/plan": Object {
+      "end": Object {
+        "line": 59,
+      },
+      "start": Object {
+        "line": 35,
+      },
+    },
+    "/properties/plan/anyOf": Object {
+      "end": Object {
+        "line": 58,
+      },
+      "start": Object {
+        "line": 36,
+      },
+    },
+    "/properties/plan/anyOf/0": Object {
+      "end": Object {
+        "line": 51,
+      },
+      "start": Object {
+        "line": 37,
+      },
+    },
+    "/properties/plan/anyOf/0/properties": Object {
+      "end": Object {
+        "line": 46,
+      },
+      "start": Object {
+        "line": 39,
+      },
+    },
+    "/properties/plan/anyOf/0/properties/bar": Object {
+      "end": Object {
+        "line": 45,
+      },
+      "start": Object {
+        "line": 43,
+      },
+    },
+    "/properties/plan/anyOf/0/properties/bar/type": Object {
+      "end": Object {
+        "line": 44,
+      },
+      "start": Object {
+        "line": 44,
+      },
+    },
+    "/properties/plan/anyOf/0/properties/foo": Object {
+      "end": Object {
+        "line": 42,
+      },
+      "start": Object {
+        "line": 40,
+      },
+    },
+    "/properties/plan/anyOf/0/properties/foo/type": Object {
+      "end": Object {
+        "line": 41,
+      },
+      "start": Object {
+        "line": 41,
+      },
+    },
+    "/properties/plan/anyOf/0/required": Object {
+      "end": Object {
+        "line": 50,
+      },
+      "start": Object {
+        "line": 47,
+      },
+    },
+    "/properties/plan/anyOf/0/required/0": Object {
+      "end": Object {
+        "line": 48,
+      },
+      "start": Object {
+        "line": 48,
+      },
+    },
+    "/properties/plan/anyOf/0/required/1": Object {
+      "end": Object {
+        "line": 49,
+      },
+      "start": Object {
+        "line": 49,
+      },
+    },
+    "/properties/plan/anyOf/0/type": Object {
+      "end": Object {
+        "line": 38,
+      },
+      "start": Object {
+        "line": 38,
+      },
+    },
+    "/properties/plan/anyOf/1": Object {
+      "end": Object {
+        "line": 57,
+      },
+      "start": Object {
+        "line": 52,
+      },
+    },
+    "/properties/plan/anyOf/1/items": Object {
+      "end": Object {
+        "line": 56,
+      },
+      "start": Object {
+        "line": 54,
+      },
+    },
+    "/properties/plan/anyOf/1/items/type": Object {
+      "end": Object {
+        "line": 55,
+      },
+      "start": Object {
+        "line": 55,
+      },
+    },
+    "/properties/plan/anyOf/1/type": Object {
+      "end": Object {
+        "line": 53,
+      },
+      "start": Object {
+        "line": 53,
+      },
+    },
+    "/properties/ref": Object {
+      "end": Object {
+        "line": 76,
+      },
+      "start": Object {
+        "line": 74,
+      },
+    },
+    "/properties/ref/$ref": Object {
+      "end": Object {
+        "line": 75,
+      },
+      "start": Object {
+        "line": 75,
+      },
+    },
+    "/required": Object {
+      "end": Object {
+        "line": 82,
+      },
+      "start": Object {
+        "line": 78,
+      },
+    },
+    "/required/0": Object {
+      "end": Object {
+        "line": 79,
+      },
+      "start": Object {
+        "line": 79,
+      },
+    },
+    "/required/1": Object {
+      "end": Object {
+        "line": 80,
+      },
+      "start": Object {
+        "line": 80,
+      },
+    },
+    "/required/2": Object {
+      "end": Object {
+        "line": 81,
+      },
+      "start": Object {
+        "line": 81,
+      },
+    },
+    "/title": Object {
+      "end": Object {
+        "line": 2,
+      },
+      "start": Object {
+        "line": 2,
+      },
+    },
+    "/type": Object {
+      "end": Object {
+        "line": 3,
+      },
+      "start": Object {
+        "line": 3,
+      },
+    },
+  },
+  "validations": Array [],
+}
+`;
+
 exports[`json parser invalid fixtures parses characters.json 1`] = `
 Object {
   "data": Object {
@@ -9,7 +2449,7 @@ Object {
   "pointers": Object {
     "": Object {
       "end": Object {
-        "line": 7,
+        "line": 6,
       },
       "start": Object {
         "line": 1,
@@ -125,7 +2565,7 @@ Object {
   "pointers": Object {
     "": Object {
       "end": Object {
-        "line": 14,
+        "line": 13,
       },
       "start": Object {
         "line": 1,
@@ -218,6 +2658,145 @@ Object {
       "severityLabel": "error",
     },
   ],
+}
+`;
+
+exports[`json parser parse complex 1`] = `
+Object {
+  "data": Object {
+    "users": Array [
+      Object {
+        "address": Object {
+          "city": "Helsinki",
+          "country": "Finland",
+        },
+        "adult": false,
+        "age": 17,
+        "name": "Markku",
+      },
+      Object {
+        "adult": true,
+        "age": 18,
+        "country": "Denmark",
+        "name": "Dennis",
+      },
+    ],
+  },
+  "pointers": Object {
+    "": Object {
+      "end": Object {
+        "line": 19,
+      },
+      "start": Object {
+        "line": 1,
+      },
+    },
+    "/users": Object {
+      "end": Object {
+        "line": 18,
+      },
+      "start": Object {
+        "line": 2,
+      },
+    },
+    "/users/0": Object {
+      "end": Object {
+        "line": 11,
+      },
+      "start": Object {
+        "line": 3,
+      },
+    },
+    "/users/0/address": Object {
+      "end": Object {
+        "line": 8,
+      },
+      "start": Object {
+        "line": 5,
+      },
+    },
+    "/users/0/address/city": Object {
+      "end": Object {
+        "line": 7,
+      },
+      "start": Object {
+        "line": 7,
+      },
+    },
+    "/users/0/address/country": Object {
+      "end": Object {
+        "line": 6,
+      },
+      "start": Object {
+        "line": 6,
+      },
+    },
+    "/users/0/adult": Object {
+      "end": Object {
+        "line": 10,
+      },
+      "start": Object {
+        "line": 10,
+      },
+    },
+    "/users/0/age": Object {
+      "end": Object {
+        "line": 9,
+      },
+      "start": Object {
+        "line": 9,
+      },
+    },
+    "/users/0/name": Object {
+      "end": Object {
+        "line": 4,
+      },
+      "start": Object {
+        "line": 4,
+      },
+    },
+    "/users/1": Object {
+      "end": Object {
+        "line": 17,
+      },
+      "start": Object {
+        "line": 12,
+      },
+    },
+    "/users/1/adult": Object {
+      "end": Object {
+        "line": 16,
+      },
+      "start": Object {
+        "line": 16,
+      },
+    },
+    "/users/1/age": Object {
+      "end": Object {
+        "line": 15,
+      },
+      "start": Object {
+        "line": 15,
+      },
+    },
+    "/users/1/country": Object {
+      "end": Object {
+        "line": 14,
+      },
+      "start": Object {
+        "line": 14,
+      },
+    },
+    "/users/1/name": Object {
+      "end": Object {
+        "line": 13,
+      },
+      "start": Object {
+        "line": 13,
+      },
+    },
+  },
+  "validations": Array [],
 }
 `;
 
