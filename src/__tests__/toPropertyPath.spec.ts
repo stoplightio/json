@@ -9,5 +9,5 @@ test('toPropertyPath', () => {
   expect(toPropertyPath('#/definitions/Error')).toEqual('definitions.Error');
   expect(toPropertyPath('/a/..dotted/path')).toEqual('a.["..dotted"].path');
   expect(toPropertyPath('/a/..dotted/path')).toEqual('a.["..dotted"].path');
-  expect(toPropertyPath('/a/..dotted.and."quoted"/path')).toEqual('a.["..dotted.and.\\\"quoted\\\""].path');
+  expect(toPropertyPath('/a/..dotted.and."quoted"/path')).toEqual('a.["..dotted.and.\\"quoted\\""].path');
 });

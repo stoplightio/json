@@ -5,8 +5,6 @@ export function toPropertyPath(path: string) {
     .replace(/^(\/|#\/)/, '')
     .split('/')
     .map(decodePointerFragment)
-    .map(fragment => (fragment.indexOf('.') > -1
-      ? `["${fragment.replace(/"/g, '\\"')}"]`
-      : fragment))
+    .map(fragment => (fragment.indexOf('.') > -1 ? `["${fragment.replace(/"/g, '\\"')}"]` : fragment))
     .join('.');
 }
