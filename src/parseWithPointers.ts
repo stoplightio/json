@@ -212,6 +212,7 @@ function visit(text: string, visitor: IJSONVisitor, options?: ParseOptions): any
 
   const disallowComments = options && options.disallowComments;
   const allowTrailingComma = options && options.allowTrailingComma;
+
   function scanNext(): SyntaxKind {
     while (true) {
       const token = _scanner.scan();
@@ -262,6 +263,7 @@ function visit(text: string, visitor: IJSONVisitor, options?: ParseOptions): any
 
   function handleError(error: ParseErrorCode, skipUntilAfter: SyntaxKind[] = [], skipUntil: SyntaxKind[] = []): void {
     onError(error);
+
     if (skipUntilAfter.length + skipUntil.length > 0) {
       let token = _scanner.getToken();
       while (token !== SyntaxKind.EOF) {
