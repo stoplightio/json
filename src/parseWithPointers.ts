@@ -42,7 +42,7 @@ interface IJSONVisitor extends JSONVisitor {
   onNewLine?: (lineNumber: ParseErrorCode, offset: number, length: number) => void;
 }
 
-function toPointer(...fragments: Segment[]) {
+function toPointer(fragments: Segment[]) {
   return ['', ...fragments.filter(item => item !== '')].join('/');
 }
 
@@ -73,7 +73,7 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
       const index = (currentParent as any[]).push(value) - 1;
 
       if (previousParents.length > 0) {
-        pointers[toPointer(...previousPointers.slice(0, previousPointers.length - 1), index)] = {
+        pointers[toPointer([...previousPointers.slice(0, previousPointers.length - 1), index])] = {
           start: {
             line: currentLineNumber,
           },
@@ -85,7 +85,7 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
     } else if (currentProperty) {
       currentParent[currentProperty] = value;
 
-      pointers[toPointer(...previousPointers)] = {
+      pointers[toPointer(previousPointers)] = {
         start: {
           line: currentLineNumber,
         },
@@ -102,7 +102,7 @@ function parse(text: string, errors: IValidationResult[] = [], options?: ParseOp
       previousPointersCopy.pop();
     }
 
-    const pointer = pointers[toPointer(...previousPointersCopy)];
+    const pointer = pointers[toPointer(previousPointersCopy)];
     if (pointer && pointer.end.line === 0) {
       pointer.end.line = currentLineNumber;
     }
