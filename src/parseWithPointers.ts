@@ -25,7 +25,9 @@ export const parseWithPointers: SourceMapParser = <T>(value: string): IParserRes
   const validations: IValidationResult[] = [];
 
   return {
-    ...parse(value, validations),
+    ...parse(value, validations, {
+      disallowComments: true,
+    }),
     validations,
   };
 };
