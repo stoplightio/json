@@ -1,3 +1,17 @@
+/*
+Right now the parseWithPointers function doesn't make use of parse function exposed by jsonc-parser.
+The reason we had to fall back to tokenizer is quite simple - lines and columns.
+jsonc-parser doesn't expose any onNewLine hook, so the only piece of information we are given is offset and length,
+which are not sufficient to build the list of pointers.
+That's why we had to bring the parse function in and modify it to let us have the pointers with correct location.
+
+We should get rid of the current implementation of it. There are 2 ways to accomplish this:
+- either use offsets + lengths provided by jsonc-parser (would require changes to yaml/markdown parsers, related story SL-1958)
+or
+- create a PR with onNewLine hook
+
+Related task to address the issue: SL-2039
+ */
 import { IParserResult, SourceMapParser } from '@stoplight/types/parsers';
 import { IValidationResult, ValidationSeverity, ValidationSeverityLabel } from '@stoplight/types/validations';
 import {
