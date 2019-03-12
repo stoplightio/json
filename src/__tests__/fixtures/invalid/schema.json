@@ -1,0 +1,13 @@
+{
+  "hello": "world",
+  "address": {
+    "street":
+  }
+  "paths": {
+    "/users/{id}": {
+      "get": {
+        "operationId": "get-user"
+      }
+    }
+  }
+}
