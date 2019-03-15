@@ -1,0 +1,28 @@
+{
+  "name": "jsonc-parser",
+  "version": "2.0.3-3d4349a7",
+  "description": "Scanner and parser for JSON with comments.",
+  "main": "./lib/umd/main.js",
+  "typings": "./lib/umd/main",
+  "module": "./lib/esm/main.js",
+  "author": "Microsoft Corporation",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/node-jsonc-parser"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/node-jsonc-parser/issues"
+  },
+  "scripts": {
+    "prepublishOnly": "npm run clean && npm run compile-esm && npm run test",
+    "postpublish": "exit 0;node ./build/post-publish.js",
+    "compile": "tsc -p ./src",
+    "compile-esm": "tsc -p ./src/tsconfig.esm.json",
+    "clean": "rimraf lib",
+    "watch": "tsc -w -p ./src",
+    "test": "npm run compile && mocha",
+    "preversion": "npm test",
+    "postversion": "git push && git push --tags"
+  }
+}

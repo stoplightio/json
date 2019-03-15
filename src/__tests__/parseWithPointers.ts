@@ -2,23 +2,11 @@ import * as fs from 'fs';
 import { join } from 'path';
 import { parseWithPointers } from '../parseWithPointers';
 
+const simple = fs.readFileSync(join(__dirname, './fixtures/simple.json'), 'utf-8');
+
 describe('json parser', () => {
   test('parse simple', () => {
-    expect(
-      parseWithPointers(`{
-  "hello": "world",
-  "address": {
-    "street": 123
-  },
-  "paths": {
-    "/users/{id}": {
-      "get": {
-        "operationId": "get-user"
-      }
-    }
-  }
-}`)
-    ).toMatchSnapshot();
+    expect(parseWithPointers(simple)).toMatchSnapshot();
   });
 
   test('parse complex', () => {
@@ -125,6 +113,55 @@ describe('json parser', () => {
           'utf-8'
         )) as string)
       ).toMatchSnapshot();
+    });
+  });
+
+  describe('getJsonPathForPosition', () => {
+    test('simple', () => {
+      const { getJsonPathForPosition } = parseWithPointers(simple);
+      expect(
+        getJsonPathForPosition({
+          line: 3,
+          character: 5,
+        })
+      ).toEqual(['address', 'street']);
+      expect(
+        getJsonPathForPosition({
+          line: 1,
+          character: 4,
+        })
+      ).toEqual(['hello']);
+      expect(
+        getJsonPathForPosition({
+          line: 8,
+          character: 20,
+        })
+      ).toEqual(['paths', '/users/{id}', 'get', 'operationId']);
+    });
+
+    test('arrays', () => {
+      const { getJsonPathForPosition } = parseWithPointers(`{
+        "users": [
+           {
+             "name": "Joe",
+             "address": {
+               "city": "New York"
+             } 
+           },
+           {
+             "name": "Chris",
+             "address": {
+               "city": "Dallas"
+             } 
+           }
+          ]
+        } `);
+      expect(
+        getJsonPathForPosition({
+          line: 5,
+          character: 17,
+        })
+      ).toEqual(['users', 0, 'address', 'city']);
     });
   });
 });

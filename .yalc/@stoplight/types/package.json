@@ -1,0 +1,21 @@
+{
+  "name": "@stoplight/types",
+  "version": "0.0.0-50cf1838",
+  "description": "Common typings for the Stoplight ecosystem.",
+  "keywords": [],
+  "sideEffects": false,
+  "files": [
+    "**/*"
+  ],
+  "author": "Stoplight <support@stoplight.io>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stoplightio/types.git"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=8"
+  },
+  "main": "index.js",
+  "typings": "index.d.ts"
+}

@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "packages": {
+    "jsonc-parser": {
+      "signature": "3d4349a75b4402eb53a796840b4ce6a8",
+      "file": true,
+      "replaced": "2.0.3"
+    },
+    "@stoplight/types": {
+      "signature": "50cf1838d33abfeb5aa4fe53d8302654",
+      "file": true,
+      "replaced": "3.x.x"
+    }
+  }
+}
