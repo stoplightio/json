@@ -1,27 +1,25 @@
 import { ILocation, IParserResult, IPosition, SourceMapParser } from '@stoplight/types/parsers';
-import { IDiagnostic } from '@stoplight/types/validations';
+import { DiagnosticSeverity, IDiagnostic } from '@stoplight/types/validations';
 import {
   findNodeAtLocation,
   findNodeAtOffset,
   getNodePath,
-  getNodeValue,
   JSONPath,
   JSONVisitor,
   Node,
   NodeType,
-  ParseError,
   ParseErrorCode,
   ParseOptions,
+  printParseErrorCode,
   visit,
 } from 'jsonc-parser';
 
 export const parseWithPointers: SourceMapParser = <T>(value: string): IParserResult<T> => {
   const diagnostics: IDiagnostic[] = [];
-  const errors: ParseError[] = [];
-  const { tree, linesMap } = parseTree(value, errors, { disallowComments: true });
+  const { tree, data, linesMap } = parseTree(value, diagnostics, { disallowComments: true });
 
   return {
-    data: getNodeValue(tree),
+    data,
     diagnostics,
 
     getJsonPathForPosition(position: IPosition): JSONPath | undefined {
@@ -69,14 +67,20 @@ export const parseWithPointers: SourceMapParser = <T>(value: string): IParserRes
   };
 };
 
-/**
- * Parses the given text and returns a tree representation the JSON content. On invalid input, the parser tries to be as fault tolerant as possible, but still return a result.
- */
-export function parseTree(text: string, errors: ParseError[] = [], options: ParseOptions) {
+// based on source code of "https://github.com/Microsoft/node-jsonc-parser
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+export function parseTree(text: string, errors: IDiagnostic[] = [], options: ParseOptions) {
   const linesMap = new Map<number, number>([[0, 0]]);
   let currentLineNumber = 0;
   let currentOffset = 0;
+  let lastErrorEndOffset = -1;
   let currentParent: INodeImpl = { type: 'array', offset: -1, length: -1, children: [], parent: void 0 }; // artificial root
+  let currentParsedProperty: string | null = null;
+  let currentParsedParent: any = [];
+  const previousParsedParents: any[] = [];
 
   function ensurePropertyComplete(endOffset: number) {
     if (currentParent.type === 'property') {
@@ -100,6 +104,25 @@ export function parseTree(text: string, errors: ParseError[] = [], options: Pars
     return valueNode;
   }
 
+  function onParsedValue(value: any) {
+    if (Array.isArray(currentParsedParent)) {
+      (currentParsedParent as any[]).push(value);
+    } else if (currentParsedProperty) {
+      currentParsedParent[currentParsedProperty] = value;
+    }
+  }
+
+  function onParsedComplexBegin(value: any) {
+    onParsedValue(value);
+    previousParsedParents.push(currentParsedParent);
+    currentParsedParent = value;
+    currentParsedProperty = null;
+  }
+
+  function onParsedComplexEnd() {
+    currentParsedParent = previousParsedParents.pop();
+  }
+
   const visitor: JSONVisitor = {
     onObjectBegin: (offset: number) => {
       currentParent = onValue({
@@ -110,10 +133,14 @@ export function parseTree(text: string, errors: ParseError[] = [], options: Pars
         children: [],
         ...calculateRange(offset - 1, -1),
       });
+
+      onParsedComplexBegin({});
     },
     onObjectProperty: (name: string, offset: number, length: number) => {
       currentParent = onValue({ type: 'property', offset, length: -1, parent: currentParent, children: [] });
       currentParent.children!.push({ type: 'string', value: name, offset, length, parent: currentParent });
+
+      currentParsedProperty = name;
     },
     onObjectEnd: (offset: number, length: number) => {
       currentParent.length = offset + length - currentParent.offset;
@@ -121,6 +148,8 @@ export function parseTree(text: string, errors: ParseError[] = [], options: Pars
       currentParent.endLine = currentLineNumber;
       currentParent = currentParent.parent!;
       ensurePropertyComplete(offset + length);
+
+      onParsedComplexEnd();
     },
     onArrayBegin: (offset: number, length: number) => {
       currentParent = onValue({
@@ -131,6 +160,8 @@ export function parseTree(text: string, errors: ParseError[] = [], options: Pars
         children: [],
         ...calculateRange(offset - 1, -1),
       });
+
+      onParsedComplexBegin([]);
     },
     onArrayEnd: (offset: number, length: number) => {
       currentParent.length = offset + length - currentParent.offset;
@@ -138,6 +169,8 @@ export function parseTree(text: string, errors: ParseError[] = [], options: Pars
       currentParent.endLine = currentLineNumber;
       currentParent = currentParent.parent!;
       ensurePropertyComplete(offset + length);
+
+      onParsedComplexEnd();
     },
     onLiteralValue: (value: any, offset: number, length: number) => {
       onValue({
@@ -149,6 +182,8 @@ export function parseTree(text: string, errors: ParseError[] = [], options: Pars
         ...calculateRange(offset, length),
       });
       ensurePropertyComplete(offset + length);
+
+      onParsedValue(value);
     },
     onSeparator: (sep: string, offset: number, length: number) => {
       if (currentParent.type === 'property') {
@@ -160,12 +195,35 @@ export function parseTree(text: string, errors: ParseError[] = [], options: Pars
       }
     },
     onError: (error: ParseErrorCode, offset: number, length: number) => {
-      errors.push({ error, offset, length });
+      const range = calculateRange(offset, length);
+      lastErrorEndOffset = offset + length;
+      errors.push({
+        range: {
+          start: {
+            character: range.startColumn,
+            line: range.startLine,
+          },
+          end: {
+            character: range.endColumn,
+            line: range.startLine,
+          },
+        },
+        message: printParseErrorCode(error),
+        severity: DiagnosticSeverity.Error,
+        code: error,
+      });
     },
     onLineBreak: (lineNumber: number, offset: number) => {
       linesMap.set(lineNumber, offset);
       currentLineNumber = lineNumber;
       currentOffset = offset;
+      if (lastErrorEndOffset !== -1 && offset > lastErrorEndOffset) {
+        // @ts-ignore read-only
+        errors[errors.length - 1].range.end.line = lineNumber - 1;
+        // @ts-ignore read-only
+        errors[errors.length - 1].range.end.character = offset - lastErrorEndOffset;
+        lastErrorEndOffset = -1;
+      }
     },
   };
   visit(text, visitor, options);
@@ -176,6 +234,7 @@ export function parseTree(text: string, errors: ParseError[] = [], options: Pars
   }
   return {
     tree: result,
+    data: currentParsedParent[0],
     linesMap,
   };
 }

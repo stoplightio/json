@@ -390,106 +390,70 @@ Object {
     "valid-escape": "\\\\n",
     "valid-unicode": "ż",
   },
-  "pointers": Object {
-    "": Object {
-      "end": Object {
-        "line": 6,
-      },
-      "start": Object {
-        "line": 1,
-      },
-    },
-    "/valid-escape": Object {
-      "end": Object {
-        "line": 3,
-      },
-      "start": Object {
-        "line": 3,
-      },
-    },
-    "/valid-unicode": Object {
-      "end": Object {
-        "line": 2,
-      },
-      "start": Object {
-        "line": 2,
-      },
-    },
-  },
-  "validations": Array [
+  "diagnostics": Array [
     Object {
-      "errorCode": 1,
-      "length": 6,
-      "location": Object {
+      "code": 1,
+      "message": "InvalidSymbol",
+      "range": Object {
         "end": Object {
-          "column": 20,
-          "line": 4,
+          "character": 20,
+          "line": 3,
         },
         "start": Object {
-          "column": 14,
-          "line": 4,
+          "character": 14,
+          "line": 3,
         },
       },
-      "name": "InvalidSymbol",
-      "offset": 69,
-      "severity": 50,
-      "severityLabel": "error",
+      "severity": 0,
     },
     Object {
-      "errorCode": 12,
-      "length": 2,
-      "location": Object {
+      "code": 12,
+      "message": "UnexpectedEndOfString",
+      "range": Object {
         "end": Object {
-          "column": 22,
-          "line": 4,
+          "character": 22,
+          "line": 3,
         },
         "start": Object {
-          "column": 20,
-          "line": 4,
+          "character": 20,
+          "line": 3,
         },
       },
-      "name": "UnexpectedEndOfString",
-      "offset": 75,
-      "severity": 50,
-      "severityLabel": "error",
+      "severity": 0,
     },
     Object {
-      "errorCode": 5,
-      "length": 2,
-      "location": Object {
+      "code": 5,
+      "message": "ColonExpected",
+      "range": Object {
         "end": Object {
-          "column": 22,
-          "line": 4,
+          "character": 22,
+          "line": 3,
         },
         "start": Object {
-          "column": 20,
-          "line": 4,
+          "character": 20,
+          "line": 3,
         },
       },
-      "name": "ColonExpected",
-      "offset": 75,
-      "severity": 50,
-      "severityLabel": "error",
+      "severity": 0,
     },
     Object {
-      "errorCode": 15,
-      "length": 4,
-      "location": Object {
+      "code": 15,
+      "message": "InvalidEscapeCharacter",
+      "range": Object {
         "end": Object {
-          "column": 25,
+          "character": 2,
           "line": 5,
         },
         "start": Object {
-          "column": 21,
-          "line": 5,
+          "character": 21,
+          "line": 4,
         },
       },
-      "name": "InvalidEscapeCharacter",
-      "offset": 98,
-      "severity": 50,
-      "severityLabel": "error",
+      "severity": 0,
     },
   ],
+  "getJsonPathForPosition": [Function],
+  "getLocationForJsonPath": [Function],
 }
 `;
 
@@ -506,102 +470,40 @@ Object {
       },
     },
   },
-  "pointers": Object {
-    "": Object {
-      "end": Object {
-        "line": 13,
-      },
-      "start": Object {
-        "line": 1,
-      },
-    },
-    "/address": Object {
-      "end": Object {
-        "line": 5,
-      },
-      "start": Object {
-        "line": 3,
-      },
-    },
-    "/hello": Object {
-      "end": Object {
-        "line": 2,
-      },
-      "start": Object {
-        "line": 2,
-      },
-    },
-    "/paths": Object {
-      "end": Object {
-        "line": 12,
-      },
-      "start": Object {
-        "line": 6,
-      },
-    },
-    "/paths/~1users~1{id}": Object {
-      "end": Object {
-        "line": 11,
-      },
-      "start": Object {
-        "line": 7,
-      },
-    },
-    "/paths/~1users~1{id}/get": Object {
-      "end": Object {
-        "line": 10,
-      },
-      "start": Object {
-        "line": 8,
-      },
-    },
-    "/paths/~1users~1{id}/get/operationId": Object {
-      "end": Object {
-        "line": 9,
-      },
-      "start": Object {
-        "line": 9,
-      },
-    },
-  },
-  "validations": Array [
+  "diagnostics": Array [
     Object {
-      "errorCode": 4,
-      "length": 1,
-      "location": Object {
+      "code": 4,
+      "message": "ValueExpected",
+      "range": Object {
         "end": Object {
-          "column": 4,
+          "character": 4,
+          "line": 4,
+        },
+        "start": Object {
+          "character": 3,
+          "line": 4,
+        },
+      },
+      "severity": 0,
+    },
+    Object {
+      "code": 6,
+      "message": "CommaExpected",
+      "range": Object {
+        "end": Object {
+          "character": 3,
           "line": 5,
         },
         "start": Object {
-          "column": 3,
+          "character": 3,
           "line": 5,
         },
       },
-      "name": "ValueExpected",
-      "offset": 53,
-      "severity": 50,
-      "severityLabel": "error",
-    },
-    Object {
-      "errorCode": 6,
-      "length": 7,
-      "location": Object {
-        "end": Object {
-          "column": 10,
-          "line": 6,
-        },
-        "start": Object {
-          "column": 3,
-          "line": 6,
-        },
-      },
-      "name": "CommaExpected",
-      "offset": 57,
-      "severity": 50,
-      "severityLabel": "error",
+      "severity": 0,
     },
   ],
+  "getJsonPathForPosition": [Function],
+  "getLocationForJsonPath": [Function],
 }
 `;
 

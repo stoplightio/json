@@ -46,20 +46,20 @@ describe('json parser', () => {
        */
       "city": "Vantaa"
     }`)
-    ).toHaveProperty('validations', [
+    ).toHaveProperty('diagnostics', [
       expect.objectContaining({
-        name: 'InvalidCommentToken',
-        location: expect.objectContaining({
+        message: 'InvalidCommentToken',
+        range: expect.objectContaining({
           start: expect.objectContaining({
-            line: 2,
+            line: 1,
           }),
         }),
       }),
       expect.objectContaining({
-        name: 'InvalidCommentToken',
-        location: expect.objectContaining({
+        message: 'InvalidCommentToken',
+        range: expect.objectContaining({
           start: expect.objectContaining({
-            line: 4,
+            line: 3,
           }),
         }),
       }),
@@ -72,26 +72,26 @@ describe('json parser', () => {
       "name": "Antti",
        "city": "Vantaa",
     }`)
-    ).toHaveProperty('validations', [
+    ).toHaveProperty('diagnostics', [
       expect.objectContaining({
-        name: 'PropertyNameExpected',
-        location: {
+        message: 'PropertyNameExpected',
+        range: {
           start: expect.objectContaining({
-            line: 4,
+            line: 3,
           }),
           end: expect.objectContaining({
-            line: 4,
+            line: 3,
           }),
         },
       }),
       expect.objectContaining({
-        name: 'ValueExpected',
-        location: {
+        message: 'ValueExpected',
+        range: {
           start: expect.objectContaining({
-            line: 4,
+            line: 3,
           }),
           end: expect.objectContaining({
-            line: 4,
+            line: 3,
           }),
         },
       }),
