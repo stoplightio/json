@@ -1,4 +1,4 @@
-import { IRange, ILocation } from './parsers';
+import { ILocation, IRange } from './parsers';
 export declare enum DiagnosticSeverity {
     Error = 0,
     Warning = 1,
