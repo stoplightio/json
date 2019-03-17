@@ -3,6 +3,7 @@ import { join } from 'path';
 import { parseWithPointers } from '../parseWithPointers';
 
 const simple = fs.readFileSync(join(__dirname, './fixtures/simple.json'), 'utf-8');
+const users = fs.readFileSync(join(__dirname, './fixtures/users.json'), 'utf-8');
 
 describe('json parser', () => {
   test('parse simple', () => {
@@ -140,28 +141,133 @@ describe('json parser', () => {
     });
 
     test('arrays', () => {
-      const { getJsonPathForPosition } = parseWithPointers(`{
-        "users": [
-           {
-             "name": "Joe",
-             "address": {
-               "city": "New York"
-             } 
-           },
-           {
-             "name": "Chris",
-             "address": {
-               "city": "Dallas"
-             } 
-           }
-          ]
-        } `);
+      const { getJsonPathForPosition } = parseWithPointers(users);
       expect(
         getJsonPathForPosition({
           line: 5,
           character: 17,
         })
       ).toEqual(['users', 0, 'address', 'city']);
+    });
+
+    test('one-liner', () => {
+      const { getJsonPathForPosition } = parseWithPointers(`{ "foo": true, "bar": false }`);
+      expect(
+        getJsonPathForPosition({
+          line: 0,
+          character: 3,
+        })
+      ).toEqual(['foo']);
+    });
+  });
+
+  describe('getLocationForJsonPath', () => {
+    test('simple', () => {
+      const { getLocationForJsonPath } = parseWithPointers(simple);
+      expect(getLocationForJsonPath(['address', 'street'])).toMatchObject({
+        range: {
+          start: {
+            character: 15,
+            line: 3,
+          },
+          end: {
+            character: 18,
+            line: 3,
+          },
+        },
+      });
+      expect(getLocationForJsonPath(['address'])).toMatchObject({
+        range: {
+          start: {
+            character: 13,
+            line: 2,
+          },
+          end: {
+            character: 3,
+            line: 4,
+          },
+        },
+      });
+      expect(getLocationForJsonPath(['paths', '/users/{id}', 'get', 'operationId'])).toMatchObject({
+        range: {
+          start: {
+            character: 24,
+            line: 8,
+          },
+          end: {
+            character: 34,
+            line: 8,
+          },
+        },
+      });
+      expect(getLocationForJsonPath(['paths', '/users/{id}', 'get', 'operationId'])).toMatchObject({
+        range: {
+          start: {
+            character: 24,
+            line: 8,
+          },
+          end: {
+            character: 34,
+            line: 8,
+          },
+        },
+      });
+      expect(getLocationForJsonPath(['paths', '/users/{id}'])).toMatchObject({
+        range: {
+          start: {
+            character: 19,
+            line: 6,
+          },
+          end: {
+            character: 5,
+            line: 10,
+          },
+        },
+      });
+    });
+
+    test('arrays', () => {
+      const { getLocationForJsonPath } = parseWithPointers(users);
+      expect(getLocationForJsonPath(['users', 0, 'name'])).toMatchObject({
+        range: {
+          start: {
+            character: 15,
+            line: 3,
+          },
+          end: {
+            character: 20,
+            line: 3,
+          },
+        },
+      });
+      expect(getLocationForJsonPath(['users', 1, 'address'])).toMatchObject({
+        range: {
+          start: {
+            character: 17,
+            line: 10,
+          },
+          end: {
+            character: 7,
+            line: 12,
+          },
+        },
+      });
+    });
+
+    test('one-liner', () => {
+      const { getLocationForJsonPath } = parseWithPointers(`{ "foo": true, "bar": false }`);
+      expect(getLocationForJsonPath(['bar'])).toMatchObject({
+        range: {
+          start: {
+            character: 22,
+            line: 0,
+          },
+          end: {
+            character: 27,
+            line: 0,
+          },
+        },
+      });
     });
   });
 });

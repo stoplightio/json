@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "name": "Joe",
+      "address": {
+        "city": "New York"
+      }
+    },
+    {
+      "name": "Chris",
+      "address": {
+        "city": "Dallas"
+      }
+    }
+  ]
+}
