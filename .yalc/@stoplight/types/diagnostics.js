@@ -7,4 +7,4 @@ var DiagnosticSeverity;
     DiagnosticSeverity[DiagnosticSeverity["Information"] = 2] = "Information";
     DiagnosticSeverity[DiagnosticSeverity["Hint"] = 3] = "Hint";
 })(DiagnosticSeverity = exports.DiagnosticSeverity || (exports.DiagnosticSeverity = {}));
-//# sourceMappingURL=validations.js.map
+//# sourceMappingURL=diagnostics.js.map

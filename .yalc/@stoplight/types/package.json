@@ -1,6 +1,6 @@
 {
   "name": "@stoplight/types",
-  "version": "0.0.0-7116f1ac",
+  "version": "0.0.0-3cf4d144",
   "description": "Common typings for the Stoplight ecosystem.",
   "keywords": [],
   "sideEffects": false,

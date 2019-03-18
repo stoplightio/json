@@ -1,5 +1,5 @@
+import { DiagnosticSeverity, IDiagnostic } from '@stoplight/types/diagnostics';
 import { ILocation, IParserResult, IPosition, SourceMapParser } from '@stoplight/types/parsers';
-import { DiagnosticSeverity, IDiagnostic } from '@stoplight/types/validations';
 import {
   findNodeAtLocation,
   findNodeAtOffset,

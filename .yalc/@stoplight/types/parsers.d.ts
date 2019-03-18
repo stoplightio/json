@@ -1,4 +1,4 @@
-import { IDiagnostic } from './validations';
+import { IDiagnostic } from './diagnostics';
 export declare type SourceMapParser<T = any> = (value: string) => IParserResult<T>;
 export declare type DocumentUri = string;
 export declare type Segment = string | number;
@@ -18,7 +18,7 @@ export interface IRange {
     readonly end: IPosition;
 }
 export interface ILocation {
-    uri: DocumentUri;
+    uri?: DocumentUri;
     range: IRange;
 }
 export interface IJsonLocation extends ILocation {
