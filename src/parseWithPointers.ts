@@ -51,7 +51,6 @@ export const parseWithPointers: SourceMapParser = <T>(value: string): IParserRes
       }
 
       return {
-        uri: '',
         range: {
           start: {
             character: node.startColumn!,

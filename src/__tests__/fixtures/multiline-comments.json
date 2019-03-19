@@ -1,0 +1,19 @@
+{
+  "hello": "world",
+  /* some
+  multiline
+  comment
+  */
+  "address": {
+    "street": 123
+  },
+  "paths": {
+    /* yet
+    another one */
+    "/users/{id}": {
+      "get": {
+        "operationId": "get-user"
+      }
+    }
+  }
+}

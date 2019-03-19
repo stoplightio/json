@@ -4,6 +4,7 @@ import { parseWithPointers } from '../parseWithPointers';
 
 const simple = fs.readFileSync(join(__dirname, './fixtures/simple.json'), 'utf-8');
 const users = fs.readFileSync(join(__dirname, './fixtures/users.json'), 'utf-8');
+const multilineComments = fs.readFileSync(join(__dirname, './fixtures/multiline-comments.json'), 'utf-8');
 
 describe('json parser', () => {
   test('parse simple', () => {
@@ -99,7 +100,7 @@ describe('json parser', () => {
   });
 
   describe('fixtures', () => {
-    it.each(['main.oas2.json', 'user.jschema.json'])('parses %s', async filename => {
+    test.each(['main.oas2.json', 'user.jschema.json'])('parses %s', async filename => {
       expect(
         parseWithPointers((await fs.promises.readFile(join(__dirname, 'fixtures', filename), 'utf-8')) as string)
       ).toMatchSnapshot();
@@ -107,7 +108,7 @@ describe('json parser', () => {
   });
 
   describe('invalid fixtures', () => {
-    it.each(['schema.json', 'characters.json'])('parses %s', async filename => {
+    test.each(['schema.json', 'characters.json'])('parses %s', async filename => {
       expect(
         parseWithPointers((await fs.promises.readFile(
           join(__dirname, 'fixtures/invalid', filename),
@@ -118,155 +119,157 @@ describe('json parser', () => {
   });
 
   describe('getJsonPathForPosition', () => {
-    test('simple', () => {
+    describe('simple fixture', () => {
       const { getJsonPathForPosition } = parseWithPointers(simple);
-      expect(
-        getJsonPathForPosition({
-          line: 3,
-          character: 5,
-        })
-      ).toEqual(['address', 'street']);
-      expect(
-        getJsonPathForPosition({
-          line: 1,
-          character: 4,
-        })
-      ).toEqual(['hello']);
-      expect(
-        getJsonPathForPosition({
-          line: 8,
-          character: 20,
-        })
-      ).toEqual(['paths', '/users/{id}', 'get', 'operationId']);
+
+      test.each`
+        line | character | path
+        ${0} | ${0}      | ${[]}
+        ${1} | ${4}      | ${['hello']}
+        ${1} | ${17}     | ${['hello']}
+        ${3} | ${5}      | ${['address', 'street']}
+        ${8} | ${20}     | ${['paths', '/users/{id}', 'get', 'operationId']}
+      `('should return proper json path for line $line and character $character', ({ line, character, path }) => {
+        expect(getJsonPathForPosition({ line, character })).toEqual(path);
+      });
     });
 
-    test('arrays', () => {
+    describe('users fixture', () => {
       const { getJsonPathForPosition } = parseWithPointers(users);
-      expect(
-        getJsonPathForPosition({
-          line: 5,
-          character: 17,
-        })
-      ).toEqual(['users', 0, 'address', 'city']);
+
+      test.each`
+        line | character | path
+        ${0} | ${0}      | ${[]}
+        ${2} | ${0}      | ${['users']}
+        ${2} | ${5}      | ${['users', 0]}
+        ${5} | ${17}     | ${['users', 0, 'address', 'city']}
+        ${9} | ${12}     | ${['users', 1, 'name']}
+      `('should return proper json path for line $line and character $character', ({ line, character, path }) => {
+        expect(getJsonPathForPosition({ line, character })).toEqual(path);
+      });
     });
 
-    test('one-liner', () => {
+    describe('one-liner', () => {
       const { getJsonPathForPosition } = parseWithPointers(`{ "foo": true, "bar": false }`);
-      expect(
-        getJsonPathForPosition({
-          line: 0,
-          character: 3,
-        })
-      ).toEqual(['foo']);
+
+      test.each`
+        line | character | path
+        ${0} | ${3}      | ${['foo']}
+        ${0} | ${12}     | ${['foo']}
+        ${0} | ${17}     | ${['bar']}
+      `('should return proper json path for line $line and character $character', ({ line, character, path }) => {
+        expect(getJsonPathForPosition({ line, character })).toEqual(path);
+      });
+    });
+
+    describe('multiline comments', () => {
+      const { getJsonPathForPosition } = parseWithPointers(multilineComments);
+
+      test.each`
+        line  | character | path
+        ${1}  | ${4}      | ${['hello']}
+        ${7}  | ${5}      | ${['address', 'street']}
+        ${14} | ${20}     | ${['paths', '/users/{id}', 'get', 'operationId']}
+      `('should return proper json path for line $line and character $character', ({ line, character, path }) => {
+        expect(getJsonPathForPosition({ line, character })).toEqual(path);
+      });
     });
   });
 
   describe('getLocationForJsonPath', () => {
-    test('simple', () => {
+    describe('simple fixture', () => {
       const { getLocationForJsonPath } = parseWithPointers(simple);
-      expect(getLocationForJsonPath(['address', 'street'])).toMatchObject({
-        range: {
-          start: {
-            character: 15,
-            line: 3,
+
+      test.each`
+        start      | end        | path
+        ${[2, 13]} | ${[4, 3]}  | ${['address']}
+        ${[3, 15]} | ${[3, 18]} | ${['address', 'street']}
+        ${[6, 19]} | ${[10, 5]} | ${['paths', '/users/{id}']}
+        ${[8, 24]} | ${[8, 34]} | ${['paths', '/users/{id}', 'get', 'operationId']}
+      `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
+        expect(getLocationForJsonPath(path)).toEqual({
+          range: {
+            start: {
+              character: start[1],
+              line: start[0],
+            },
+            end: {
+              character: end[1],
+              line: end[0],
+            },
           },
-          end: {
-            character: 18,
-            line: 3,
-          },
-        },
-      });
-      expect(getLocationForJsonPath(['address'])).toMatchObject({
-        range: {
-          start: {
-            character: 13,
-            line: 2,
-          },
-          end: {
-            character: 3,
-            line: 4,
-          },
-        },
-      });
-      expect(getLocationForJsonPath(['paths', '/users/{id}', 'get', 'operationId'])).toMatchObject({
-        range: {
-          start: {
-            character: 24,
-            line: 8,
-          },
-          end: {
-            character: 34,
-            line: 8,
-          },
-        },
-      });
-      expect(getLocationForJsonPath(['paths', '/users/{id}', 'get', 'operationId'])).toMatchObject({
-        range: {
-          start: {
-            character: 24,
-            line: 8,
-          },
-          end: {
-            character: 34,
-            line: 8,
-          },
-        },
-      });
-      expect(getLocationForJsonPath(['paths', '/users/{id}'])).toMatchObject({
-        range: {
-          start: {
-            character: 19,
-            line: 6,
-          },
-          end: {
-            character: 5,
-            line: 10,
-          },
-        },
+        });
       });
     });
 
-    test('arrays', () => {
+    describe('users fixture', () => {
       const { getLocationForJsonPath } = parseWithPointers(users);
-      expect(getLocationForJsonPath(['users', 0, 'name'])).toMatchObject({
-        range: {
-          start: {
-            character: 15,
-            line: 3,
+
+      test.each`
+        start       | end        | path
+        ${[3, 15]}  | ${[3, 20]} | ${['users', 0, 'name']}
+        ${[10, 17]} | ${[12, 7]} | ${['users', 1, 'address']}
+      `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
+        expect(getLocationForJsonPath(path)).toEqual({
+          range: {
+            start: {
+              character: start[1],
+              line: start[0],
+            },
+            end: {
+              character: end[1],
+              line: end[0],
+            },
           },
-          end: {
-            character: 20,
-            line: 3,
-          },
-        },
-      });
-      expect(getLocationForJsonPath(['users', 1, 'address'])).toMatchObject({
-        range: {
-          start: {
-            character: 17,
-            line: 10,
-          },
-          end: {
-            character: 7,
-            line: 12,
-          },
-        },
+        });
       });
     });
 
-    test('one-liner', () => {
+    describe('one-liner', () => {
       const { getLocationForJsonPath } = parseWithPointers(`{ "foo": true, "bar": false }`);
-      expect(getLocationForJsonPath(['bar'])).toMatchObject({
-        range: {
-          start: {
-            character: 22,
-            line: 0,
+
+      test.each`
+        start      | end        | path
+        ${[0, 9]}  | ${[0, 13]} | ${['foo']}
+        ${[0, 22]} | ${[0, 27]} | ${['bar']}
+      `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
+        expect(getLocationForJsonPath(path)).toEqual({
+          range: {
+            start: {
+              character: start[1],
+              line: start[0],
+            },
+            end: {
+              character: end[1],
+              line: end[0],
+            },
           },
-          end: {
-            character: 27,
-            line: 0,
+        });
+      });
+    });
+
+    describe('multiline comments', () => {
+      const { getLocationForJsonPath } = parseWithPointers(multilineComments);
+
+      test.each`
+        start       | end         | path
+        ${[1, 12]}  | ${[1, 19]}  | ${['hello']}
+        ${[7, 15]}  | ${[7, 18]}  | ${['address', 'street']}
+        ${[13, 13]} | ${[15, 7]}  | ${['paths', '/users/{id}', 'get']}
+        ${[14, 24]} | ${[14, 34]} | ${['paths', '/users/{id}', 'get', 'operationId']}
+      `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
+        expect(getLocationForJsonPath(path)).toEqual({
+          range: {
+            start: {
+              character: start[1],
+              line: start[0],
+            },
+            end: {
+              character: end[1],
+              line: end[0],
+            },
           },
-        },
+        });
       });
     });
   });
