@@ -1,3 +1,4 @@
+import { Segment } from '@stoplight/types/parsers';
 import { replaceInString } from './_utils';
 
 /**
@@ -5,6 +6,6 @@ import { replaceInString } from './_utils';
  *
  * encodePointer('/paths/~users) => '~1paths~1~0users'
  */
-export const encodePointerFragment = (value: string): string => {
-  return replaceInString(replaceInString(value, '~', '~0'), '/', '~1');
+export const encodePointerFragment = (value: Segment): Segment => {
+  return typeof value === 'number' ? value : replaceInString(replaceInString(value, '~', '~0'), '/', '~1');
 };
