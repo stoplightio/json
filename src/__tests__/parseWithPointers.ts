@@ -5,6 +5,7 @@ import { parseWithPointers } from '../parseWithPointers';
 const simple = fs.readFileSync(join(__dirname, './fixtures/simple.json'), 'utf-8');
 const users = fs.readFileSync(join(__dirname, './fixtures/users.json'), 'utf-8');
 const multilineComments = fs.readFileSync(join(__dirname, './fixtures/multiline-comments.json'), 'utf-8');
+const petStore = fs.readFileSync(join(__dirname, './fixtures/petstore.oas2.json'), 'utf-8');
 
 describe('json parser', () => {
   test('parse simple', () => {
@@ -100,7 +101,7 @@ describe('json parser', () => {
   });
 
   describe('fixtures', () => {
-    test.each(['main.oas2.json', 'user.jschema.json'])('parses %s', async filename => {
+    test.each(['petstore.oas2.json', 'user.jschema.json'])('parses %s', async filename => {
       expect(
         parseWithPointers((await fs.promises.readFile(join(__dirname, 'fixtures', filename), 'utf-8')) as string)
       ).toMatchSnapshot();
@@ -177,6 +178,29 @@ describe('json parser', () => {
   });
 
   describe('getLocationForJsonPath', () => {
+    describe('pet store fixture', () => {
+      const { getLocationForJsonPath } = parseWithPointers(petStore);
+
+      test.each`
+        start       | end        | path
+        ${[8, 22]}  | ${[8, 42]} | ${['info', 'contact', 'email']}
+        ${[39, 15]} | ${[42, 5]} | ${['schemes']}
+      `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
+        expect(getLocationForJsonPath(path)).toEqual({
+          range: {
+            start: {
+              character: start[1],
+              line: start[0],
+            },
+            end: {
+              character: end[1],
+              line: end[0],
+            },
+          },
+        });
+      });
+    });
+
     describe('simple fixture', () => {
       const { getLocationForJsonPath } = parseWithPointers(simple);
 
