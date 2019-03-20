@@ -1,7 +1,7 @@
-import { JSONPath } from '@stoplight/types/parsers';
+import { JsonPath } from '@stoplight/types/parsers';
 import { decodePointer } from './decodePointer';
 
-export const pointerToPath = (pointer: string): JSONPath => {
+export const pointerToPath = (pointer: string): JsonPath => {
   return decodeUriFragmentIdentifier(pointer);
 };
 

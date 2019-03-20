@@ -1,68 +1,17 @@
 import { DiagnosticSeverity, IDiagnostic } from '@stoplight/types/diagnostics';
-import { ILocation, IParserResult, IPosition, SourceMapParser } from '@stoplight/types/parsers';
-import {
-  findNodeAtLocation,
-  findNodeAtOffset,
-  getNodePath,
-  JSONPath,
-  JSONVisitor,
-  Node,
-  NodeType,
-  ParseErrorCode,
-  ParseOptions,
-  printParseErrorCode,
-  visit,
-} from 'jsonc-parser';
+import { IParserASTResult, IParserResult } from '@stoplight/types/parsers';
+import { JSONVisitor, Node, NodeType, ParseErrorCode, ParseOptions, printParseErrorCode, visit } from 'jsonc-parser';
+import { IJsonASTNode } from './types';
 
-export const parseWithPointers: SourceMapParser = <T>(value: string): IParserResult<T> => {
+export const parseWithPointers = <T = unknown>(value: string): IParserResult<T, IJsonASTNode, Map<number, number>> => {
   const diagnostics: IDiagnostic[] = [];
-  const { tree, data, linesMap } = parseTree(value, diagnostics, { disallowComments: true });
+  const { ast, data, lineMap } = parseTree<T>(value, diagnostics, { disallowComments: true });
 
   return {
     data,
     diagnostics,
-
-    getJsonPathForPosition(position: IPosition): JSONPath | undefined {
-      const startOffset = linesMap.get(position.line);
-      const endOffset = linesMap.get(position.line + 1);
-      if (startOffset === undefined) {
-        return;
-      }
-
-      const node = findNodeAtOffset(
-        tree,
-        endOffset === undefined
-          ? startOffset + position.character
-          : Math.min(endOffset, startOffset + position.character)
-      );
-
-      if (node === undefined) {
-        return;
-      }
-
-      return getNodePath(node);
-    },
-
-    getLocationForJsonPath(path: JSONPath): ILocation | undefined {
-      const node = findNodeAtLocation(tree, path) as INodeImpl;
-
-      if (node === undefined) {
-        return node;
-      }
-
-      return {
-        range: {
-          start: {
-            character: node.startColumn!,
-            line: node.startLine!,
-          },
-          end: {
-            character: node.endColumn!,
-            line: node.endLine!,
-          },
-        },
-      };
-    },
+    ast,
+    lineMap,
   };
 };
 
@@ -71,12 +20,16 @@ export const parseWithPointers: SourceMapParser = <T>(value: string): IParserRes
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-export function parseTree(text: string, errors: IDiagnostic[] = [], options: ParseOptions) {
-  const linesMap = new Map<number, number>([[0, 0]]);
+export function parseTree<T>(
+  text: string,
+  errors: IDiagnostic[] = [],
+  options: ParseOptions
+): IParserASTResult<T, Node, Map<number, number>> {
+  const lineMap: Map<number, number> = new Map([[0, 0]]);
   let currentLineNumber = 0;
   let currentOffset = 0;
   let lastErrorEndOffset = -1;
-  let currentParent: INodeImpl = { type: 'array', offset: -1, length: -1, children: [], parent: void 0 }; // artificial root
+  let currentParent: IJsonASTNode = { type: 'array', offset: -1, length: -1, children: [], parent: void 0 }; // artificial root
   let currentParsedProperty: string | null = null;
   let currentParsedParent: any = [];
   const previousParsedParents: any[] = [];
@@ -98,7 +51,7 @@ export function parseTree(text: string, errors: IDiagnostic[] = [], options: Par
     };
   }
 
-  function onValue(valueNode: INodeImpl): INodeImpl {
+  function onValue(valueNode: IJsonASTNode): IJsonASTNode {
     currentParent.children!.push(valueNode);
     return valueNode;
   }
@@ -213,7 +166,7 @@ export function parseTree(text: string, errors: IDiagnostic[] = [], options: Par
       });
     },
     onLineBreak: (lineNumber: number, offset: number) => {
-      linesMap.set(lineNumber, offset);
+      lineMap.set(lineNumber, offset);
       currentLineNumber = lineNumber;
       currentOffset = offset;
       if (lastErrorEndOffset !== -1 && offset > lastErrorEndOffset) {
@@ -232,9 +185,9 @@ export function parseTree(text: string, errors: IDiagnostic[] = [], options: Par
     delete result.parent;
   }
   return {
-    tree: result,
+    ast: result,
     data: currentParsedParent[0],
-    linesMap,
+    lineMap,
   };
 }
 
@@ -249,18 +202,4 @@ function getLiteralNodeType(value: any): NodeType {
     default:
       return 'null';
   }
-}
-
-interface INodeImpl extends Node {
-  type: NodeType;
-  value?: any;
-  offset: number;
-  length: number;
-  startLine?: number;
-  startColumn?: number;
-  endLine?: number;
-  endColumn?: number;
-  colonOffset?: number;
-  parent?: INodeImpl;
-  children?: INodeImpl[];
 }

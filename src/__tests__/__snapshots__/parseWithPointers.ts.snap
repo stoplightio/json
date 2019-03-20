@@ -1,300 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`json parser fixtures parses main.oas2.json 1`] = `
-Object {
-  "data": Object {
-    "basePath": "/v2",
-    "definitions": Object {
-      "Category": Object {
-        "properties": Object {
-          "name": Object {
-            "type": "string",
-          },
-        },
-        "required": Array [
-          "name",
-        ],
-        "title": "Category",
-        "type": "object",
-      },
-      "Error": Object {
-        "properties": Object {
-          "code": Object {
-            "type": "string",
-          },
-          "message": Object {
-            "type": "string",
-          },
-        },
-        "required": Array [
-          "code",
-        ],
-        "type": "object",
-      },
-      "Pet": Object {
-        "properties": Object {
-          "category": Object {
-            "$ref": "#/definitions/Category",
-          },
-          "id": Object {
-            "format": "int64",
-            "type": "integer",
-          },
-          "name": Object {
-            "example": "doggie",
-            "type": "string",
-          },
-          "photoUrls": Object {
-            "items": Object {
-              "type": "string",
-            },
-            "type": "array",
-            "xml": Object {
-              "name": "photoUrl",
-              "wrapped": true,
-            },
-          },
-          "status": Object {
-            "description": "pet status in the store",
-            "enum": Array [
-              "available",
-              "pending",
-              "sold",
-            ],
-            "type": "string",
-          },
-        },
-        "required": Array [
-          "name",
-          "photoUrls",
-        ],
-        "type": "object",
-        "xml": Object {
-          "name": "Pet",
-        },
-      },
-    },
-    "externalDocs": Object {
-      "description": "Find out more about Swagger",
-      "url": "http://swagger.io",
-    },
-    "host": "petstore.swagger.io",
-    "info": Object {
-      "contact": Object {
-        "email": "apiteam@swagger.io",
-      },
-      "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key \`special-key\` to test the authorization filters.",
-      "license": Object {
-        "name": "Apache 2.0",
-        "url": "http://www.apache.org/licenses/LICENSE-2.0.html",
-      },
-      "termsOfService": "http://swagger.io/terms/",
-      "title": "Swagger Petstore",
-      "version": "1.0.0",
-    },
-    "parameters": Object {
-      "limit": Object {
-        "in": "query",
-        "name": "limit",
-        "type": "string",
-      },
-      "pet-id": Object {
-        "in": "path",
-        "name": "petId",
-        "required": true,
-        "type": "string",
-      },
-      "rate-limit": Object {
-        "in": "header",
-        "name": "Rate-Limit",
-        "type": "string",
-      },
-      "skip": Object {
-        "in": "query",
-        "name": "skip",
-        "type": "string",
-      },
-    },
-    "paths": Object {
-      "/pet/{petId}": Object {
-        "parameters": Array [
-          Object {
-            "$ref": "#/parameters/pet-id",
-          },
-        ],
-        "put": Object {
-          "consumes": Array [
-            "application/json",
-            "application/xml",
-          ],
-          "description": "",
-          "operationId": "updatePet",
-          "parameters": Array [
-            Object {
-              "description": "Pet object that needs to be added to the store",
-              "in": "body",
-              "name": "body",
-              "required": true,
-              "schema": Object {
-                "$ref": "#/definitions/Pet",
-              },
-            },
-          ],
-          "produces": Array [
-            "application/xml",
-            "application/json",
-          ],
-          "responses": Object {
-            "400": Object {
-              "description": "Invalid ID supplied",
-            },
-            "404": Object {
-              "$ref": "#/responses/404",
-            },
-            "405": Object {
-              "description": "Validation exception",
-            },
-          },
-          "security": Array [
-            Object {
-              "petstore_auth": Array [
-                "write:pets",
-                "read:pets",
-              ],
-            },
-          ],
-          "summary": "Update an existing pet",
-          "tags": Array [
-            "pet",
-          ],
-        },
-      },
-      "/pets": Object {
-        "get": Object {
-          "parameters": Array [
-            Object {
-              "$ref": "#/parameters/skip",
-            },
-            Object {
-              "$ref": "#/parameters/limit",
-            },
-            Object {
-              "$ref": "#/parameters/rate-limit",
-            },
-          ],
-          "responses": Object {
-            "200": Object {
-              "description": "",
-              "schema": Object {
-                "properties": Object {},
-                "type": "object",
-              },
-            },
-          },
-          "summary": "List pets",
-        },
-        "post": Object {
-          "consumes": Array [
-            "application/json",
-            "application/xml",
-          ],
-          "description": "",
-          "operationId": "addPet",
-          "parameters": Array [
-            Object {
-              "description": "Pet object that needs to be added to the store",
-              "in": "body",
-              "name": "body",
-              "required": true,
-              "schema": Object {
-                "$ref": "#/definitions/Pet",
-              },
-            },
-          ],
-          "produces": Array [
-            "application/xml",
-            "application/json",
-          ],
-          "responses": Object {
-            "405": Object {
-              "description": "Invalid input",
-            },
-          },
-          "security": Array [
-            Object {
-              "petstore_auth": Array [
-                "write:pets",
-                "read:pets",
-              ],
-            },
-          ],
-          "summary": "Add a new pet to the store",
-          "tags": Array [
-            "pet",
-          ],
-        },
-      },
-    },
-    "responses": Object {
-      "404": Object {
-        "description": "Our shared 404 response.",
-        "schema": Object {
-          "$ref": "#/definitions/Error",
-        },
-      },
-    },
-    "schemes": Array [
-      "https",
-      "http",
-    ],
-    "securityDefinitions": Object {
-      "api_key": Object {
-        "in": "header",
-        "name": "api_key",
-        "type": "apiKey",
-      },
-      "petstore_auth": Object {
-        "authorizationUrl": "https://petstore.swagger.io/oauth/dialog",
-        "flow": "implicit",
-        "scopes": Object {
-          "read:pets": "read your pets",
-          "write:pets": "modify pets in your account",
-        },
-        "type": "oauth2",
-      },
-    },
-    "swagger": "2.0",
-    "tags": Array [
-      Object {
-        "description": "Everything about your Pets",
-        "externalDocs": Object {
-          "description": "Find out more",
-          "url": "http://swagger.io",
-        },
-        "name": "pet",
-      },
-      Object {
-        "description": "Access to Petstore orders",
-        "name": "store",
-      },
-      Object {
-        "description": "Operations about user",
-        "externalDocs": Object {
-          "description": "Find out more about our store",
-          "url": "http://swagger.io",
-        },
-        "name": "user",
-      },
-    ],
-  },
-  "diagnostics": Array [],
-  "getJsonPathForPosition": [Function],
-  "getLocationForJsonPath": [Function],
-}
-`;
-
 exports[`json parser fixtures parses petstore.oas2.json 1`] = `
 Object {
+  "ast": Any<Object>,
   "data": Object {
     "basePath": "/v2",
     "definitions": Object {
@@ -581,13 +289,13 @@ Object {
     ],
   },
   "diagnostics": Array [],
-  "getJsonPathForPosition": [Function],
-  "getLocationForJsonPath": [Function],
+  "lineMap": Any<Map>,
 }
 `;
 
 exports[`json parser fixtures parses user.jschema.json 1`] = `
 Object {
+  "ast": Any<Object>,
   "data": Object {
     "properties": Object {
       "age": Object {
@@ -672,13 +380,13 @@ Object {
     "type": "object",
   },
   "diagnostics": Array [],
-  "getJsonPathForPosition": [Function],
-  "getLocationForJsonPath": [Function],
+  "lineMap": Any<Map>,
 }
 `;
 
 exports[`json parser invalid fixtures parses characters.json 1`] = `
 Object {
+  "ast": Any<Object>,
   "data": Object {
     "valid-escape": "\\\\n",
     "valid-unicode": "ż",
@@ -745,13 +453,13 @@ Object {
       "severity": 0,
     },
   ],
-  "getJsonPathForPosition": [Function],
-  "getLocationForJsonPath": [Function],
+  "lineMap": Any<Map>,
 }
 `;
 
 exports[`json parser invalid fixtures parses schema.json 1`] = `
 Object {
+  "ast": Any<Object>,
   "data": Object {
     "address": Object {},
     "hello": "world",
@@ -795,13 +503,13 @@ Object {
       "severity": 0,
     },
   ],
-  "getJsonPathForPosition": [Function],
-  "getLocationForJsonPath": [Function],
+  "lineMap": Any<Map>,
 }
 `;
 
 exports[`json parser parse complex 1`] = `
 Object {
+  "ast": Any<Object>,
   "data": Object {
     "users": Array [
       Object {
@@ -822,13 +530,13 @@ Object {
     ],
   },
   "diagnostics": Array [],
-  "getJsonPathForPosition": [Function],
-  "getLocationForJsonPath": [Function],
+  "lineMap": Any<Map>,
 }
 `;
 
 exports[`json parser parse simple 1`] = `
 Object {
+  "ast": Any<Object>,
   "data": Object {
     "address": Object {
       "street": 123,
@@ -843,7 +551,6 @@ Object {
     },
   },
   "diagnostics": Array [],
-  "getJsonPathForPosition": [Function],
-  "getLocationForJsonPath": [Function],
+  "lineMap": Any<Map>,
 }
 `;
