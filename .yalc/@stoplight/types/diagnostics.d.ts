@@ -1,4 +1,4 @@
-import { ILocation, IRange, JSONPath } from './parsers';
+import { ILocation, IRange, JsonPath } from './parsers';
 export declare enum DiagnosticSeverity {
     Error = 0,
     Warning = 1,
@@ -11,7 +11,7 @@ export interface IDiagnostic {
     message: string;
     severity: DiagnosticSeverity;
     source?: string;
-    path?: JSONPath;
+    path?: JsonPath;
     code?: string | number;
     tags?: DiagnosticTag[];
     relatedInformation?: IDiagnosticRelatedInformation[];

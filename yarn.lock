@@ -679,8 +679,10 @@
     tslint-config-stoplight "1.2.x"
     typedoc "0.14.2"
 
-"@stoplight/types@file:.yalc/@stoplight/types":
-  version "0.0.0-3cf4d144"
+"@stoplight/types@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@stoplight/types/-/types-3.1.0.tgz#bca0a2943adbfee02f6a560cff3e60493af013cf"
+  integrity sha512-HlqKh6iLqZp/rXwEryJTybY7ZEcuePPiSm0Y18dSZMrlywzeWEDQ5jDX3DdP1y7N5BIzN2dUt727uvbsC4UmFQ==
 
 "@types/events@*":
   version "1.2.0"
