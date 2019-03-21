@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@stoplight/fast-safe-stringify": "2.1.2",
-    "@stoplight/types": "file:.yalc/@stoplight/types",
+    "@stoplight/types": "4.0.x",
     "jsonc-parser": "https://github.com/stoplightio/node-jsonc-parser.git#f45703496d842937ec822683550067dfe68d898e",
     "lodash": "4.x.x"
   },
