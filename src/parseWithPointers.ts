@@ -3,9 +3,12 @@ import { IParserASTResult, IParserResult } from '@stoplight/types/parsers';
 import { JSONVisitor, Node, NodeType, ParseErrorCode, ParseOptions, printParseErrorCode, visit } from 'jsonc-parser';
 import { IJsonASTNode } from './types';
 
-export const parseWithPointers = <T = unknown>(value: string): IParserResult<T, IJsonASTNode, Map<number, number>> => {
+export const parseWithPointers = <T = any>(
+  value: string,
+  options: ParseOptions = { disallowComments: true }
+): IParserResult<T, IJsonASTNode, Map<number, number>> => {
   const diagnostics: IDiagnostic[] = [];
-  const { ast, data, lineMap } = parseTree<T>(value, diagnostics, { disallowComments: true });
+  const { ast, data, lineMap } = parseTree<T>(value, diagnostics, options);
 
   return {
     data,
