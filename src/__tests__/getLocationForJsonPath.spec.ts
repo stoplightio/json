@@ -14,7 +14,7 @@ describe('getLocationForJsonPath', () => {
 
     test.each`
       start       | end        | path
-      ${[8, 22]}  | ${[8, 42]} | ${['info', 'contact', 'email']}
+      ${[8, 21]}  | ${[8, 41]} | ${['info', 'contact', 'email']}
       ${[39, 15]} | ${[42, 5]} | ${['schemes']}
     `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
       expect(getLocationForJsonPath(result, path)).toEqual({
@@ -38,9 +38,9 @@ describe('getLocationForJsonPath', () => {
     test.each`
       start      | end        | path
       ${[2, 13]} | ${[4, 3]}  | ${['address']}
-      ${[3, 15]} | ${[3, 18]} | ${['address', 'street']}
+      ${[3, 14]} | ${[3, 17]} | ${['address', 'street']}
       ${[6, 19]} | ${[10, 5]} | ${['paths', '/users/{id}']}
-      ${[8, 24]} | ${[8, 34]} | ${['paths', '/users/{id}', 'get', 'operationId']}
+      ${[8, 23]} | ${[8, 33]} | ${['paths', '/users/{id}', 'get', 'operationId']}
     `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
       expect(getLocationForJsonPath(result, path)).toEqual({
         range: {
@@ -62,7 +62,7 @@ describe('getLocationForJsonPath', () => {
 
     test.each`
       start       | end        | path
-      ${[3, 15]}  | ${[3, 20]} | ${['users', 0, 'name']}
+      ${[3, 14]}  | ${[3, 19]} | ${['users', 0, 'name']}
       ${[10, 17]} | ${[12, 7]} | ${['users', 1, 'address']}
     `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
       expect(getLocationForJsonPath(result, path)).toEqual({
@@ -108,10 +108,10 @@ describe('getLocationForJsonPath', () => {
 
     test.each`
       start       | end         | path
-      ${[1, 12]}  | ${[1, 19]}  | ${['hello']}
-      ${[7, 15]}  | ${[7, 18]}  | ${['address', 'street']}
+      ${[1, 11]}  | ${[1, 18]}  | ${['hello']}
+      ${[7, 14]}  | ${[7, 17]}  | ${['address', 'street']}
       ${[13, 13]} | ${[15, 7]}  | ${['paths', '/users/{id}', 'get']}
-      ${[14, 24]} | ${[14, 34]} | ${['paths', '/users/{id}', 'get', 'operationId']}
+      ${[14, 23]} | ${[14, 33]} | ${['paths', '/users/{id}', 'get', 'operationId']}
     `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
       expect(getLocationForJsonPath(result, path)).toEqual({
         range: {

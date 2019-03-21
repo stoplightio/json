@@ -289,7 +289,7 @@ Object {
     ],
   },
   "diagnostics": Array [],
-  "lineMap": Any<Map>,
+  "lineMap": Any<Array>,
 }
 `;
 
@@ -380,7 +380,7 @@ Object {
     "type": "object",
   },
   "diagnostics": Array [],
-  "lineMap": Any<Map>,
+  "lineMap": Any<Array>,
 }
 `;
 
@@ -397,11 +397,11 @@ Object {
       "message": "InvalidSymbol",
       "range": Object {
         "end": Object {
-          "character": 20,
+          "character": 19,
           "line": 3,
         },
         "start": Object {
-          "character": 14,
+          "character": 13,
           "line": 3,
         },
       },
@@ -412,11 +412,11 @@ Object {
       "message": "UnexpectedEndOfString",
       "range": Object {
         "end": Object {
-          "character": 22,
+          "character": 21,
           "line": 3,
         },
         "start": Object {
-          "character": 20,
+          "character": 19,
           "line": 3,
         },
       },
@@ -427,11 +427,11 @@ Object {
       "message": "ColonExpected",
       "range": Object {
         "end": Object {
-          "character": 22,
+          "character": 21,
           "line": 3,
         },
         "start": Object {
-          "character": 20,
+          "character": 19,
           "line": 3,
         },
       },
@@ -442,18 +442,18 @@ Object {
       "message": "InvalidEscapeCharacter",
       "range": Object {
         "end": Object {
-          "character": 2,
-          "line": 5,
+          "character": 24,
+          "line": 4,
         },
         "start": Object {
-          "character": 21,
+          "character": 20,
           "line": 4,
         },
       },
       "severity": 0,
     },
   ],
-  "lineMap": Any<Map>,
+  "lineMap": Any<Array>,
 }
 `;
 
@@ -477,11 +477,11 @@ Object {
       "message": "ValueExpected",
       "range": Object {
         "end": Object {
-          "character": 4,
+          "character": 3,
           "line": 4,
         },
         "start": Object {
-          "character": 3,
+          "character": 2,
           "line": 4,
         },
       },
@@ -492,18 +492,18 @@ Object {
       "message": "CommaExpected",
       "range": Object {
         "end": Object {
-          "character": 3,
+          "character": 9,
           "line": 5,
         },
         "start": Object {
-          "character": 3,
+          "character": 2,
           "line": 5,
         },
       },
       "severity": 0,
     },
   ],
-  "lineMap": Any<Map>,
+  "lineMap": Any<Array>,
 }
 `;
 
@@ -530,7 +530,7 @@ Object {
     ],
   },
   "diagnostics": Array [],
-  "lineMap": Any<Map>,
+  "lineMap": Any<Array>,
 }
 `;
 
@@ -551,6 +551,6 @@ Object {
     },
   },
   "diagnostics": Array [],
-  "lineMap": Any<Map>,
+  "lineMap": Any<Array>,
 }
 `;

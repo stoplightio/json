@@ -8,7 +8,7 @@ describe('json parser', () => {
   test('parse simple', () => {
     expect(parseWithPointers(simple)).toMatchSnapshot({
       ast: expect.any(Object),
-      lineMap: expect.any(Map),
+      lineMap: expect.any(Array),
     });
   });
 
@@ -35,7 +35,7 @@ describe('json parser', () => {
 }`)
     ).toMatchSnapshot({
       ast: expect.any(Object),
-      lineMap: expect.any(Map),
+      lineMap: expect.any(Array),
     });
   });
 
@@ -109,7 +109,7 @@ describe('json parser', () => {
         parseWithPointers((await fs.promises.readFile(join(__dirname, 'fixtures', filename), 'utf-8')) as string)
       ).toMatchSnapshot({
         ast: expect.any(Object),
-        lineMap: expect.any(Map),
+        lineMap: expect.any(Array),
       });
     });
   });
@@ -123,7 +123,7 @@ describe('json parser', () => {
         )) as string)
       ).toMatchSnapshot({
         ast: expect.any(Object),
-        lineMap: expect.any(Map),
+        lineMap: expect.any(Array),
       });
     });
   });
