@@ -1,0 +1,130 @@
+import * as fs from 'fs';
+import { join } from 'path';
+import { getLocationForJsonPath } from '../getLocationForJsonPath';
+import { parseWithPointers } from '../parseWithPointers';
+
+const simple = fs.readFileSync(join(__dirname, './fixtures/simple.json'), 'utf-8');
+const users = fs.readFileSync(join(__dirname, './fixtures/users.json'), 'utf-8');
+const multilineComments = fs.readFileSync(join(__dirname, './fixtures/multiline-comments.json'), 'utf-8');
+const petStore = fs.readFileSync(join(__dirname, './fixtures/petstore.oas2.json'), 'utf-8');
+
+describe('getLocationForJsonPath', () => {
+  describe('pet store fixture', () => {
+    const result = parseWithPointers(petStore);
+
+    test.each`
+      start       | end        | path
+      ${[8, 22]}  | ${[8, 42]} | ${['info', 'contact', 'email']}
+      ${[39, 15]} | ${[42, 5]} | ${['schemes']}
+    `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
+      expect(getLocationForJsonPath(result, path)).toEqual({
+        range: {
+          start: {
+            character: start[1],
+            line: start[0],
+          },
+          end: {
+            character: end[1],
+            line: end[0],
+          },
+        },
+      });
+    });
+  });
+
+  describe('simple fixture', () => {
+    const result = parseWithPointers(simple);
+
+    test.each`
+      start      | end        | path
+      ${[2, 13]} | ${[4, 3]}  | ${['address']}
+      ${[3, 15]} | ${[3, 18]} | ${['address', 'street']}
+      ${[6, 19]} | ${[10, 5]} | ${['paths', '/users/{id}']}
+      ${[8, 24]} | ${[8, 34]} | ${['paths', '/users/{id}', 'get', 'operationId']}
+    `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
+      expect(getLocationForJsonPath(result, path)).toEqual({
+        range: {
+          start: {
+            character: start[1],
+            line: start[0],
+          },
+          end: {
+            character: end[1],
+            line: end[0],
+          },
+        },
+      });
+    });
+  });
+
+  describe('users fixture', () => {
+    const result = parseWithPointers(users);
+
+    test.each`
+      start       | end        | path
+      ${[3, 15]}  | ${[3, 20]} | ${['users', 0, 'name']}
+      ${[10, 17]} | ${[12, 7]} | ${['users', 1, 'address']}
+    `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
+      expect(getLocationForJsonPath(result, path)).toEqual({
+        range: {
+          start: {
+            character: start[1],
+            line: start[0],
+          },
+          end: {
+            character: end[1],
+            line: end[0],
+          },
+        },
+      });
+    });
+  });
+
+  describe('one-liner', () => {
+    const result = parseWithPointers(`{ "foo": true, "bar": false }`);
+
+    test.each`
+      start      | end        | path
+      ${[0, 9]}  | ${[0, 13]} | ${['foo']}
+      ${[0, 22]} | ${[0, 27]} | ${['bar']}
+    `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
+      expect(getLocationForJsonPath(result, path)).toEqual({
+        range: {
+          start: {
+            character: start[1],
+            line: start[0],
+          },
+          end: {
+            character: end[1],
+            line: end[0],
+          },
+        },
+      });
+    });
+  });
+
+  describe('multiline comments', () => {
+    const result = parseWithPointers(multilineComments);
+
+    test.each`
+      start       | end         | path
+      ${[1, 12]}  | ${[1, 19]}  | ${['hello']}
+      ${[7, 15]}  | ${[7, 18]}  | ${['address', 'street']}
+      ${[13, 13]} | ${[15, 7]}  | ${['paths', '/users/{id}', 'get']}
+      ${[14, 24]} | ${[14, 34]} | ${['paths', '/users/{id}', 'get', 'operationId']}
+    `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
+      expect(getLocationForJsonPath(result, path)).toEqual({
+        range: {
+          start: {
+            character: start[1],
+            line: start[0],
+          },
+          end: {
+            character: end[1],
+            line: end[0],
+          },
+        },
+      });
+    });
+  });
+});

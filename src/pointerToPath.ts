@@ -1,6 +1,7 @@
+import { JsonPath } from '@stoplight/types/parsers';
 import { decodePointer } from './decodePointer';
 
-export const pointerToPath = (pointer: string): string[] => {
+export const pointerToPath = (pointer: string): JsonPath => {
   return decodeUriFragmentIdentifier(pointer);
 };
 
@@ -22,7 +23,7 @@ const decodeUriFragmentIdentifier = (ptr: string): string[] => {
   }
 
   if (ptr.length === 0 || ptr[0] !== '#') {
-    throw new URIError('Invalid JSON Pointer syntax; URI fragment idetifiers must begin with a hash.');
+    throw new URIError('Invalid JSON Pointer syntax; URI fragment identifiers must begin with a hash.');
   }
 
   if (ptr.length === 1) {

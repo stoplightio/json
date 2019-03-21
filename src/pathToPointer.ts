@@ -1,10 +1,11 @@
+import { JsonPath } from '@stoplight/types';
 import { encodePointerFragment } from './encodePointerFragment';
 
-export const pathToPointer = (path: string[]): string => {
+export const pathToPointer = (path: JsonPath): string => {
   return encodeUriFragmentIdentifier(path);
 };
 
-const encodeUriFragmentIdentifier = (path: string[]): string => {
+const encodeUriFragmentIdentifier = (path: JsonPath): string => {
   if (path && typeof path !== 'object') {
     throw new TypeError('Invalid type: path must be an array of segments.');
   }

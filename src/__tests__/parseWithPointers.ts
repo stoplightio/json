@@ -2,23 +2,14 @@ import * as fs from 'fs';
 import { join } from 'path';
 import { parseWithPointers } from '../parseWithPointers';
 
+const simple = fs.readFileSync(join(__dirname, './fixtures/simple.json'), 'utf-8');
+
 describe('json parser', () => {
   test('parse simple', () => {
-    expect(
-      parseWithPointers(`{
-  "hello": "world",
-  "address": {
-    "street": 123
-  },
-  "paths": {
-    "/users/{id}": {
-      "get": {
-        "operationId": "get-user"
-      }
-    }
-  }
-}`)
-    ).toMatchSnapshot();
+    expect(parseWithPointers(simple)).toMatchSnapshot({
+      ast: expect.any(Object),
+      lineMap: expect.any(Map),
+    });
   });
 
   test('parse complex', () => {
@@ -42,7 +33,10 @@ describe('json parser', () => {
     }
   ]
 }`)
-    ).toMatchSnapshot();
+    ).toMatchSnapshot({
+      ast: expect.any(Object),
+      lineMap: expect.any(Map),
+    });
   });
 
   test('does not allow comments by default', () => {
@@ -57,20 +51,20 @@ describe('json parser', () => {
        */
       "city": "Vantaa"
     }`)
-    ).toHaveProperty('validations', [
+    ).toHaveProperty('diagnostics', [
       expect.objectContaining({
-        name: 'InvalidCommentToken',
-        location: expect.objectContaining({
+        message: 'InvalidCommentToken',
+        range: expect.objectContaining({
           start: expect.objectContaining({
-            line: 2,
+            line: 1,
           }),
         }),
       }),
       expect.objectContaining({
-        name: 'InvalidCommentToken',
-        location: expect.objectContaining({
+        message: 'InvalidCommentToken',
+        range: expect.objectContaining({
           start: expect.objectContaining({
-            line: 4,
+            line: 3,
           }),
         }),
       }),
@@ -83,26 +77,26 @@ describe('json parser', () => {
       "name": "Antti",
        "city": "Vantaa",
     }`)
-    ).toHaveProperty('validations', [
+    ).toHaveProperty('diagnostics', [
       expect.objectContaining({
-        name: 'PropertyNameExpected',
-        location: {
+        message: 'PropertyNameExpected',
+        range: {
           start: expect.objectContaining({
-            line: 4,
+            line: 3,
           }),
           end: expect.objectContaining({
-            line: 4,
+            line: 3,
           }),
         },
       }),
       expect.objectContaining({
-        name: 'ValueExpected',
-        location: {
+        message: 'ValueExpected',
+        range: {
           start: expect.objectContaining({
-            line: 4,
+            line: 3,
           }),
           end: expect.objectContaining({
-            line: 4,
+            line: 3,
           }),
         },
       }),
@@ -110,21 +104,27 @@ describe('json parser', () => {
   });
 
   describe('fixtures', () => {
-    it.each(['main.oas2.json', 'user.jschema.json'])('parses %s', async filename => {
+    test.each(['petstore.oas2.json', 'user.jschema.json'])('parses %s', async filename => {
       expect(
         parseWithPointers((await fs.promises.readFile(join(__dirname, 'fixtures', filename), 'utf-8')) as string)
-      ).toMatchSnapshot();
+      ).toMatchSnapshot({
+        ast: expect.any(Object),
+        lineMap: expect.any(Map),
+      });
     });
   });
 
   describe('invalid fixtures', () => {
-    it.each(['schema.json', 'characters.json'])('parses %s', async filename => {
+    test.each(['schema.json', 'characters.json'])('parses %s', async filename => {
       expect(
         parseWithPointers((await fs.promises.readFile(
           join(__dirname, 'fixtures/invalid', filename),
           'utf-8'
         )) as string)
-      ).toMatchSnapshot();
+      ).toMatchSnapshot({
+        ast: expect.any(Object),
+        lineMap: expect.any(Map),
+      });
     });
   });
 });
