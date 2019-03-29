@@ -5,9 +5,9 @@ import { IJsonASTNode } from './types';
 export const getLocationForJsonPath: GetLocationForJsonPath<IJsonASTNode, number[]> = ({ lineMap, ast }, path) => {
   const node = findNodeAtLocation(ast, path) as IJsonASTNode;
 
-  if (node === undefined) {
+  if (node === undefined || node.range === undefined) {
     return;
   }
 
-  return { range: node.range! };
+  return { range: node.range };
 };
