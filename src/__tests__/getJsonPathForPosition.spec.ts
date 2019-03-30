@@ -35,6 +35,7 @@ describe('getJsonPathForPosition', () => {
       ${2} | ${5}      | ${['users', 0]}
       ${5} | ${17}     | ${['users', 0, 'address', 'city']}
       ${9} | ${12}     | ${['users', 1, 'name']}
+      ${9} | ${19}     | ${['users', 1, 'name']}
     `('should return proper json path for line $line and character $character', ({ line, character, path }) => {
       expect(getJsonPathForPosition(result, { line, character })).toEqual(path);
     });

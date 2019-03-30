@@ -1,12 +1,12 @@
 import { DiagnosticSeverity, IDiagnostic } from '@stoplight/types/diagnostics';
-import { IParserASTResult, IParserResult } from '@stoplight/types/parsers';
+import { IParserASTResult, IParserResult, IRange } from '@stoplight/types/parsers';
 import { JSONVisitor, Node, NodeType, ParseErrorCode, ParseOptions, printParseErrorCode, visit } from 'jsonc-parser';
 import { IJsonASTNode } from './types';
 
 export const parseWithPointers = <T = any>(
   value: string,
   options: ParseOptions = { disallowComments: true }
-): IParserResult<T, IJsonASTNode, Map<number, number>> => {
+): IParserResult<T, IJsonASTNode, number[]> => {
   const diagnostics: IDiagnostic[] = [];
   const { ast, data, lineMap } = parseTree<T>(value, diagnostics, options);
 
@@ -27,11 +27,8 @@ export function parseTree<T>(
   text: string,
   errors: IDiagnostic[] = [],
   options: ParseOptions
-): IParserASTResult<T, Node, Map<number, number>> {
-  const lineMap: Map<number, number> = new Map([[0, 0]]);
-  let currentLineNumber = 0;
-  let currentOffset = 0;
-  let lastErrorEndOffset = -1;
+): IParserASTResult<T, Node, number[]> {
+  const lineMap = computeLineMap(text);
   let currentParent: IJsonASTNode = { type: 'array', offset: -1, length: -1, children: [], parent: void 0 }; // artificial root
   let currentParsedProperty: string | null = null;
   let currentParsedParent: any = [];
@@ -44,13 +41,16 @@ export function parseTree<T>(
     }
   }
 
-  function calculateRange(offset: number, length: number) {
-    const startColumn = offset - currentOffset;
+  function calculateRange(startLine: number, startCharacter: number, length: number): IRange {
     return {
-      startColumn,
-      startLine: currentLineNumber,
-      endColumn: startColumn + length,
-      endLine: currentLineNumber,
+      start: {
+        line: startLine,
+        character: startCharacter,
+      },
+      end: {
+        line: startLine,
+        character: startCharacter + length,
+      },
     };
   }
 
@@ -79,14 +79,14 @@ export function parseTree<T>(
   }
 
   const visitor: JSONVisitor = {
-    onObjectBegin: (offset: number) => {
+    onObjectBegin: (offset, length, startLine, startCharacter: number) => {
       currentParent = onValue({
         type: 'object',
         offset,
         length: -1,
         parent: currentParent,
         children: [],
-        ...calculateRange(offset - 1, -1),
+        range: calculateRange(startLine, startCharacter, length),
       });
 
       onParsedComplexBegin({});
@@ -97,44 +97,52 @@ export function parseTree<T>(
 
       currentParsedProperty = name;
     },
-    onObjectEnd: (offset: number, length: number) => {
+    onObjectEnd: (offset: number, length, startLine, startCharacter) => {
       currentParent.length = offset + length - currentParent.offset;
-      currentParent.endColumn = offset - currentOffset;
-      currentParent.endLine = currentLineNumber;
+      if (currentParent.range) {
+        // @ts-ignore, read only ;P
+        currentParent.range.end.line = startLine;
+        // @ts-ignore, read only ;P
+        currentParent.range.end.character = startCharacter + length;
+      }
       currentParent = currentParent.parent!;
       ensurePropertyComplete(offset + length);
 
       onParsedComplexEnd();
     },
-    onArrayBegin: (offset: number, length: number) => {
+    onArrayBegin: (offset, length, startLine, startCharacter) => {
       currentParent = onValue({
         type: 'array',
         offset,
         length: -1,
         parent: currentParent,
         children: [],
-        ...calculateRange(offset - 1, -1),
+        range: calculateRange(startLine, startCharacter, length),
       });
 
       onParsedComplexBegin([]);
     },
-    onArrayEnd: (offset: number, length: number) => {
+    onArrayEnd: (offset, length, startLine, startCharacter) => {
       currentParent.length = offset + length - currentParent.offset;
-      currentParent.endColumn = offset - currentOffset;
-      currentParent.endLine = currentLineNumber;
+      if (currentParent.range) {
+        // @ts-ignore, read only ;P
+        currentParent.range.end.line = startLine;
+        // @ts-ignore, read only ;P
+        currentParent.range.end.character = startCharacter + length;
+      }
       currentParent = currentParent.parent!;
       ensurePropertyComplete(offset + length);
 
       onParsedComplexEnd();
     },
-    onLiteralValue: (value: any, offset: number, length: number) => {
+    onLiteralValue: (value, offset, length, startLine, startCharacter) => {
       onValue({
         type: getLiteralNodeType(value),
         offset,
         length,
         parent: currentParent,
         value,
-        ...calculateRange(offset, length),
+        range: calculateRange(startLine, startCharacter, length),
       });
       ensurePropertyComplete(offset + length);
 
@@ -149,36 +157,13 @@ export function parseTree<T>(
         }
       }
     },
-    onError: (error: ParseErrorCode, offset: number, length: number) => {
-      const range = calculateRange(offset, length);
-      lastErrorEndOffset = offset + length;
+    onError: (error: ParseErrorCode, offset, length, startLine, startCharacter) => {
       errors.push({
-        range: {
-          start: {
-            character: range.startColumn,
-            line: range.startLine,
-          },
-          end: {
-            character: range.endColumn,
-            line: range.startLine,
-          },
-        },
+        range: calculateRange(startLine, startCharacter, length),
         message: printParseErrorCode(error),
         severity: DiagnosticSeverity.Error,
         code: error,
       });
-    },
-    onLineBreak: (lineNumber: number, offset: number) => {
-      lineMap.set(lineNumber, offset);
-      currentLineNumber = lineNumber;
-      currentOffset = offset;
-      if (lastErrorEndOffset !== -1 && offset > lastErrorEndOffset) {
-        // @ts-ignore read-only
-        errors[errors.length - 1].range.end.line = lineNumber - 1;
-        // @ts-ignore read-only
-        errors[errors.length - 1].range.end.character = offset - lastErrorEndOffset;
-        lastErrorEndOffset = -1;
-      }
     },
   };
   visit(text, visitor, options);
@@ -206,3 +191,17 @@ function getLiteralNodeType(value: any): NodeType {
       return 'null';
   }
 }
+
+// builds up the line map, for use by linesForPosition
+const computeLineMap = (input: string) => {
+  const lines = input.split(/\n/);
+  const lineMap = [0];
+
+  let sum = 0;
+  for (const line of lines) {
+    sum += line.length + 1;
+    lineMap.push(sum);
+  }
+
+  return lineMap;
+};
