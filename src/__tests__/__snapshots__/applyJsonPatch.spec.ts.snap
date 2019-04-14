@@ -1,0 +1,1349 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`json patches remove patch users fixture should match file users/no-city.json and path ["users", 0, "address", "city"] 1`] = `
+Object {
+  "ast": Object {
+    "children": Array [
+      Object {
+        "children": Array [
+          Object {
+            "length": 7,
+            "offset": 4,
+            "parent": [Circular],
+            "type": "string",
+            "value": "users",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "children": Array [
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 6,
+                        "offset": 27,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "name",
+                      },
+                      Object {
+                        "length": 5,
+                        "offset": 35,
+                        "parent": [Circular],
+                        "range": Object {
+                          "end": Object {
+                            "character": 19,
+                            "line": 3,
+                          },
+                          "start": Object {
+                            "character": 14,
+                            "line": 3,
+                          },
+                        },
+                        "type": "string",
+                        "value": "Joe",
+                      },
+                    ],
+                    "length": 13,
+                    "offset": 27,
+                    "parent": [Circular],
+                    "range": Object {
+                      "end": Object {
+                        "character": 12,
+                        "line": 3,
+                      },
+                      "start": Object {
+                        "character": 6,
+                        "line": 3,
+                      },
+                    },
+                    "type": "property",
+                  },
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 9,
+                        "offset": 48,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "address",
+                      },
+                      Object {
+                        "children": Array [
+                          Object {
+                            "children": Array [
+                              Object {
+                                "length": 6,
+                                "offset": 69,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "city",
+                              },
+                              Object {
+                                "length": 10,
+                                "offset": 77,
+                                "parent": [Circular],
+                                "range": Object {
+                                  "end": Object {
+                                    "character": 26,
+                                    "line": 5,
+                                  },
+                                  "start": Object {
+                                    "character": 16,
+                                    "line": 5,
+                                  },
+                                },
+                                "type": "string",
+                                "value": "New York",
+                              },
+                            ],
+                            "length": 18,
+                            "offset": 69,
+                            "parent": [Circular],
+                            "range": Object {
+                              "end": Object {
+                                "character": 14,
+                                "line": 5,
+                              },
+                              "start": Object {
+                                "character": 8,
+                                "line": 5,
+                              },
+                            },
+                            "type": "property",
+                          },
+                        ],
+                        "length": 36,
+                        "offset": 59,
+                        "parent": [Circular],
+                        "range": Object {
+                          "end": Object {
+                            "character": 7,
+                            "line": 6,
+                          },
+                          "start": Object {
+                            "character": 17,
+                            "line": 4,
+                          },
+                        },
+                        "type": "object",
+                      },
+                    ],
+                    "length": 47,
+                    "offset": 48,
+                    "parent": [Circular],
+                    "range": Object {
+                      "end": Object {
+                        "character": 15,
+                        "line": 4,
+                      },
+                      "start": Object {
+                        "character": 6,
+                        "line": 4,
+                      },
+                    },
+                    "type": "property",
+                  },
+                ],
+                "length": 82,
+                "offset": 19,
+                "parent": [Circular],
+                "range": Object {
+                  "end": Object {
+                    "character": 5,
+                    "line": 7,
+                  },
+                  "start": Object {
+                    "character": 4,
+                    "line": 2,
+                  },
+                },
+                "type": "object",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 6,
+                        "offset": 115,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "name",
+                      },
+                      Object {
+                        "length": 7,
+                        "offset": 123,
+                        "parent": [Circular],
+                        "range": Object {
+                          "end": Object {
+                            "character": 21,
+                            "line": 9,
+                          },
+                          "start": Object {
+                            "character": 14,
+                            "line": 9,
+                          },
+                        },
+                        "type": "string",
+                        "value": "Chris",
+                      },
+                    ],
+                    "length": 15,
+                    "offset": 115,
+                    "parent": [Circular],
+                    "range": Object {
+                      "end": Object {
+                        "character": 12,
+                        "line": 9,
+                      },
+                      "start": Object {
+                        "character": 6,
+                        "line": 9,
+                      },
+                    },
+                    "type": "property",
+                  },
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 9,
+                        "offset": 138,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "address",
+                      },
+                      Object {
+                        "children": Array [
+                          Object {
+                            "children": Array [
+                              Object {
+                                "length": 6,
+                                "offset": 159,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "city",
+                              },
+                              Object {
+                                "length": 8,
+                                "offset": 167,
+                                "parent": [Circular],
+                                "range": Object {
+                                  "end": Object {
+                                    "character": 24,
+                                    "line": 11,
+                                  },
+                                  "start": Object {
+                                    "character": 16,
+                                    "line": 11,
+                                  },
+                                },
+                                "type": "string",
+                                "value": "Dallas",
+                              },
+                            ],
+                            "length": 16,
+                            "offset": 159,
+                            "parent": [Circular],
+                            "range": Object {
+                              "end": Object {
+                                "character": 14,
+                                "line": 11,
+                              },
+                              "start": Object {
+                                "character": 8,
+                                "line": 11,
+                              },
+                            },
+                            "type": "property",
+                          },
+                        ],
+                        "length": 34,
+                        "offset": 149,
+                        "parent": [Circular],
+                        "range": Object {
+                          "end": Object {
+                            "character": 7,
+                            "line": 12,
+                          },
+                          "start": Object {
+                            "character": 17,
+                            "line": 10,
+                          },
+                        },
+                        "type": "object",
+                      },
+                    ],
+                    "length": 45,
+                    "offset": 138,
+                    "parent": [Circular],
+                    "range": Object {
+                      "end": Object {
+                        "character": 15,
+                        "line": 10,
+                      },
+                      "start": Object {
+                        "character": 6,
+                        "line": 10,
+                      },
+                    },
+                    "type": "property",
+                  },
+                ],
+                "length": 82,
+                "offset": 107,
+                "parent": [Circular],
+                "range": Object {
+                  "end": Object {
+                    "character": 5,
+                    "line": 13,
+                  },
+                  "start": Object {
+                    "character": 4,
+                    "line": 8,
+                  },
+                },
+                "type": "object",
+              },
+            ],
+            "length": 180,
+            "offset": 13,
+            "parent": [Circular],
+            "range": Object {
+              "end": Object {
+                "character": 3,
+                "line": 14,
+              },
+              "start": Object {
+                "character": 11,
+                "line": 1,
+              },
+            },
+            "type": "array",
+          },
+        ],
+        "length": 189,
+        "offset": 4,
+        "parent": [Circular],
+        "range": Object {
+          "end": Object {
+            "character": 9,
+            "line": 1,
+          },
+          "start": Object {
+            "character": 2,
+            "line": 1,
+          },
+        },
+        "type": "property",
+      },
+    ],
+    "length": 195,
+    "offset": 0,
+    "range": Object {
+      "end": Object {
+        "character": 1,
+        "line": 15,
+      },
+      "start": Object {
+        "character": 0,
+        "line": 0,
+      },
+    },
+    "type": "object",
+  },
+  "data": Object {
+    "users": Array [
+      Object {
+        "address": Object {
+          "city": "New York",
+        },
+        "name": "Joe",
+      },
+      Object {
+        "address": Object {
+          "city": "Dallas",
+        },
+        "name": "Chris",
+      },
+    ],
+  },
+  "diagnostics": Array [],
+  "lineMap": Array [
+    0,
+    2,
+    15,
+    21,
+    42,
+    61,
+    88,
+    96,
+    103,
+    109,
+    132,
+    151,
+    176,
+    184,
+    190,
+    194,
+    196,
+    197,
+  ],
+}
+`;
+
+exports[`json patches remove patch users fixture should match file users/no-users.json and path ["users"] 1`] = `
+Object {
+  "ast": Object {
+    "children": Array [
+      Object {
+        "children": Array [
+          Object {
+            "length": 7,
+            "offset": 4,
+            "parent": [Circular],
+            "type": "string",
+            "value": "users",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "children": Array [
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 6,
+                        "offset": 27,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "name",
+                      },
+                      Object {
+                        "length": 5,
+                        "offset": 35,
+                        "parent": [Circular],
+                        "range": Object {
+                          "end": Object {
+                            "character": 19,
+                            "line": 3,
+                          },
+                          "start": Object {
+                            "character": 14,
+                            "line": 3,
+                          },
+                        },
+                        "type": "string",
+                        "value": "Joe",
+                      },
+                    ],
+                    "length": 13,
+                    "offset": 27,
+                    "parent": [Circular],
+                    "range": Object {
+                      "end": Object {
+                        "character": 12,
+                        "line": 3,
+                      },
+                      "start": Object {
+                        "character": 6,
+                        "line": 3,
+                      },
+                    },
+                    "type": "property",
+                  },
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 9,
+                        "offset": 48,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "address",
+                      },
+                      Object {
+                        "children": Array [
+                          Object {
+                            "children": Array [
+                              Object {
+                                "length": 6,
+                                "offset": 69,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "city",
+                              },
+                              Object {
+                                "length": 10,
+                                "offset": 77,
+                                "parent": [Circular],
+                                "range": Object {
+                                  "end": Object {
+                                    "character": 26,
+                                    "line": 5,
+                                  },
+                                  "start": Object {
+                                    "character": 16,
+                                    "line": 5,
+                                  },
+                                },
+                                "type": "string",
+                                "value": "New York",
+                              },
+                            ],
+                            "length": 18,
+                            "offset": 69,
+                            "parent": [Circular],
+                            "range": Object {
+                              "end": Object {
+                                "character": 14,
+                                "line": 5,
+                              },
+                              "start": Object {
+                                "character": 8,
+                                "line": 5,
+                              },
+                            },
+                            "type": "property",
+                          },
+                        ],
+                        "length": 36,
+                        "offset": 59,
+                        "parent": [Circular],
+                        "range": Object {
+                          "end": Object {
+                            "character": 7,
+                            "line": 6,
+                          },
+                          "start": Object {
+                            "character": 17,
+                            "line": 4,
+                          },
+                        },
+                        "type": "object",
+                      },
+                    ],
+                    "length": 47,
+                    "offset": 48,
+                    "parent": [Circular],
+                    "range": Object {
+                      "end": Object {
+                        "character": 15,
+                        "line": 4,
+                      },
+                      "start": Object {
+                        "character": 6,
+                        "line": 4,
+                      },
+                    },
+                    "type": "property",
+                  },
+                ],
+                "length": 82,
+                "offset": 19,
+                "parent": [Circular],
+                "range": Object {
+                  "end": Object {
+                    "character": 5,
+                    "line": 7,
+                  },
+                  "start": Object {
+                    "character": 4,
+                    "line": 2,
+                  },
+                },
+                "type": "object",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 6,
+                        "offset": 115,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "name",
+                      },
+                      Object {
+                        "length": 7,
+                        "offset": 123,
+                        "parent": [Circular],
+                        "range": Object {
+                          "end": Object {
+                            "character": 21,
+                            "line": 9,
+                          },
+                          "start": Object {
+                            "character": 14,
+                            "line": 9,
+                          },
+                        },
+                        "type": "string",
+                        "value": "Chris",
+                      },
+                    ],
+                    "length": 15,
+                    "offset": 115,
+                    "parent": [Circular],
+                    "range": Object {
+                      "end": Object {
+                        "character": 12,
+                        "line": 9,
+                      },
+                      "start": Object {
+                        "character": 6,
+                        "line": 9,
+                      },
+                    },
+                    "type": "property",
+                  },
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 9,
+                        "offset": 138,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "address",
+                      },
+                      Object {
+                        "children": Array [
+                          Object {
+                            "children": Array [
+                              Object {
+                                "length": 6,
+                                "offset": 159,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "city",
+                              },
+                              Object {
+                                "length": 8,
+                                "offset": 167,
+                                "parent": [Circular],
+                                "range": Object {
+                                  "end": Object {
+                                    "character": 24,
+                                    "line": 11,
+                                  },
+                                  "start": Object {
+                                    "character": 16,
+                                    "line": 11,
+                                  },
+                                },
+                                "type": "string",
+                                "value": "Dallas",
+                              },
+                            ],
+                            "length": 16,
+                            "offset": 159,
+                            "parent": [Circular],
+                            "range": Object {
+                              "end": Object {
+                                "character": 14,
+                                "line": 11,
+                              },
+                              "start": Object {
+                                "character": 8,
+                                "line": 11,
+                              },
+                            },
+                            "type": "property",
+                          },
+                        ],
+                        "length": 34,
+                        "offset": 149,
+                        "parent": [Circular],
+                        "range": Object {
+                          "end": Object {
+                            "character": 7,
+                            "line": 12,
+                          },
+                          "start": Object {
+                            "character": 17,
+                            "line": 10,
+                          },
+                        },
+                        "type": "object",
+                      },
+                    ],
+                    "length": 45,
+                    "offset": 138,
+                    "parent": [Circular],
+                    "range": Object {
+                      "end": Object {
+                        "character": 15,
+                        "line": 10,
+                      },
+                      "start": Object {
+                        "character": 6,
+                        "line": 10,
+                      },
+                    },
+                    "type": "property",
+                  },
+                ],
+                "length": 82,
+                "offset": 107,
+                "parent": [Circular],
+                "range": Object {
+                  "end": Object {
+                    "character": 5,
+                    "line": 13,
+                  },
+                  "start": Object {
+                    "character": 4,
+                    "line": 8,
+                  },
+                },
+                "type": "object",
+              },
+            ],
+            "length": 180,
+            "offset": 13,
+            "parent": [Circular],
+            "range": Object {
+              "end": Object {
+                "character": 3,
+                "line": 14,
+              },
+              "start": Object {
+                "character": 11,
+                "line": 1,
+              },
+            },
+            "type": "array",
+          },
+        ],
+        "length": 189,
+        "offset": 4,
+        "parent": [Circular],
+        "range": Object {
+          "end": Object {
+            "character": 9,
+            "line": 1,
+          },
+          "start": Object {
+            "character": 2,
+            "line": 1,
+          },
+        },
+        "type": "property",
+      },
+    ],
+    "length": 195,
+    "offset": 0,
+    "range": Object {
+      "end": Object {
+        "character": 1,
+        "line": 15,
+      },
+      "start": Object {
+        "character": 0,
+        "line": 0,
+      },
+    },
+    "type": "object",
+  },
+  "data": Object {
+    "users": Array [
+      Object {
+        "address": Object {
+          "city": "New York",
+        },
+        "name": "Joe",
+      },
+      Object {
+        "address": Object {
+          "city": "Dallas",
+        },
+        "name": "Chris",
+      },
+    ],
+  },
+  "diagnostics": Array [],
+  "lineMap": Array [
+    0,
+    2,
+    15,
+    21,
+    42,
+    61,
+    88,
+    96,
+    103,
+    109,
+    132,
+    151,
+    176,
+    184,
+    190,
+    194,
+    196,
+    197,
+  ],
+}
+`;
+
+exports[`json patches remove patch users fixture should match file users/single-user.json and path ["users", 0] 1`] = `
+Object {
+  "ast": Object {
+    "children": Array [
+      Object {
+        "children": Array [
+          Object {
+            "length": 7,
+            "offset": 4,
+            "parent": [Circular],
+            "type": "string",
+            "value": "users",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "children": Array [
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 6,
+                        "offset": 27,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "name",
+                      },
+                      Object {
+                        "length": 5,
+                        "offset": 35,
+                        "parent": [Circular],
+                        "range": Object {
+                          "end": Object {
+                            "character": 19,
+                            "line": 3,
+                          },
+                          "start": Object {
+                            "character": 14,
+                            "line": 3,
+                          },
+                        },
+                        "type": "string",
+                        "value": "Joe",
+                      },
+                    ],
+                    "length": 13,
+                    "offset": 27,
+                    "parent": [Circular],
+                    "range": Object {
+                      "end": Object {
+                        "character": 12,
+                        "line": 3,
+                      },
+                      "start": Object {
+                        "character": 6,
+                        "line": 3,
+                      },
+                    },
+                    "type": "property",
+                  },
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 9,
+                        "offset": 48,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "address",
+                      },
+                      Object {
+                        "children": Array [
+                          Object {
+                            "children": Array [
+                              Object {
+                                "length": 6,
+                                "offset": 69,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "city",
+                              },
+                              Object {
+                                "length": 10,
+                                "offset": 77,
+                                "parent": [Circular],
+                                "range": Object {
+                                  "end": Object {
+                                    "character": 26,
+                                    "line": 5,
+                                  },
+                                  "start": Object {
+                                    "character": 16,
+                                    "line": 5,
+                                  },
+                                },
+                                "type": "string",
+                                "value": "New York",
+                              },
+                            ],
+                            "length": 18,
+                            "offset": 69,
+                            "parent": [Circular],
+                            "range": Object {
+                              "end": Object {
+                                "character": 14,
+                                "line": 5,
+                              },
+                              "start": Object {
+                                "character": 8,
+                                "line": 5,
+                              },
+                            },
+                            "type": "property",
+                          },
+                        ],
+                        "length": 36,
+                        "offset": 59,
+                        "parent": [Circular],
+                        "range": Object {
+                          "end": Object {
+                            "character": 7,
+                            "line": 6,
+                          },
+                          "start": Object {
+                            "character": 17,
+                            "line": 4,
+                          },
+                        },
+                        "type": "object",
+                      },
+                    ],
+                    "length": 47,
+                    "offset": 48,
+                    "parent": [Circular],
+                    "range": Object {
+                      "end": Object {
+                        "character": 15,
+                        "line": 4,
+                      },
+                      "start": Object {
+                        "character": 6,
+                        "line": 4,
+                      },
+                    },
+                    "type": "property",
+                  },
+                ],
+                "length": 82,
+                "offset": 19,
+                "parent": [Circular],
+                "range": Object {
+                  "end": Object {
+                    "character": 5,
+                    "line": 7,
+                  },
+                  "start": Object {
+                    "character": 4,
+                    "line": 2,
+                  },
+                },
+                "type": "object",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 6,
+                        "offset": 115,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "name",
+                      },
+                      Object {
+                        "length": 7,
+                        "offset": 123,
+                        "parent": [Circular],
+                        "range": Object {
+                          "end": Object {
+                            "character": 21,
+                            "line": 9,
+                          },
+                          "start": Object {
+                            "character": 14,
+                            "line": 9,
+                          },
+                        },
+                        "type": "string",
+                        "value": "Chris",
+                      },
+                    ],
+                    "length": 15,
+                    "offset": 115,
+                    "parent": [Circular],
+                    "range": Object {
+                      "end": Object {
+                        "character": 12,
+                        "line": 9,
+                      },
+                      "start": Object {
+                        "character": 6,
+                        "line": 9,
+                      },
+                    },
+                    "type": "property",
+                  },
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 9,
+                        "offset": 138,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "address",
+                      },
+                      Object {
+                        "children": Array [
+                          Object {
+                            "children": Array [
+                              Object {
+                                "length": 6,
+                                "offset": 159,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "city",
+                              },
+                              Object {
+                                "length": 8,
+                                "offset": 167,
+                                "parent": [Circular],
+                                "range": Object {
+                                  "end": Object {
+                                    "character": 24,
+                                    "line": 11,
+                                  },
+                                  "start": Object {
+                                    "character": 16,
+                                    "line": 11,
+                                  },
+                                },
+                                "type": "string",
+                                "value": "Dallas",
+                              },
+                            ],
+                            "length": 16,
+                            "offset": 159,
+                            "parent": [Circular],
+                            "range": Object {
+                              "end": Object {
+                                "character": 14,
+                                "line": 11,
+                              },
+                              "start": Object {
+                                "character": 8,
+                                "line": 11,
+                              },
+                            },
+                            "type": "property",
+                          },
+                        ],
+                        "length": 34,
+                        "offset": 149,
+                        "parent": [Circular],
+                        "range": Object {
+                          "end": Object {
+                            "character": 7,
+                            "line": 12,
+                          },
+                          "start": Object {
+                            "character": 17,
+                            "line": 10,
+                          },
+                        },
+                        "type": "object",
+                      },
+                    ],
+                    "length": 45,
+                    "offset": 138,
+                    "parent": [Circular],
+                    "range": Object {
+                      "end": Object {
+                        "character": 15,
+                        "line": 10,
+                      },
+                      "start": Object {
+                        "character": 6,
+                        "line": 10,
+                      },
+                    },
+                    "type": "property",
+                  },
+                ],
+                "length": 82,
+                "offset": 107,
+                "parent": [Circular],
+                "range": Object {
+                  "end": Object {
+                    "character": 5,
+                    "line": 13,
+                  },
+                  "start": Object {
+                    "character": 4,
+                    "line": 8,
+                  },
+                },
+                "type": "object",
+              },
+            ],
+            "length": 180,
+            "offset": 13,
+            "parent": [Circular],
+            "range": Object {
+              "end": Object {
+                "character": 3,
+                "line": 14,
+              },
+              "start": Object {
+                "character": 11,
+                "line": 1,
+              },
+            },
+            "type": "array",
+          },
+        ],
+        "length": 189,
+        "offset": 4,
+        "parent": [Circular],
+        "range": Object {
+          "end": Object {
+            "character": 9,
+            "line": 1,
+          },
+          "start": Object {
+            "character": 2,
+            "line": 1,
+          },
+        },
+        "type": "property",
+      },
+    ],
+    "length": 195,
+    "offset": 0,
+    "range": Object {
+      "end": Object {
+        "character": 1,
+        "line": 15,
+      },
+      "start": Object {
+        "character": 0,
+        "line": 0,
+      },
+    },
+    "type": "object",
+  },
+  "data": Object {
+    "users": Array [
+      Object {
+        "address": Object {
+          "city": "New York",
+        },
+        "name": "Joe",
+      },
+      Object {
+        "address": Object {
+          "city": "Dallas",
+        },
+        "name": "Chris",
+      },
+    ],
+  },
+  "diagnostics": Array [],
+  "lineMap": Array [
+    0,
+    2,
+    15,
+    21,
+    42,
+    61,
+    88,
+    96,
+    103,
+    109,
+    132,
+    151,
+    176,
+    184,
+    190,
+    194,
+    196,
+    197,
+  ],
+}
+`;
+
+exports[`json patches remove works 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "children": Array [
+        Object {
+          "length": 7,
+          "offset": 4,
+          "parent": [Circular],
+          "type": "string",
+          "value": "users",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "children": Array [
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 6,
+                      "offset": 33,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "name",-=
+                    },
+                    Object {
+                      "length": 7,
+                      "offset": 41,
+                      "parent": [Circular],
+                      "range": Object {
+                        "end": Object {
+                          "character": 21,
+                          "line": 9,
+                        },
+                        "start": Object {
+                          "character": 14,
+                          "line": 9,
+                        },
+                      },
+                      "type": "string",
+                      "value": "Chris",
+                    },
+                  ],
+                  "colonOffset": 121,
+                  "length": 15,
+                  "offset": 33,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 9,
+                      "offset": 56,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "address",
+                    },
+                    Object {
+                      "children": Array [
+                        Object {
+                          "children": Array [
+                            Object {
+                              "length": 6,
+                              "offset": 77,
+                              "parent": [Circular],
+                              "type": "string",
+                              "value": "city",
+                            },
+                            Object {
+                              "length": 8,
+                              "offset": 85,
+                              "parent": [Circular],
+                              "range": Object {
+                                "end": Object {
+                                  "character": 24,
+                                  "line": 11,
+                                },
+                                "start": Object {
+                                  "character": 16,
+                                  "line": 11,
+                                },
+                              },
+                              "type": "string",
+                              "value": "Dallas",
+                            },
+                          ],
+                          "colonOffset": 165,
+                          "length": 16,
+                          "offset": 77,
+                          "parent": [Circular],
+                          "type": "property",
+                        },
+                      ],
+                      "length": 34,
+                      "offset": 67,
+                      "parent": [Circular],
+                      "range": Object {
+                        "end": Object {
+                          "character": 7,
+                          "line": 12,
+                        },
+                        "start": Object {
+                          "character": 17,
+                          "line": 10,
+                        },
+                      },
+                      "type": "object",
+                    },
+                  ],
+                  "colonOffset": 147,
+                  "length": 45,
+                  "offset": 56,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+              ],
+              "length": 82,
+              "offset": 25,
+              "parent": [Circular],
+              "range": Object {
+                "end": Object {
+                  "character": 5,
+                  "line": 13,
+                },
+                "start": Object {
+                  "character": 4,
+                  "line": 8,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "length": 98,
+          "offset": 13,
+          "parent": [Circular],
+          "range": Object {
+            "end": Object {
+              "character": 3,
+              "line": 14,
+            },
+            "start": Object {
+              "character": 11,
+              "line": 1,
+            },
+          },
+          "type": "array",
+        },
+      ],
+      "colonOffset": 11,
+      "length": 107,
+      "offset": 4,
+      "parent": [Circular],
+      "type": "property",
+    },
+  ],
+  "length": 113,
+  "offset": 0,
+  "range": Object {
+    "end": Object {
+      "character": 1,
+      "line": 15,
+    },
+    "start": Object {
+      "character": 0,
+      "line": 0,
+    },
+  },
+  "type": "object",
+}
+`;

@@ -1,12 +1,12 @@
 import { DiagnosticSeverity, IDiagnostic } from '@stoplight/types/diagnostics';
-import { IParserASTResult, IParserResult, IRange } from '@stoplight/types/parsers';
+import { IParserASTResult, IRange } from '@stoplight/types/parsers';
 import { JSONVisitor, Node, NodeType, ParseErrorCode, ParseOptions, printParseErrorCode, visit } from 'jsonc-parser';
-import { IJsonASTNode } from './types';
+import { IJsonASTNode, JsonParserResult } from './types';
 
 export const parseWithPointers = <T = any>(
   value: string,
   options: ParseOptions = { disallowComments: true }
-): IParserResult<T, IJsonASTNode, number[]> => {
+): JsonParserResult<T> => {
   const diagnostics: IDiagnostic[] = [];
   const { ast, data, lineMap } = parseTree<T>(value, diagnostics, options);
 
@@ -91,8 +91,15 @@ export function parseTree<T>(
 
       onParsedComplexBegin({});
     },
-    onObjectProperty: (name: string, offset: number, length: number) => {
-      currentParent = onValue({ type: 'property', offset, length: -1, parent: currentParent, children: [] });
+    onObjectProperty: (name: string, offset: number, length: number, startLine, startCharacter) => {
+      currentParent = onValue({
+        type: 'property',
+        offset,
+        length: -1,
+        parent: currentParent,
+        children: [],
+        range: calculateRange(startLine, startCharacter, length),
+      });
       currentParent.children!.push({ type: 'string', value: name, offset, length, parent: currentParent });
 
       currentParsedProperty = name;
@@ -148,13 +155,13 @@ export function parseTree<T>(
 
       onParsedValue(value);
     },
-    onSeparator: (sep: string, offset: number, length: number) => {
-      if (currentParent.type === 'property') {
-        if (sep === ':') {
-          currentParent.colonOffset = offset;
-        } else if (sep === ',') {
-          ensurePropertyComplete(offset);
-        }
+    onSeparator: (sep: string, offset: number, length: number, startLine, startCharacter) => {
+      if (currentParent.type === 'property' && sep === ',') {
+        ensurePropertyComplete(offset);
+        // @ts-ignore, read only ;P
+        currentParent.range.end.line = startLine;
+        // @ts-ignore, read only ;P
+        currentParent.range.end.character = startCharacter + length;
       }
     },
     onError: (error: ParseErrorCode, offset, length, startLine, startCharacter) => {
