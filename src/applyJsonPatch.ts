@@ -7,9 +7,23 @@ import { IJsonASTNode, JsonParserResult } from './types';
 
 type MutableNode = Omit<IJsonASTNode, 'length' | 'offset'> & { length: number; offset: number };
 
-// function add() {
-//
-// }
+function getNextChild(node: IJsonASTNode) {
+  const index = node.parent!.children!.indexOf(node);
+  if (index < node.parent!.children!.length - 1) {
+    return node.parent!.children![index + 1];
+  }
+
+  return null;
+}
+
+function add<T>(result: JsonParserResult<T>, path: JsonPath, data: JsonParserResult<T>): void {
+  if (path.length === 0) {
+    Object.assign(result, data);
+    return;
+  }
+
+  // const node = findNodeAtLocation(result.ast, path) as IJsonASTNode;
+}
 
 function remove<T>(result: JsonParserResult<T>, path: JsonPath): void {
   if (path.length === 0) {
@@ -27,18 +41,22 @@ function remove<T>(result: JsonParserResult<T>, path: JsonPath): void {
       node = node.parent;
     }
 
+    const nextChild = getNextChild(node);
+
     node.parent!.children!.splice(node.parent!.children!.indexOf(node), 1);
-    const startOffset = node.range ? node.range!.start.character : 0;
-    calculateOffsets(node, node.offset, -node.length - startOffset);
     const linesRemoved = node.range!.end.line - node.range!.start.line;
+
+    const extraOffset = nextChild ? nextChild.offset - node.offset - node.length : 0;
 
     if (linesRemoved > 0) {
       result.lineMap.splice(node.range!.start.line, linesRemoved);
 
       for (let i = node.range!.start.line; i < result.lineMap.length; i++) {
-        result.lineMap[i] -= node.length + startOffset;
+        result.lineMap[i] -= node.length;
       }
     }
+
+    recomputeOffsets(node, -node.length - extraOffset, node.offset);
 
     if (typeof path[path.length - 1] === 'number') {
       _pullAt(_get(result.data, path.slice(0, -1)), path[path.length - 1] as number);
@@ -50,11 +68,16 @@ function remove<T>(result: JsonParserResult<T>, path: JsonPath): void {
   }
 }
 
-const calculateOffsets = (node: IJsonASTNode, offset: number, diff: number) => {
+const recomputeOffsets = (node: IJsonASTNode, diff: number, offset: number) => {
   if (diff !== 0) {
     while (node.parent) {
-      if (node.offset + node.length > offset) {
-        updateChildren(node, node.parent, offset, diff);
+      if (node.offset + node.length > offset && node.children !== undefined) {
+        for (const child of getRelevantChildren(node.children, offset)) {
+          (child as MutableNode).offset += diff;
+          if (child.range !== undefined) {
+            // node.range = getLocationForJsonPath
+          }
+        }
       }
 
       ((node = node.parent) as MutableNode).length += diff;
@@ -62,24 +85,17 @@ const calculateOffsets = (node: IJsonASTNode, offset: number, diff: number) => {
   }
 };
 
-const updateChildren = (src: IJsonASTNode, node: IJsonASTNode, offset: number, diff: number) => {
-  if (node.offset + node.length > offset) {
+function* getRelevantChildren(nodes: IJsonASTNode[], offset: number): IterableIterator<IJsonASTNode> {
+  for (const node of nodes) {
     if (node.offset > offset) {
-      (node as MutableNode).offset += diff;
-      if (node.range !== undefined) {
-        // node.range.start.character =
-      }
-    }
+      yield node;
 
-    if (node.children !== undefined) {
-      for (const child of node.children) {
-        if (child !== src) {
-          updateChildren(src, child, offset, diff);
-        }
+      if (node.children !== undefined) {
+        yield* getRelevantChildren(node.children, offset);
       }
     }
   }
-};
+}
 
 export const enum PatchTypes {
   Remove = 'remove',
@@ -91,14 +107,22 @@ export interface IJsonRemovePatch {
   path: JsonPath;
 }
 
-export type JsonPatch = IJsonRemovePatch;
+export interface IJsonAddPatch<T> {
+  type: PatchTypes.Add;
+  path: JsonPath;
+  data: JsonParserResult<T>;
+}
 
-export const applyJsonPatch = <T>(result: JsonParserResult<T>, patch: JsonPatch): JsonParserResult<T> => {
+export type JsonPatch<T> = IJsonRemovePatch | IJsonAddPatch<T>;
+
+export const applyJsonPatch = <T>(result: JsonParserResult<T>, patch: JsonPatch<T>): JsonParserResult<T> => {
   switch (patch.type) {
     case PatchTypes.Remove:
       remove(result, patch.path);
       break;
-
+    case PatchTypes.Add:
+      add<T>(result, patch.path, patch.data);
+      break;
   }
 
   return result;
@@ -107,12 +131,3 @@ export const applyJsonPatch = <T>(result: JsonParserResult<T>, patch: JsonPatch)
 export const computePatch = (source: string) => {
   return parse(source);
 };
-
-// key assumptions:
-
-// - json ast patch supports all (or at least a vast subset) of the operations that fast-json-patch does
-// - json ast patch cannot result in syntax error
-// - end code is expected to compute the patch using `computePatch` method
-// - json/yaml/markdown take care of updating internal data needed to calculate positions + update diagnostics
-// - json/yaml/markdown update parsed content
-// - ast and internal data are mutatable
