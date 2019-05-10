@@ -51,5 +51,7 @@ describe('safeStringify', () => {
     expect(safeStringify(null)).toBe('null');
     expect(safeStringify(0)).toBe('0');
     expect(safeStringify(false)).toBe('false');
+    expect(safeStringify(undefined)).toBeUndefined();
+    expect(safeStringify({ value: undefined })).toBe('{}');
   });
 });
