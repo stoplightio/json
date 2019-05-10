@@ -3,6 +3,7 @@ export * from './decodePointer';
 export * from './decodePointerFragment';
 export * from './encodePointer';
 export * from './encodePointerFragment';
+export * from './isStringified';
 export * from './pathToPointer';
 export * from './pointerToPath';
 export * from './safeParse';
