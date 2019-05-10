@@ -44,6 +44,12 @@ describe('safeStringify', () => {
   it('should work', () => {
     const val = { foo: true };
     expect(safeStringify(val)).toEqual('{"foo":true}');
-    expect(safeStringify('{"foo":true}')).toEqual('{"foo":true}');
+    expect(safeStringify('{"foo":true}')).toEqual(JSON.stringify('{"foo":true}'));
+  });
+
+  it('should handle falsy values correctly', () => {
+    expect(safeStringify(null)).toBe('null');
+    expect(safeStringify(0)).toBe('0');
+    expect(safeStringify(false)).toBe('false');
   });
 });
