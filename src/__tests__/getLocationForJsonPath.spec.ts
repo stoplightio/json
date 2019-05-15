@@ -16,6 +16,7 @@ describe('getLocationForJsonPath', () => {
     test.each`
       start       | end        | path
       ${[8, 21]}  | ${[8, 41]} | ${['info', 'contact', 'email']}
+      ${[8, 21]}  | ${[8, 41]} | ${['info', 'contact', 'email', 'foo']}
       ${[18, 8]}  | ${[25, 9]} | ${['tags', 0]}
       ${[18, 8]}  | ${[25, 9]} | ${['tags', 0, 0]}
       ${[18, 8]}  | ${[25, 9]} | ${['tags', 0, 'test', 'foo']}
