@@ -55,8 +55,9 @@ describe('safeStringify', () => {
     expect(safeStringify({ value: undefined })).toBe('{}');
   });
 
-  it('should not stringify twice', () => {
-    expect(safeStringify('"0"')).toBe('"0"');
+  it('should not stringify something that is already a string', () => {
+    // invalid json (for example coming from user in code editor) SHOULD not stringify again
+    expect(safeStringify('{"foo": "bar",}')).toBe('{"foo": "bar",}');
     expect(safeStringify(JSON.stringify({ foo: 'bar' }))).toBe(JSON.stringify({ foo: 'bar' }));
   });
 });

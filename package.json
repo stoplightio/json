@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@stoplight/fast-safe-stringify": "2.1.2",
-    "@stoplight/types": "4.0.x",
+    "@stoplight/types": "5.x.x",
     "jsonc-parser": "2.1.0",
     "lodash": "4.x.x"
   },
@@ -54,7 +54,7 @@
     "ts-jest": "24.0.x",
     "tslint": "5.14.x",
     "tslint-config-stoplight": "1.2.x",
-    "typescript": "3.3.4000"
+    "typescript": "3.4.5"
   },
   "lint-staged": {
     "*.{ts,tsx}$": [
