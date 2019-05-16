@@ -1,8 +1,12 @@
 import { GetLocationForJsonPath, JsonPath } from '@stoplight/types';
 import { IJsonASTNode } from './types';
 
-export const getLocationForJsonPath: GetLocationForJsonPath<IJsonASTNode, number[]> = ({ lineMap, ast }, path) => {
-  const node = findNodeAtPath(ast, path) as IJsonASTNode;
+export const getLocationForJsonPath: GetLocationForJsonPath<IJsonASTNode, number[]> = (
+  { lineMap, ast },
+  path,
+  closest = false
+) => {
+  const node = findNodeAtPath(ast, path, closest) as IJsonASTNode;
 
   if (node === undefined || node.range === undefined) {
     return;
@@ -12,11 +16,11 @@ export const getLocationForJsonPath: GetLocationForJsonPath<IJsonASTNode, number
 };
 
 // based on source code of https://github.com/microsoft/node-jsonc-parser
-function findNodeAtPath(node: IJsonASTNode, path: JsonPath): IJsonASTNode | undefined {
+function findNodeAtPath(node: IJsonASTNode, path: JsonPath, closest: boolean): IJsonASTNode | undefined {
   pathLoop: for (const segment of path) {
     if (typeof segment === 'string') {
       if (node.type !== 'object' || !Array.isArray(node.children)) {
-        return node;
+        return closest ? node : undefined;
       }
 
       for (const propertyNode of node.children) {
@@ -25,9 +29,11 @@ function findNodeAtPath(node: IJsonASTNode, path: JsonPath): IJsonASTNode | unde
           continue pathLoop;
         }
       }
+
+      return closest ? node : undefined;
     } else {
       if (node.type !== 'array' || segment < 0 || !Array.isArray(node.children) || segment >= node.children.length) {
-        return node;
+        return closest ? node : undefined;
       }
 
       node = node.children[segment];
