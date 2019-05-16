@@ -12,7 +12,7 @@ export const safeParse: JSON['parse'] = <T>(text: string, reviver?: (key: any, v
 
     return JSON.parse(text, reviver);
   } catch (e) {
-    return undefined;
+    return void 0;
   }
 };
 
