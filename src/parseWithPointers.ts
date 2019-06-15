@@ -1,5 +1,4 @@
-import { DiagnosticSeverity, IDiagnostic } from '@stoplight/types/diagnostics';
-import { IParserASTResult, IParserResult, IRange } from '@stoplight/types/parsers';
+import { DiagnosticSeverity, IDiagnostic, IParserASTResult, IParserResult, IRange } from '@stoplight/types';
 import { JSONVisitor, Node, NodeType, ParseErrorCode, ParseOptions, printParseErrorCode, visit } from 'jsonc-parser';
 import { IJsonASTNode } from './types';
 
