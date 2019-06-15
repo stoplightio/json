@@ -1,4 +1,4 @@
-import { JsonPath } from '@stoplight/types/parsers';
+import { JsonPath } from '@stoplight/types';
 import { decodePointer } from './decodePointer';
 
 export const pointerToPath = (pointer: string): JsonPath => {

@@ -1,4 +1,5 @@
-import { Segment } from '@stoplight/types/parsers';
+
+import { Segment } from '@stoplight/types';
 import { replaceInString } from './_utils';
 
 /**
