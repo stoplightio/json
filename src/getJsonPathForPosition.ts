@@ -20,5 +20,8 @@ export const getJsonPathForPosition: GetJsonPathForPosition<IJsonASTNode, number
     return;
   }
 
-  return getNodePath(node);
+  const path = getNodePath(node);
+  if (path.length === 0) return;
+
+  return path;
 };
