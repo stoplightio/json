@@ -13,7 +13,7 @@ describe('getJsonPathForPosition', () => {
 
     test.each`
       line | character | path
-      ${0} | ${0}      | ${[]}
+      ${0} | ${0}      | ${void 0}
       ${1} | ${4}      | ${['hello']}
       ${1} | ${17}     | ${['hello']}
       ${3} | ${5}      | ${['address', 'street']}
@@ -28,8 +28,8 @@ describe('getJsonPathForPosition', () => {
 
     test.each`
       line | character | path
-      ${0} | ${0}      | ${[]}
-      ${0} | ${231}    | ${[]}
+      ${0} | ${0}      | ${void 0}
+      ${0} | ${231}    | ${void 0}
       ${2} | ${0}      | ${['users']}
       ${2} | ${3}      | ${['users']}
       ${2} | ${5}      | ${['users', 0]}
