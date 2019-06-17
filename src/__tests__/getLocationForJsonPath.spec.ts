@@ -81,7 +81,9 @@ describe('getLocationForJsonPath', () => {
     test.each`
       start       | end        | path
       ${[3, 14]}  | ${[3, 19]} | ${['users', 0, 'name']}
+      ${[3, 14]}  | ${[3, 19]} | ${['users', '0', 'name']}
       ${[10, 17]} | ${[12, 7]} | ${['users', 1, 'address']}
+      ${[10, 17]} | ${[12, 7]} | ${['users', '1', 'address']}
     `('should return proper location for given JSONPath $path', ({ start, end, path }) => {
       expect(getLocationForJsonPath(result, path)).toEqual({
         range: {

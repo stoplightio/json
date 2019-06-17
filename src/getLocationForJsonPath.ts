@@ -17,7 +17,8 @@ export const getLocationForJsonPath: GetLocationForJsonPath<IJsonASTNode, number
 
 // based on source code of https://github.com/microsoft/node-jsonc-parser
 function findNodeAtPath(node: IJsonASTNode, path: JsonPath, closest: boolean): IJsonASTNode | undefined {
-  pathLoop: for (const segment of path) {
+  pathLoop: for (const part of path) {
+    const segment = Number.isInteger(Number(part)) ? Number(part) : part;
     if (typeof segment === 'string') {
       if (node.type !== 'object' || !Array.isArray(node.children)) {
         return closest ? node : void 0;
