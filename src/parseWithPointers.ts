@@ -105,7 +105,7 @@ export function parseTree<T>(
         } else {
           errors.push({
             range: calculateRange(startLine, startCharacter, length),
-            message: 'Duplicated property',
+            message: 'DuplicatedKey',
             severity: DiagnosticSeverity.Error,
             code: 20, // 17 is the lowest safe value, but decided to bump it
           });
