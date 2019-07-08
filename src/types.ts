@@ -1,5 +1,5 @@
 import { IRange } from '@stoplight/types';
-import { Node, NodeType } from 'jsonc-parser';
+import { Node, NodeType, ParseOptions } from 'jsonc-parser';
 
 export interface IJsonASTNode extends Node {
   type: NodeType;
@@ -10,4 +10,8 @@ export interface IJsonASTNode extends Node {
   colonOffset?: number;
   parent?: IJsonASTNode;
   children?: IJsonASTNode[];
+}
+
+export interface IParseOptions extends ParseOptions {
+  ignoreDuplicateKeys?: boolean;
 }
