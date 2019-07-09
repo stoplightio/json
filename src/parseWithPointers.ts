@@ -1,10 +1,10 @@
 import { DiagnosticSeverity, IDiagnostic, IParserASTResult, IParserResult, IRange } from '@stoplight/types';
-import { JSONVisitor, Node, NodeType, ParseErrorCode, ParseOptions, printParseErrorCode, visit } from 'jsonc-parser';
-import { IJsonASTNode } from './types';
+import { JSONVisitor, Node, NodeType, ParseErrorCode, printParseErrorCode, visit } from 'jsonc-parser';
+import { IJsonASTNode, IParseOptions } from './types';
 
 export const parseWithPointers = <T = any>(
   value: string,
-  options: ParseOptions = { disallowComments: true }
+  options: IParseOptions = { disallowComments: true }
 ): IParserResult<T, IJsonASTNode, number[]> => {
   const diagnostics: IDiagnostic[] = [];
   const { ast, data, lineMap } = parseTree<T>(value, diagnostics, options);
@@ -25,12 +25,13 @@ export const parseWithPointers = <T = any>(
 export function parseTree<T>(
   text: string,
   errors: IDiagnostic[] = [],
-  options: ParseOptions
+  options: IParseOptions
 ): IParserASTResult<T, Node, number[]> {
   const lineMap = computeLineMap(text);
   let currentParent: IJsonASTNode = { type: 'array', offset: -1, length: -1, children: [], parent: void 0 }; // artificial root
   let currentParsedProperty: string | null = null;
   let currentParsedParent: any = [];
+  const currentObjectKeys: string[] = [''];
   const previousParsedParents: any[] = [];
 
   function ensurePropertyComplete(endOffset: number) {
@@ -88,11 +89,28 @@ export function parseTree<T>(
         range: calculateRange(startLine, startCharacter, length),
       });
 
+      if (options.ignoreDuplicateKeys === false) {
+        currentObjectKeys.length = 0;
+      }
+
       onParsedComplexBegin({});
     },
-    onObjectProperty: (name: string, offset: number, length: number) => {
+    onObjectProperty: (name: string, offset: number, length: number, startLine: number, startCharacter: number) => {
       currentParent = onValue({ type: 'property', offset, length: -1, parent: currentParent, children: [] });
       currentParent.children!.push({ type: 'string', value: name, offset, length, parent: currentParent });
+
+      if (options.ignoreDuplicateKeys === false) {
+        if (currentObjectKeys.length === 0 || !currentObjectKeys.includes(name)) {
+          currentObjectKeys.push(name);
+        } else {
+          errors.push({
+            range: calculateRange(startLine, startCharacter, length),
+            message: 'DuplicatedKey',
+            severity: DiagnosticSeverity.Error,
+            code: 20, // 17 is the lowest safe value, but decided to bump it
+          });
+        }
+      }
 
       currentParsedProperty = name;
     },

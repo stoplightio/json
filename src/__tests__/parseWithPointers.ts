@@ -1,3 +1,4 @@
+import { DiagnosticSeverity } from '@stoplight/types';
 import * as fs from 'fs';
 import { join } from 'path';
 import { parseWithPointers } from '../parseWithPointers';
@@ -126,5 +127,42 @@ describe('json parser', () => {
         lineMap: expect.any(Array),
       });
     });
+  });
+
+  test('reports duplicated properties', () => {
+    expect(
+      parseWithPointers('{ "foo": true, "foo": false,\n "foo": 2, "bar": true }', { ignoreDuplicateKeys: false })
+    ).toHaveProperty('diagnostics', [
+      {
+        code: 20,
+        message: 'DuplicatedKey',
+        range: {
+          start: {
+            line: 0,
+            character: 15,
+          },
+          end: {
+            line: 0,
+            character: 20,
+          },
+        },
+        severity: DiagnosticSeverity.Error,
+      },
+      {
+        code: 20,
+        message: 'DuplicatedKey',
+        range: {
+          start: {
+            line: 1,
+            character: 1,
+          },
+          end: {
+            line: 1,
+            character: 6,
+          },
+        },
+        severity: DiagnosticSeverity.Error,
+      },
+    ]);
   });
 });
