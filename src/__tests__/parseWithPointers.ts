@@ -135,7 +135,7 @@ describe('json parser', () => {
     ).toHaveProperty('diagnostics', [
       {
         code: 20,
-        message: 'DuplicatedKey',
+        message: 'DuplicateKey',
         range: {
           start: {
             line: 0,
@@ -150,7 +150,7 @@ describe('json parser', () => {
       },
       {
         code: 20,
-        message: 'DuplicatedKey',
+        message: 'DuplicateKey',
         range: {
           start: {
             line: 1,
