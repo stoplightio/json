@@ -1,4 +1,4 @@
-import { DiagnosticSeverity, IDiagnostic, IParserASTResult, IParserResult, IRange } from '@stoplight/types';
+import { DiagnosticSeverity, IDiagnostic, IParserASTResult, IParserResult, IRange, JsonPath } from '@stoplight/types';
 import { JSONVisitor, Node, NodeType, ParseErrorCode, printParseErrorCode, visit } from 'jsonc-parser';
 import { IJsonASTNode, IParseOptions } from './types';
 
@@ -107,6 +107,7 @@ export function parseTree<T>(
             range: calculateRange(startLine, startCharacter, length),
             message: 'DuplicateKey',
             severity: DiagnosticSeverity.Error,
+            path: getJsonPath(currentParent),
             code: 20, // 17 is the lowest safe value, but decided to bump it
           });
         }
@@ -222,3 +223,20 @@ const computeLineMap = (input: string) => {
 
   return lineMap;
 };
+
+function getJsonPath(node: IJsonASTNode, path: JsonPath = []): JsonPath {
+  if (node.type === 'property') {
+    path.unshift(node.children![0].value);
+  }
+
+  if (node.parent !== void 0) {
+    // RHS expr is to filter out root node (line 31)
+    if (node.parent.type === 'array' && node.parent.parent !== void 0) {
+      path.unshift(node.parent.children!.indexOf(node));
+    }
+
+    return getJsonPath(node.parent, path);
+  }
+
+  return path;
+}

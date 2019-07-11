@@ -136,6 +136,7 @@ describe('json parser', () => {
       {
         code: 20,
         message: 'DuplicateKey',
+        path: ['foo'],
         range: {
           start: {
             line: 0,
@@ -151,6 +152,7 @@ describe('json parser', () => {
       {
         code: 20,
         message: 'DuplicateKey',
+        path: ['foo'],
         range: {
           start: {
             line: 1,
@@ -163,6 +165,38 @@ describe('json parser', () => {
         },
         severity: DiagnosticSeverity.Error,
       },
+    ]);
+  });
+
+  test('generates correct path for dupes in array', () => {
+    expect(
+      parseWithPointers('{ "A": [{}, { "foo": true, "foo": false,\n "foo": 2 }] }', { ignoreDuplicateKeys: false })
+    ).toHaveProperty('diagnostics', [
+      expect.objectContaining({
+        code: 20,
+        message: 'DuplicateKey',
+        path: ['A', 1, 'foo'],
+      }),
+      expect.objectContaining({
+        code: 20,
+        message: 'DuplicateKey',
+        path: ['A', 1, 'foo'],
+      }),
+    ]);
+
+    expect(
+      parseWithPointers('[{ "A": [{}, {}, { "foo": true, "foo": false,\n "foo": 2 }] }]', { ignoreDuplicateKeys: false })
+    ).toHaveProperty('diagnostics', [
+      expect.objectContaining({
+        code: 20,
+        message: 'DuplicateKey',
+        path: [0, 'A', 2, 'foo'],
+      }),
+      expect.objectContaining({
+        code: 20,
+        message: 'DuplicateKey',
+        path: [0, 'A', 2, 'foo'],
+      }),
     ]);
   });
 });
