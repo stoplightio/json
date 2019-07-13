@@ -170,7 +170,7 @@ describe('json parser', () => {
 
   test('generates correct path for dupes in array', () => {
     expect(
-      parseWithPointers('{ "A": [{}, { "foo": true, "foo": false,\n "foo": 2 }] }', { ignoreDuplicateKeys: false })
+      parseWithPointers('{ "A": [{}, { "foo": true, "foo": false,\n "foo": 2 }] }', { ignoreDuplicateKeys: false }),
     ).toHaveProperty('diagnostics', [
       expect.objectContaining({
         code: 20,
@@ -185,7 +185,9 @@ describe('json parser', () => {
     ]);
 
     expect(
-      parseWithPointers('[{ "A": [{}, {}, { "foo": true, "foo": false,\n "foo": 2 }] }]', { ignoreDuplicateKeys: false })
+      parseWithPointers('[{ "A": [{}, {}, { "foo": true, "foo": false,\n "foo": 2 }] }]', {
+        ignoreDuplicateKeys: false,
+      }),
     ).toHaveProperty('diagnostics', [
       expect.objectContaining({
         code: 20,
