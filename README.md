@@ -18,7 +18,6 @@ yarn add @stoplight/json
 
 ### Usage
 
-- **[decycle](https://stoplightio.github.io/json/globals.html#decycle)**: Remove circular references with support for an optional replacer.
 - **[parseWithPointers](https://stoplightio.github.io/json/globals.html#parsewithpointers)**: Like `JSON.parse(val)` but also returns parsing errors as well as full ast with line information.
 - **[pathToPointer](https://stoplightio.github.io/json/globals.html#pathtopointer)**: Turns an array of path segments into a json pointer IE `['paths', '/user', 'get']` -> `#/paths/~1/user/get`.
 - **[pointerToPath](https://stoplightio.github.io/json/globals.html#pointertopath)**: Turns a json pointer into an array of path segments IE `#/paths/~1/user/get` -> `['paths', '/user', 'get']`.
@@ -31,10 +30,8 @@ yarn add @stoplight/json
 
 #### Example `parseWithPointers`
 
-_Note: Unlike most of the other functions, parseWithPointers is not exported from root. You must import by name._
-
 ```ts
-import { parseWithPointers } from "@stoplight/json/parseWithPointers";
+import { parseWithPointers } from "@stoplight/json";
 
 const result = parseWithPointers('{"foo": "bar"}');
 

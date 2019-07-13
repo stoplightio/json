@@ -4,7 +4,7 @@ import { IJsonASTNode } from './types';
 export const getLocationForJsonPath: GetLocationForJsonPath<IJsonASTNode, number[]> = (
   { lineMap, ast },
   path,
-  closest = false
+  closest = false,
 ) => {
   const node = findNodeAtPath(ast, path, closest) as IJsonASTNode;
 

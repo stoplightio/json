@@ -45,7 +45,7 @@ describe('getLocationForJsonPath', () => {
                 },
               },
             }
-          : void 0
+          : void 0,
       );
     });
   });
@@ -173,7 +173,7 @@ describe('getLocationForJsonPath', () => {
                 },
               },
             }
-          : undefined
+          : undefined,
       );
     });
   });

@@ -19,7 +19,7 @@ describe('renameObjectKey', () => {
         boo: 3,
       },
       'old',
-      'new'
+      'new',
     );
 
     expect(newObj).toEqual({
@@ -38,7 +38,7 @@ describe('renameObjectKey', () => {
         boo: 3,
       },
       'old',
-      'boo'
+      'boo',
     );
 
     expect(newObj).toEqual({
@@ -55,7 +55,7 @@ describe('renameObjectKey', () => {
         old: 2,
       },
       'old',
-      'boo'
+      'boo',
     );
 
     expect(newObj).toEqual({
@@ -72,7 +72,7 @@ describe('renameObjectKey', () => {
         old: 2,
       },
       'old',
-      'old'
+      'old',
     );
 
     expect(newObj).toEqual({
