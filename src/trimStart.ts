@@ -8,7 +8,9 @@ import { trimStart as _trimStart } from 'lodash';
  * trimStart([1, 2, 3], [1, 2]) === [3]
  * trimStart([1, 2, 3], [999, 2]) === [1, 2, 3] since source[0] does not equal elems[0]
  */
-export const trimStart = (target: any[] | string, elems: any[] | string) => {
+export function trimStart(target: any[], elems: any[]): any[];
+export function trimStart(target: string, elems: string): string;
+export function trimStart(target: any[] | string, elems: any[] | string): string | any[] {
   if (typeof target === 'string' && typeof elems === 'string') {
     return _trimStart(target, elems);
   }
@@ -24,4 +26,4 @@ export const trimStart = (target: any[] | string, elems: any[] | string) => {
   }
 
   return target.slice(toRemove);
-};
+}
