@@ -39,13 +39,14 @@
   },
   "dependencies": {
     "@stoplight/types": "^9.1.2",
-    "jsonc-parser": "~2.1.0",
-    "lodash": "^4.17.0",
-    "safe-stable-stringify": "^1.1.0"
+    "jsonc-parser": "~2.1",
+    "lodash": "^4.17",
+    "safe-stable-stringify": "^1.1"
   },
   "devDependencies": {
     "@stoplight/scripts": "^7.0.3",
     "@types/jest": "^24.0.0",
+    "@types/lodash": "^4.14",
     "@types/node": "^12.0.0",
     "benchmark": "^2.1.0",
     "jest": "^24.8.0",

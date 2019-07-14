@@ -1,4 +1,4 @@
-const _trimStart = require('lodash/trimStart');
+import { trimStart as _trimStart } from 'lodash';
 
 /**
  * Removes elems from target, matched in order, starting on the left.
@@ -9,11 +9,12 @@ const _trimStart = require('lodash/trimStart');
  * trimStart([1, 2, 3], [999, 2]) === [1, 2, 3] since source[0] does not equal elems[0]
  */
 export const trimStart = (target: any[] | string, elems: any[] | string) => {
-  if (typeof target === 'string') {
+  if (typeof target === 'string' && typeof elems === 'string') {
     return _trimStart(target, elems);
   }
 
-  if (!elems || !elems.length || !(elems instanceof Array)) return target;
+  if (!target || !Array.isArray(target) || !target.length || !elems || !Array.isArray(elems) || !elems.length)
+    return target;
 
   let toRemove = 0;
   for (const i in target) {

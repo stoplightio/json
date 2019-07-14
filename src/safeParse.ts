@@ -1,12 +1,11 @@
-const toNumber = require('lodash/toNumber');
-const isFinite = require('lodash/isFinite');
-const toString = require('lodash/toString');
+import { isFinite, toNumber, toString } from 'lodash';
 
 export const safeParse: JSON['parse'] = <T>(text: string, reviver?: (key: any, value: any) => any): T | undefined => {
   if (typeof text !== 'string') return text;
 
   try {
     // if the number is parsed incorrectly return the original stringified num
+    // @ts-ignore
     const num = parseNumber(text) as T;
     if (typeof num === 'string') return num;
 
