@@ -1,3 +1,5 @@
+// NOTE: There are many safe stringify implementations. This one has proven to handle the most edge cases.
+// Be very careful if considering switching out the underlying library to a different one!
 import fastStringify from 'safe-stable-stringify';
 
 export const safeStringify = (
