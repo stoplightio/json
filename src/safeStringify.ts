@@ -1,9 +1,11 @@
-import fastStringify from '@stoplight/fast-safe-stringify';
+// NOTE: There are many safe stringify implementations. This one has proven to handle the most edge cases.
+// Be very careful if considering switching out the underlying library to a different one!
+import fastStringify from 'safe-stable-stringify';
 
 export const safeStringify = (
   value: any,
-  replacer?: (key: string, value: any) => any | Array<string | number> | null,
-  space?: string | number
+  replacer?: (key: string, value: any) => any | Array<number | string> | null,
+  space?: string | number,
 ): string => {
   if (typeof value === 'string') {
     return value;

@@ -1,14 +1,17 @@
-export * from './decycle';
 export * from './decodePointer';
 export * from './decodePointerFragment';
 export * from './encodePointer';
 export * from './encodePointerFragment';
+export * from './getJsonPathForPosition';
+export * from './getLastPathSegment';
+export * from './getLocationForJsonPath';
+export * from './parseWithPointers';
 export * from './pathToPointer';
 export * from './pointerToPath';
+export * from './renameObjectKey';
 export * from './safeParse';
 export * from './safeStringify';
 export * from './startsWith';
+export * from './toPropertyPath';
 export * from './trimStart';
-
-// parser is a heavier dep, so it is not included in default exports. must import directly
-// export * from './parseWithPointers';
+export * from './types';

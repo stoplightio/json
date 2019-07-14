@@ -4,7 +4,7 @@ import { IJsonASTNode, IParseOptions } from './types';
 
 export const parseWithPointers = <T = any>(
   value: string,
-  options: IParseOptions = { disallowComments: true }
+  options: IParseOptions = { disallowComments: true },
 ): IParserResult<T, IJsonASTNode, number[]> => {
   const diagnostics: IDiagnostic[] = [];
   const { ast, data, lineMap } = parseTree<T>(value, diagnostics, options);
@@ -25,7 +25,7 @@ export const parseWithPointers = <T = any>(
 export function parseTree<T>(
   text: string,
   errors: IDiagnostic[] = [],
-  options: IParseOptions
+  options: IParseOptions,
 ): IParserASTResult<T, Node, number[]> {
   const lineMap = computeLineMap(text);
   let currentParent: IJsonASTNode = { type: 'array', offset: -1, length: -1, children: [], parent: void 0 }; // artificial root

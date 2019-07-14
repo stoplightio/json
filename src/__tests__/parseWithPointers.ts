@@ -33,7 +33,7 @@ describe('json parser', () => {
       "adult": true
     }
   ]
-}`)
+}`),
     ).toMatchSnapshot({
       ast: expect.any(Object),
       lineMap: expect.any(Array),
@@ -51,7 +51,7 @@ describe('json parser', () => {
        comment  
        */
       "city": "Vantaa"
-    }`)
+    }`),
     ).toHaveProperty('diagnostics', [
       expect.objectContaining({
         message: 'InvalidCommentToken',
@@ -77,7 +77,7 @@ describe('json parser', () => {
       parseWithPointers(`{
       "name": "Antti",
        "city": "Vantaa",
-    }`)
+    }`),
     ).toHaveProperty('diagnostics', [
       expect.objectContaining({
         message: 'PropertyNameExpected',
@@ -107,7 +107,7 @@ describe('json parser', () => {
   describe('fixtures', () => {
     test.each(['petstore.oas2.json', 'user.jschema.json'])('parses %s', async filename => {
       expect(
-        parseWithPointers((await fs.promises.readFile(join(__dirname, 'fixtures', filename), 'utf-8')) as string)
+        parseWithPointers((await fs.promises.readFile(join(__dirname, 'fixtures', filename), 'utf-8')) as string),
       ).toMatchSnapshot({
         ast: expect.any(Object),
         lineMap: expect.any(Array),
@@ -120,8 +120,8 @@ describe('json parser', () => {
       expect(
         parseWithPointers((await fs.promises.readFile(
           join(__dirname, 'fixtures/invalid', filename),
-          'utf-8'
-        )) as string)
+          'utf-8',
+        )) as string),
       ).toMatchSnapshot({
         ast: expect.any(Object),
         lineMap: expect.any(Array),
@@ -131,7 +131,7 @@ describe('json parser', () => {
 
   test('reports duplicated properties', () => {
     expect(
-      parseWithPointers('{ "foo": true, "foo": false,\n "foo": 2, "bar": true }', { ignoreDuplicateKeys: false })
+      parseWithPointers('{ "foo": true, "foo": false,\n "foo": 2, "bar": true }', { ignoreDuplicateKeys: false }),
     ).toHaveProperty('diagnostics', [
       {
         code: 20,
@@ -170,7 +170,7 @@ describe('json parser', () => {
 
   test('generates correct path for dupes in array', () => {
     expect(
-      parseWithPointers('{ "A": [{}, { "foo": true, "foo": false,\n "foo": 2 }] }', { ignoreDuplicateKeys: false })
+      parseWithPointers('{ "A": [{}, { "foo": true, "foo": false,\n "foo": 2 }] }', { ignoreDuplicateKeys: false }),
     ).toHaveProperty('diagnostics', [
       expect.objectContaining({
         code: 20,
@@ -185,7 +185,9 @@ describe('json parser', () => {
     ]);
 
     expect(
-      parseWithPointers('[{ "A": [{}, {}, { "foo": true, "foo": false,\n "foo": 2 }] }]', { ignoreDuplicateKeys: false })
+      parseWithPointers('[{ "A": [{}, {}, { "foo": true, "foo": false,\n "foo": 2 }] }]', {
+        ignoreDuplicateKeys: false,
+      }),
     ).toHaveProperty('diagnostics', [
       expect.objectContaining({
         code: 20,

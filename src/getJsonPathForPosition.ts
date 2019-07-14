@@ -13,7 +13,7 @@ export const getJsonPathForPosition: GetJsonPathForPosition<IJsonASTNode, number
   const node = findNodeAtOffset(
     ast,
     endOffset === void 0 ? startOffset + position.character : Math.min(endOffset, startOffset + position.character),
-    true
+    true,
   );
 
   if (node === undefined) {
