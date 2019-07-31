@@ -1,11 +1,11 @@
-import { DiagnosticSeverity, IDiagnostic, IParserASTResult, IParserResult, IRange, JsonPath } from '@stoplight/types';
-import { JSONVisitor, Node, NodeType, ParseErrorCode, printParseErrorCode, visit } from 'jsonc-parser';
-import { IJsonASTNode, IParseOptions } from './types';
+import { DiagnosticSeverity, IDiagnostic, IParserASTResult, IRange, JsonPath } from '@stoplight/types';
+import { JSONVisitor, NodeType, ParseErrorCode, printParseErrorCode, visit } from 'jsonc-parser';
+import { IJsonASTNode, IParseOptions, JsonParserResult } from './types';
 
 export const parseWithPointers = <T = any>(
   value: string,
   options: IParseOptions = { disallowComments: true },
-): IParserResult<T, IJsonASTNode, number[]> => {
+): JsonParserResult<T> => {
   const diagnostics: IDiagnostic[] = [];
   const { ast, data, lineMap } = parseTree<T>(value, diagnostics, options);
 
@@ -26,7 +26,7 @@ export function parseTree<T>(
   text: string,
   errors: IDiagnostic[] = [],
   options: IParseOptions,
-): IParserASTResult<T, Node, number[]> {
+): IParserASTResult<T, IJsonASTNode, number[]> {
   const lineMap = computeLineMap(text);
   let currentParent: IJsonASTNode = { type: 'array', offset: -1, length: -1, children: [], parent: void 0 }; // artificial root
   let currentParsedProperty: string | null = null;
