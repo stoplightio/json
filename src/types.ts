@@ -1,4 +1,4 @@
-import { IRange } from '@stoplight/types';
+import { IParserResult, IRange } from '@stoplight/types';
 import { Node, NodeType, ParseOptions } from 'jsonc-parser';
 
 export interface IJsonASTNode extends Node {
@@ -15,3 +15,5 @@ export interface IJsonASTNode extends Node {
 export interface IParseOptions extends ParseOptions {
   ignoreDuplicateKeys?: boolean;
 }
+
+export type JsonParserResult<T> = IParserResult<T, IJsonASTNode, number[]>;

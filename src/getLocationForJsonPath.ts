@@ -1,7 +1,7 @@
 import { GetLocationForJsonPath, JsonPath } from '@stoplight/types';
-import { IJsonASTNode } from './types';
+import { IJsonASTNode, JsonParserResult } from './types';
 
-export const getLocationForJsonPath: GetLocationForJsonPath<IJsonASTNode, number[]> = (
+export const getLocationForJsonPath: GetLocationForJsonPath<JsonParserResult<unknown>> = (
   { lineMap, ast },
   path,
   closest = false,

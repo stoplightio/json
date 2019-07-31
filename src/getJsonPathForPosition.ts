@@ -1,8 +1,11 @@
 import { GetJsonPathForPosition } from '@stoplight/types';
 import { findNodeAtOffset, getNodePath } from 'jsonc-parser';
-import { IJsonASTNode } from './types';
+import { JsonParserResult } from './types';
 
-export const getJsonPathForPosition: GetJsonPathForPosition<IJsonASTNode, number[]> = ({ lineMap, ast }, position) => {
+export const getJsonPathForPosition: GetJsonPathForPosition<JsonParserResult<unknown>> = (
+  { lineMap, ast },
+  position,
+) => {
   const startOffset = lineMap[position.line];
   const endOffset = lineMap[position.line + 1];
 
