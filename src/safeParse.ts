@@ -1,5 +1,3 @@
-import { isFinite, toNumber, toString } from 'lodash';
-
 export const safeParse: JSON['parse'] = <T>(
   text: string,
   reviver?: (key: any, value: any) => any,
@@ -18,11 +16,11 @@ export const safeParse: JSON['parse'] = <T>(
 };
 
 const parseNumber = (string: string): number | string => {
-  const numVal = toNumber(string);
+  const numVal = Number(string);
 
   // For large number javascript maniuplates data, check if converted num is same as original
-  if (isFinite(numVal)) {
-    if (toString(numVal) === string) {
+  if (Number.isFinite(numVal)) {
+    if (String(numVal) === string) {
       return numVal;
     }
 
