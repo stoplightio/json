@@ -19,13 +19,13 @@ export const getLocationForJsonPath: GetLocationForJsonPath<JsonParserResult<unk
 function findNodeAtPath(node: IJsonASTNode, path: JsonPath, closest: boolean): IJsonASTNode | undefined {
   pathLoop: for (const part of path) {
     const segment = Number.isInteger(Number(part)) ? Number(part) : part;
-    if (typeof segment === 'string') {
+    if (typeof segment === 'string' || (typeof segment === 'number' && node.type !== 'array')) {
       if (node.type !== 'object' || !Array.isArray(node.children)) {
         return closest ? node : void 0;
       }
 
       for (const propertyNode of node.children) {
-        if (Array.isArray(propertyNode.children) && propertyNode.children[0].value === segment) {
+        if (Array.isArray(propertyNode.children) && propertyNode.children[0].value === String(segment)) {
           node = propertyNode.children[1];
           continue pathLoop;
         }
