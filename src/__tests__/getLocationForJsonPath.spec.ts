@@ -152,12 +152,14 @@ describe('getLocationForJsonPath', () => {
     const result = parseWithPointers(todos);
 
     test.each`
-      start       | end         | path                                                  | closest
-      ${[42, 13]} | ${[73, 7]}  | ${['paths', '/todos/{todoId}', 'get']}                | ${false}
-      ${[42, 13]} | ${[73, 7]}  | ${['paths', '/todos/{todoId}', 'get', 'description']} | ${true}
-      ${[]}       | ${[]}       | ${['paths', '/todos/{todoId}', 'get', 'description']} | ${false}
-      ${[74, 13]} | ${[125, 7]} | ${['paths', '/todos/{todoId}', 'put', 'description']} | ${true}
-      ${[]}       | ${[]}       | ${['paths', '/todos/{todoId}', 'put', 'description']} | ${false}
+      start       | end         | path                                                       | closest
+      ${[42, 13]} | ${[73, 7]}  | ${['paths', '/todos/{todoId}', 'get']}                     | ${false}
+      ${[42, 13]} | ${[73, 7]}  | ${['paths', '/todos/{todoId}', 'get', 'description']}      | ${true}
+      ${[49, 17]} | ${[65, 11]} | ${['paths', '/todos/{todoId}', 'get', 'responses', '200']} | ${false}
+      ${[49, 17]} | ${[65, 11]} | ${['paths', '/todos/{todoId}', 'get', 'responses', 200]}   | ${false}
+      ${[]}       | ${[]}       | ${['paths', '/todos/{todoId}', 'get', 'description']}      | ${false}
+      ${[74, 13]} | ${[125, 7]} | ${['paths', '/todos/{todoId}', 'put', 'description']}      | ${true}
+      ${[]}       | ${[]}       | ${['paths', '/todos/{todoId}', 'put', 'description']}      | ${false}
     `('should return proper location for given JSONPath $path', ({ start, end, path, closest }) => {
       expect(getLocationForJsonPath(result, path, closest)).toEqual(
         start.length > 0 && end.length > 0

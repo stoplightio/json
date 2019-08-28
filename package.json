@@ -46,7 +46,7 @@
   "devDependencies": {
     "@stoplight/scripts": "^7.0.3",
     "@types/jest": "^24.0.18",
-    "@types/lodash": "^4.14.137",
+    "@types/lodash": "^4.14.138",
     "@types/node": "^12.7.2",
     "benchmark": "^2.1.0",
     "jest": "^24.9.0",
