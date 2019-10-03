@@ -18,8 +18,8 @@ yarn add @stoplight/json
 ### Usage
 
 - **[parseWithPointers](https://stoplightio.github.io/json/globals.html#parsewithpointers)**: Like `JSON.parse(val)` but also returns parsing errors as well as full ast with line information.
-- **[pathToPointer](https://stoplightio.github.io/json/globals.html#pathtopointer)**: Turns an array of path segments into a json pointer IE `['paths', '/user', 'get']` -> `#/paths/~1/user/get`.
-- **[pointerToPath](https://stoplightio.github.io/json/globals.html#pointertopath)**: Turns a json pointer into an array of path segments IE `#/paths/~1/user/get` -> `['paths', '/user', 'get']`.
+- **[pathToPointer](https://stoplightio.github.io/json/globals.html#pathtopointer)**: Turns an array of path segments into a json pointer IE `['paths', '/user', 'get']` -> `#/paths/~1user/get`.
+- **[pointerToPath](https://stoplightio.github.io/json/globals.html#pointertopath)**: Turns a json pointer into an array of path segments IE `#/paths/~1user/get` -> `['paths', '/user', 'get']`.
 - **[safeParse](https://stoplightio.github.io/json/globals.html#safeparse)**: Like `JSON.parse(val)` but does not throw on invalid JSON.
 - **[safeStringify](https://stoplightio.github.io/json/globals.html#safestringify)**: Like `JSON.stringify(val)` but handles circular references.
 - **[startsWith](https://stoplightio.github.io/json/globals.html#startswith)**: Like native JS `x.startsWith(y)` but works with strings AND arrays.
