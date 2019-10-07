@@ -201,4 +201,10 @@ describe('json parser', () => {
       }),
     ]);
   });
+
+  test('includes properties with empty string as keys', () => {
+    expect(parseWithPointers('{ "": [{ "foo": true, "": false }] }')).toHaveProperty('data', {
+      '': [{ '': false, foo: true }],
+    });
+  });
 });
