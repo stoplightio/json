@@ -62,7 +62,7 @@ export function parseTree<T>(
   function onParsedValue(value: any) {
     if (Array.isArray(currentParsedParent)) {
       (currentParsedParent as any[]).push(value);
-    } else if (currentParsedProperty) {
+    } else if (currentParsedProperty !== null) {
       currentParsedParent[currentParsedProperty] = value;
     }
   }
