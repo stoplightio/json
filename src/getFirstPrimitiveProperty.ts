@@ -40,6 +40,10 @@ export const getFirstPrimitiveProperty = (text: string): Optional<[string, strin
       return [property, false];
     case SyntaxKind.NullKeyword:
       return [property, null];
+    case SyntaxKind.Unknown:
+      throw new SyntaxError('Unexpected character');
+    case SyntaxKind.EOF:
+      throw new SyntaxError('Unexpected end of file');
     default:
       return;
   }

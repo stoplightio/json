@@ -1,8 +1,15 @@
 import { getFirstPrimitiveProperty } from '../getFirstPrimitiveProperty';
 
 describe('getFirstPrimitiveProperty', () => {
-  it.each(['true', 'null', '[]', '{}'])('returns nothing when no valid property is found %s', text => {
-    expect(getFirstPrimitiveProperty(text)).toBeUndefined();
+  it.each(['true', 'null', '[]', '{}', '{"a":[]}', '{"a":{}}'])(
+    'returns nothing when no valid property is found %s',
+    text => {
+      expect(getFirstPrimitiveProperty(text)).toBeUndefined();
+    },
+  );
+
+  it.each(['{', '{2', '{"d', '{"dd"dd', '{"dd":', '{"d": fa'])('throws SyntaxError given %s', text => {
+    expect(getFirstPrimitiveProperty.bind(null, text)).toThrow(SyntaxError);
   });
 
   it('gets first primitive property', () => {
@@ -13,5 +20,6 @@ describe('getFirstPrimitiveProperty', () => {
     expect(getFirstPrimitiveProperty(`{"swagger":null}`)).toEqual(['swagger', null]);
     expect(getFirstPrimitiveProperty(`{"openapi":"3.0"}`)).toEqual(['openapi', '3.0']);
     expect(getFirstPrimitiveProperty(`{"openapi":3.1}`)).toEqual(['openapi', 3.1]);
+    expect(getFirstPrimitiveProperty(`{"openapi":3.1,"test":"foo"`)).toEqual(['openapi', 3.1]);
   });
 });
