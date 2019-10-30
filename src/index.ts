@@ -2,6 +2,7 @@ export * from './decodePointer';
 export * from './decodePointerFragment';
 export * from './encodePointer';
 export * from './encodePointerFragment';
+export * from './getFirstPrimitiveProperty';
 export * from './getJsonPathForPosition';
 export * from './getLastPathSegment';
 export * from './getLocationForJsonPath';

@@ -33,7 +33,7 @@
     "release": "sl-scripts release",
     "release.dryRun": "sl-scripts release --dry-run --debug",
     "test": "jest",
-    "test.prod": "yarn lint && yarn test --coverage --no-cache",
+    "test.prod": "yarn lint && yarn test --coverage --no-cache --max-workers=2",
     "test.update": "yarn test --updateSnapshot",
     "test.watch": "yarn test --watch"
   },
