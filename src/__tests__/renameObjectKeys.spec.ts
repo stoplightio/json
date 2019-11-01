@@ -81,4 +81,12 @@ describe('renameObjectKey', () => {
     });
     expect(Object.keys(newObj)).toEqual(['foo', 'old']);
   });
+
+  it('should handle falsey values', () => {
+    const newObj = renameObjectKey({ old: 0 }, 'old', 'boo');
+    expect(newObj).toEqual({ boo: 0 });
+
+    const newObj2 = renameObjectKey({ old: '' }, 'old', 'boo');
+    expect(newObj2).toEqual({ boo: '' });
+  });
 });
