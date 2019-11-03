@@ -1,6 +1,6 @@
 // renames a key while trying to preserve key ordering
 export const renameObjectKey = (obj: object, oldKey: string, newKey: string) => {
-  if (!obj || !obj.hasOwnProperty(oldKey) || oldKey === newKey) {
+  if (!obj || !Object.hasOwnProperty.call(obj, oldKey) || oldKey === newKey) {
     return obj;
   }
 
