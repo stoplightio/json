@@ -2,12 +2,17 @@ import { DiagnosticSeverity, IDiagnostic, IParserASTResult, IRange, JsonPath } f
 import { JSONVisitor, NodeType, ParseErrorCode, printParseErrorCode, visit } from 'jsonc-parser';
 import { IJsonASTNode, IParseOptions, JsonParserResult } from './types';
 
+export const DEFAULT_PARSE_OPTIONS: IParseOptions = {
+  disallowComments: true,
+};
+
 export const parseWithPointers = <T = any>(
   value: string,
-  options: IParseOptions = { disallowComments: true },
+  options: IParseOptions = DEFAULT_PARSE_OPTIONS,
 ): JsonParserResult<T> => {
   const diagnostics: IDiagnostic[] = [];
-  const { ast, data, lineMap } = parseTree<T>(value, diagnostics, options);
+  const { ast, data } = parseTree<T>(value, diagnostics, options);
+  const lineMap = computeLineMap(value);
 
   return {
     data,
@@ -26,8 +31,7 @@ export function parseTree<T>(
   text: string,
   errors: IDiagnostic[] = [],
   options: IParseOptions,
-): IParserASTResult<T, IJsonASTNode, number[]> {
-  const lineMap = computeLineMap(text);
+): IParserASTResult<T, IJsonASTNode> {
   let currentParent: IJsonASTNode = { type: 'array', offset: -1, length: -1, children: [], parent: void 0 }; // artificial root
   let currentParsedProperty: string | null = null;
   let currentParsedParent: any = [];
@@ -190,10 +194,11 @@ export function parseTree<T>(
   if (result) {
     delete result.parent;
   }
+
   return {
     ast: result,
     data: currentParsedParent[0],
-    lineMap,
+    lineMap: void 0,
   };
 }
 

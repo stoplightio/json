@@ -6,6 +6,7 @@ export * from './getFirstPrimitiveProperty';
 export * from './getJsonPathForPosition';
 export * from './getLastPathSegment';
 export * from './getLocationForJsonPath';
+export * from './parse';
 export * from './parseWithPointers';
 export * from './pathToPointer';
 export * from './pointerToPath';
