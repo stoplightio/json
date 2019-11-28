@@ -318,4 +318,80 @@ describe('json parser', () => {
       '': [{ '': false, foo: true }],
     });
   });
+
+  describe('keys sorting', () => {
+    it('does not retain the order of keys by default', () => {
+      const { data } = parseWithPointers(
+        `{
+      "foo": true,
+      "bar": false,
+      "1": false,
+      "0": true
+    }`,
+      );
+
+      expect(Object.keys(data)).toEqual(['0', '1', 'foo', 'bar']);
+    });
+
+    describe('when sortKeys option is set to true', () => {
+      it('retains the initial order of keys', () => {
+        const { data } = parseWithPointers(
+          `{
+      "foo": true,
+      "bar": false,
+      "1": false,
+      "0": true
+    }`,
+          { sortKeys: true },
+        );
+
+        expect(Object.keys(data)).toEqual(['foo', 'bar', '1', '0']);
+      });
+
+      it('handles duplicate properties', () => {
+        const { data } = parseWithPointers(
+          `{
+      "foo": true,
+      "bar": false,
+      "0": 0,
+      "foo": null,
+      "1": false,
+      "0": true,
+      "1": 0,
+    }`,
+          { sortKeys: true },
+        );
+
+        expect(Object.keys(data)).toEqual(['bar', 'foo', '0', '1']);
+        expect(data).toStrictEqual({
+          bar: false,
+          foo: null,
+          1: 0,
+          0: true,
+        });
+      });
+
+      it('does not touch arrays', () => {
+        const { data } = parseWithPointers(`[0, 1, 2]`, { sortKeys: true });
+
+        expect(Object.keys(data)).toEqual(['0', '1', '2']);
+        expect(Object.getOwnPropertySymbols(data)).toEqual([]);
+      });
+
+      it('works for nested objects', () => {
+        const { data } = parseWithPointers(
+          `{
+      "foo": { 
+         "1": "test",
+         "hello": 0,
+         "0": false,
+      }
+    }`,
+          { sortKeys: true },
+        );
+
+        expect(Object.keys(data.foo)).toEqual(['1', 'hello', '0']);
+      });
+    });
+  });
 });

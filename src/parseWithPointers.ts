@@ -17,6 +17,14 @@ export const parseWithPointers = <T = any>(
   };
 };
 
+const KEYS = Symbol('object_keys');
+
+const traps = {
+  ownKeys(target: object) {
+    return target[KEYS];
+  },
+};
+
 // based on source code of "https://github.com/Microsoft/node-jsonc-parser
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
@@ -75,6 +83,10 @@ export function parseTree<T>(
   }
 
   function onParsedComplexEnd() {
+    if (KEYS in currentParsedParent) {
+      currentParsedParent[KEYS].push(KEYS);
+    }
+
     currentParsedParent = previousParsedParents.pop();
   }
 
@@ -93,7 +105,14 @@ export function parseTree<T>(
         objectKeys.set(currentParent, []);
       }
 
-      onParsedComplexBegin({});
+      if (options.sortKeys === true) {
+        onParsedComplexBegin(new Proxy({}, traps));
+        Reflect.defineProperty(currentParsedParent, KEYS, {
+          value: [],
+        });
+      } else {
+        onParsedComplexBegin({});
+      }
     },
     onObjectProperty: (name: string, offset: number, length: number, startLine: number, startCharacter: number) => {
       currentParent = onValue({ type: 'property', offset, length: -1, parent: currentParent, children: [] });
@@ -114,6 +133,15 @@ export function parseTree<T>(
             });
           }
         }
+      }
+
+      if (options.sortKeys === true && KEYS in currentParsedParent) {
+        const index = currentParsedParent[KEYS].indexOf(name);
+        if (index !== -1) {
+          currentParsedParent[KEYS].splice(index, 1);
+        }
+
+        currentParsedParent[KEYS].push(name);
       }
 
       currentParsedProperty = name;

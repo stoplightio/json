@@ -14,6 +14,7 @@ export interface IJsonASTNode extends Node {
 
 export interface IParseOptions extends ParseOptions {
   ignoreDuplicateKeys?: boolean;
+  sortKeys?: boolean;
 }
 
 export type JsonParserResult<T> = IParserResult<T, IJsonASTNode, number[]>;
