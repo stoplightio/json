@@ -378,6 +378,12 @@ describe('json parser', () => {
         expect(Object.getOwnPropertySymbols(data)).toEqual([]);
       });
 
+      it('handles empty objects', () => {
+        const { data } = parseWithPointers(`{}`, { sortKeys: true });
+
+        expect(Object.keys(data)).toEqual([]);
+      });
+
       it('works for nested objects', () => {
         const { data } = parseWithPointers(
           `{
