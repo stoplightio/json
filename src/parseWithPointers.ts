@@ -1,4 +1,4 @@
-import { DiagnosticSeverity, IDiagnostic, IParserASTResult, IRange, JsonPath } from '@stoplight/types';
+import { DiagnosticSeverity, Dictionary, IDiagnostic, IParserASTResult, IRange, JsonPath } from '@stoplight/types';
 import { JSONVisitor, NodeType, ParseErrorCode, printParseErrorCode, visit } from 'jsonc-parser';
 import { IJsonASTNode, IParseOptions, JsonParserResult } from './types';
 
@@ -105,14 +105,7 @@ export function parseTree<T>(
         objectKeys.set(currentParent, []);
       }
 
-      if (options.sortKeys === true) {
-        onParsedComplexBegin(new Proxy({}, traps));
-        Reflect.defineProperty(currentParsedParent, KEYS, {
-          value: [],
-        });
-      } else {
-        onParsedComplexBegin({});
-      }
+      onParsedComplexBegin(createObjectLiteral(options.sortKeys === true));
     },
     onObjectProperty: (name: string, offset: number, length: number, startLine: number, startCharacter: number) => {
       currentParent = onValue({ type: 'property', offset, length: -1, parent: currentParent, children: [] });
@@ -136,12 +129,7 @@ export function parseTree<T>(
       }
 
       if (options.sortKeys === true && KEYS in currentParsedParent) {
-        const index = name in currentParsedParent ? currentParsedParent[KEYS].indexOf(name) : -1;
-        if (index !== -1) {
-          currentParsedParent[KEYS].splice(index, 1);
-        }
-
-        currentParsedParent[KEYS].push(name);
+        pushKey(currentParsedParent, name);
       }
 
       currentParsedProperty = name;
@@ -275,4 +263,26 @@ function getJsonPath(node: IJsonASTNode, path: JsonPath = []): JsonPath {
   }
 
   return path;
+}
+
+function createObjectLiteral(sortKeys: boolean): Dictionary<unknown> {
+  if (sortKeys) {
+    const container = new Proxy({}, traps);
+    Reflect.defineProperty(container, KEYS, {
+      value: [],
+    });
+
+    return container;
+  }
+
+  return {};
+}
+
+function pushKey(container: object, key: string) {
+  const index = key in container ? container[KEYS].indexOf(key) : -1;
+  if (index !== -1) {
+    container[KEYS].splice(index, 1);
+  }
+
+  container[KEYS].push(key);
 }
