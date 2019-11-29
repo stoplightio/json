@@ -136,7 +136,7 @@ export function parseTree<T>(
       }
 
       if (options.sortKeys === true && KEYS in currentParsedParent) {
-        const index = currentParsedParent[KEYS].indexOf(name);
+        const index = name in currentParsedParent ? currentParsedParent[KEYS].indexOf(name) : -1;
         if (index !== -1) {
           currentParsedParent[KEYS].splice(index, 1);
         }
