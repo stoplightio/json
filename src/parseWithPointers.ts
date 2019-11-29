@@ -1,4 +1,4 @@
-import { DiagnosticSeverity, Dictionary, IDiagnostic, IParserASTResult, IRange, JsonPath } from '@stoplight/types';
+import { DiagnosticSeverity, IDiagnostic, IParserASTResult, IRange, JsonPath } from '@stoplight/types';
 import { JSONVisitor, NodeType, ParseErrorCode, printParseErrorCode, visit } from 'jsonc-parser';
 import { IJsonASTNode, IParseOptions, JsonParserResult } from './types';
 
@@ -265,7 +265,7 @@ function getJsonPath(node: IJsonASTNode, path: JsonPath = []): JsonPath {
   return path;
 }
 
-function createObjectLiteral(sortKeys: boolean): Dictionary<unknown> {
+function createObjectLiteral(sortKeys: boolean): { [key in PropertyKey]: unknown } {
   if (sortKeys) {
     const container = new Proxy({}, traps);
     Reflect.defineProperty(container, KEYS, {
