@@ -31,7 +31,7 @@ export function parseTree<T>(
   let currentParent: IJsonASTNode = { type: 'array', offset: -1, length: -1, children: [], parent: void 0 }; // artificial root
   let currentParsedProperty: string | null = null;
   let currentParsedParent: any = [];
-  const currentObjectKeys: string[] = [''];
+  const objectKeys = new WeakMap<object, string[]>();
   const previousParsedParents: any[] = [];
 
   function ensurePropertyComplete(endOffset: number) {
@@ -90,7 +90,7 @@ export function parseTree<T>(
       });
 
       if (options.ignoreDuplicateKeys === false) {
-        currentObjectKeys.length = 0;
+        objectKeys.set(currentParent, []);
       }
 
       onParsedComplexBegin({});
@@ -99,7 +99,11 @@ export function parseTree<T>(
       currentParent = onValue({ type: 'property', offset, length: -1, parent: currentParent, children: [] });
       currentParent.children!.push({ type: 'string', value: name, offset, length, parent: currentParent });
 
-      if (options.ignoreDuplicateKeys === false) {
+      // tslint:disable-next-line:label-position
+      ignoreDuplicateKeys: if (options.ignoreDuplicateKeys === false) {
+        const currentObjectKeys = objectKeys.get(currentParent.parent!);
+        if (!currentObjectKeys) break ignoreDuplicateKeys;
+
         if (currentObjectKeys.length === 0 || !currentObjectKeys.includes(name)) {
           currentObjectKeys.push(name);
         } else {
@@ -116,6 +120,10 @@ export function parseTree<T>(
       currentParsedProperty = name;
     },
     onObjectEnd: (offset: number, length, startLine, startCharacter) => {
+      if (options.ignoreDuplicateKeys === false) {
+        objectKeys.delete(currentParent);
+      }
+
       currentParent.length = offset + length - currentParent.offset;
       if (currentParent.range) {
         // @ts-ignore, read only ;P
