@@ -99,21 +99,20 @@ export function parseTree<T>(
       currentParent = onValue({ type: 'property', offset, length: -1, parent: currentParent, children: [] });
       currentParent.children!.push({ type: 'string', value: name, offset, length, parent: currentParent });
 
-      // tslint:disable-next-line:label-position
-      ignoreDuplicateKeys: if (options.ignoreDuplicateKeys === false) {
+      if (options.ignoreDuplicateKeys === false) {
         const currentObjectKeys = objectKeys.get(currentParent.parent!);
-        if (!currentObjectKeys) break ignoreDuplicateKeys;
-
-        if (currentObjectKeys.length === 0 || !currentObjectKeys.includes(name)) {
-          currentObjectKeys.push(name);
-        } else {
-          errors.push({
-            range: calculateRange(startLine, startCharacter, length),
-            message: 'DuplicateKey',
-            severity: DiagnosticSeverity.Error,
-            path: getJsonPath(currentParent),
-            code: 20, // 17 is the lowest safe value, but decided to bump it
-          });
+        if (currentObjectKeys) {
+          if (currentObjectKeys.length === 0 || !currentObjectKeys.includes(name)) {
+            currentObjectKeys.push(name);
+          } else {
+            errors.push({
+              range: calculateRange(startLine, startCharacter, length),
+              message: 'DuplicateKey',
+              severity: DiagnosticSeverity.Error,
+              path: getJsonPath(currentParent),
+              code: 20, // 17 is the lowest safe value, but decided to bump it
+            });
+          }
         }
       }
 
