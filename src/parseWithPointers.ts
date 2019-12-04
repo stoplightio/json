@@ -105,7 +105,7 @@ export function parseTree<T>(
         objectKeys.set(currentParent, []);
       }
 
-      onParsedComplexBegin(createObjectLiteral(options.sortKeys === true));
+      onParsedComplexBegin(createObjectLiteral(options.preserveKeyOrder === true));
     },
     onObjectProperty: (name: string, offset: number, length: number, startLine: number, startCharacter: number) => {
       currentParent = onValue({ type: 'property', offset, length: -1, parent: currentParent, children: [] });
@@ -128,7 +128,7 @@ export function parseTree<T>(
         }
       }
 
-      if (options.sortKeys === true && KEYS in currentParsedParent) {
+      if (options.preserveKeyOrder === true && KEYS in currentParsedParent) {
         pushKey(currentParsedParent, name);
       }
 
@@ -265,8 +265,8 @@ function getJsonPath(node: IJsonASTNode, path: JsonPath = []): JsonPath {
   return path;
 }
 
-function createObjectLiteral(sortKeys: boolean): { [key in PropertyKey]: unknown } {
-  if (sortKeys) {
+function createObjectLiteral(preserveKeyOrder: boolean): { [key in PropertyKey]: unknown } {
+  if (preserveKeyOrder) {
     const container = new Proxy({}, traps);
     Reflect.defineProperty(container, KEYS, {
       value: [],

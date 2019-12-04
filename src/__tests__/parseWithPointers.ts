@@ -319,7 +319,7 @@ describe('json parser', () => {
     });
   });
 
-  describe('keys sorting', () => {
+  describe('keys order', () => {
     it('does not retain the order of keys by default', () => {
       const { data } = parseWithPointers(
         `{
@@ -333,7 +333,7 @@ describe('json parser', () => {
       expect(Object.keys(data)).toEqual(['0', '1', 'foo', 'bar']);
     });
 
-    describe('when sortKeys option is set to true', () => {
+    describe('when preserveKeyOrder option is set to true', () => {
       it('retains the initial order of keys', () => {
         const { data } = parseWithPointers(
           `{
@@ -342,7 +342,7 @@ describe('json parser', () => {
       "1": false,
       "0": true
     }`,
-          { sortKeys: true },
+          { preserveKeyOrder: true },
         );
 
         expect(Object.keys(data)).toEqual(['foo', 'bar', '1', '0']);
@@ -359,7 +359,7 @@ describe('json parser', () => {
       "0": true,
       "1": 0,
     }`,
-          { sortKeys: true },
+          { preserveKeyOrder: true },
         );
 
         expect(Object.keys(data)).toEqual(['bar', 'foo', '0', '1']);
@@ -372,14 +372,14 @@ describe('json parser', () => {
       });
 
       it('does not touch arrays', () => {
-        const { data } = parseWithPointers(`[0, 1, 2]`, { sortKeys: true });
+        const { data } = parseWithPointers(`[0, 1, 2]`, { preserveKeyOrder: true });
 
         expect(Object.keys(data)).toEqual(['0', '1', '2']);
         expect(Object.getOwnPropertySymbols(data)).toEqual([]);
       });
 
       it('handles empty objects', () => {
-        const { data } = parseWithPointers(`{}`, { sortKeys: true });
+        const { data } = parseWithPointers(`{}`, { preserveKeyOrder: true });
 
         expect(Object.keys(data)).toEqual([]);
       });
@@ -393,7 +393,7 @@ describe('json parser', () => {
          "0": false,
       }
     }`,
-          { sortKeys: true },
+          { preserveKeyOrder: true },
         );
 
         expect(Object.keys(data.foo)).toEqual(['1', 'hello', '0']);
