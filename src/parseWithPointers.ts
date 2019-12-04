@@ -17,6 +17,14 @@ export const parseWithPointers = <T = any>(
   };
 };
 
+const KEYS = Symbol('object_keys');
+
+const traps = {
+  ownKeys(target: object) {
+    return target[KEYS];
+  },
+};
+
 // based on source code of "https://github.com/Microsoft/node-jsonc-parser
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
@@ -75,6 +83,10 @@ export function parseTree<T>(
   }
 
   function onParsedComplexEnd() {
+    if (KEYS in currentParsedParent) {
+      currentParsedParent[KEYS].push(KEYS);
+    }
+
     currentParsedParent = previousParsedParents.pop();
   }
 
@@ -93,7 +105,7 @@ export function parseTree<T>(
         objectKeys.set(currentParent, []);
       }
 
-      onParsedComplexBegin({});
+      onParsedComplexBegin(createObjectLiteral(options.preserveKeyOrder === true));
     },
     onObjectProperty: (name: string, offset: number, length: number, startLine: number, startCharacter: number) => {
       currentParent = onValue({ type: 'property', offset, length: -1, parent: currentParent, children: [] });
@@ -114,6 +126,10 @@ export function parseTree<T>(
             });
           }
         }
+      }
+
+      if (options.preserveKeyOrder === true && KEYS in currentParsedParent) {
+        pushKey(currentParsedParent, name);
       }
 
       currentParsedProperty = name;
@@ -247,4 +263,26 @@ function getJsonPath(node: IJsonASTNode, path: JsonPath = []): JsonPath {
   }
 
   return path;
+}
+
+function createObjectLiteral(preserveKeyOrder: boolean): { [key in PropertyKey]: unknown } {
+  if (preserveKeyOrder) {
+    const container = new Proxy({}, traps);
+    Reflect.defineProperty(container, KEYS, {
+      value: [],
+    });
+
+    return container;
+  }
+
+  return {};
+}
+
+function pushKey(container: object, key: string) {
+  const index = key in container ? container[KEYS].indexOf(key) : -1;
+  if (index !== -1) {
+    container[KEYS].splice(index, 1);
+  }
+
+  container[KEYS].push(key);
 }
