@@ -31,7 +31,7 @@ export function parseTree<T>(
   let currentParent: IJsonASTNode = { type: 'array', offset: -1, length: -1, children: [], parent: void 0 }; // artificial root
   let currentParsedProperty: string | null = null;
   let currentParsedParent: any = [];
-  const currentObjectKeys: string[] = [''];
+  const objectKeys = new WeakMap<object, string[]>();
   const previousParsedParents: any[] = [];
 
   function ensurePropertyComplete(endOffset: number) {
@@ -90,7 +90,7 @@ export function parseTree<T>(
       });
 
       if (options.ignoreDuplicateKeys === false) {
-        currentObjectKeys.length = 0;
+        objectKeys.set(currentParent, []);
       }
 
       onParsedComplexBegin({});
@@ -100,22 +100,29 @@ export function parseTree<T>(
       currentParent.children!.push({ type: 'string', value: name, offset, length, parent: currentParent });
 
       if (options.ignoreDuplicateKeys === false) {
-        if (currentObjectKeys.length === 0 || !currentObjectKeys.includes(name)) {
-          currentObjectKeys.push(name);
-        } else {
-          errors.push({
-            range: calculateRange(startLine, startCharacter, length),
-            message: 'DuplicateKey',
-            severity: DiagnosticSeverity.Error,
-            path: getJsonPath(currentParent),
-            code: 20, // 17 is the lowest safe value, but decided to bump it
-          });
+        const currentObjectKeys = objectKeys.get(currentParent.parent!);
+        if (currentObjectKeys) {
+          if (currentObjectKeys.length === 0 || !currentObjectKeys.includes(name)) {
+            currentObjectKeys.push(name);
+          } else {
+            errors.push({
+              range: calculateRange(startLine, startCharacter, length),
+              message: 'DuplicateKey',
+              severity: DiagnosticSeverity.Error,
+              path: getJsonPath(currentParent),
+              code: 20, // 17 is the lowest safe value, but decided to bump it
+            });
+          }
         }
       }
 
       currentParsedProperty = name;
     },
     onObjectEnd: (offset: number, length, startLine, startCharacter) => {
+      if (options.ignoreDuplicateKeys === false) {
+        objectKeys.delete(currentParent);
+      }
+
       currentParent.length = offset + length - currentParent.offset;
       if (currentParent.range) {
         // @ts-ignore, read only ;P
