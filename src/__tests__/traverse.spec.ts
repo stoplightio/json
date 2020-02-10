@@ -1,7 +1,7 @@
-import { traverse } from "../traverse";
+import { traverse } from '../traverse';
 
-describe("traverse", () => {
-  it("should call function", () => {
+describe('traverse', () => {
+  it('should call function', () => {
     const obj = {
       foo: {
         bar: 'bear',
@@ -13,7 +13,7 @@ describe("traverse", () => {
     expect(mockFunc).toHaveBeenCalled();
   });
 
-  it("should not call function", () => {
+  it('should not call function', () => {
     const obj = 'foo';
 
     const mockFunc = jest.fn();

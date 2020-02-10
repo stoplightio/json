@@ -1,24 +1,16 @@
-import { JsonPath } from "@stoplight/types";
+import { JsonPath } from '@stoplight/types';
 
 export const traverse = (
   obj: unknown,
-  func: ({
-    parentPath,
-    property,
-    propertyValue
-  }: {
-    parentPath: JsonPath;
-    property: string | number;
-    propertyValue: unknown;
-  }) => void,
-  path: JsonPath = []
+  func: (opts: { parentPath: JsonPath; property: string | number; propertyValue: unknown }) => void,
+  path: JsonPath = [],
 ) => {
-  if (!obj || typeof obj !== "object") return;
+  if (!obj || typeof obj !== 'object') return;
 
   for (const i in obj) {
+    if (!obj.hasOwnProperty(i)) continue;
     func({ parentPath: path, property: i, propertyValue: obj[i] });
-
-    if (obj[i] && typeof obj[i] === "object") {
+    if (obj[i] && typeof obj[i] === 'object') {
       traverse(obj[i], func, path.concat(i));
     }
   }
