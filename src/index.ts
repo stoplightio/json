@@ -1,3 +1,4 @@
+export * from './bundle';
 export * from './decodePointer';
 export * from './decodePointerFragment';
 export * from './encodePointer';
@@ -18,5 +19,6 @@ export * from './safeParse';
 export * from './safeStringify';
 export * from './startsWith';
 export * from './toPropertyPath';
+export * from './traverse';
 export * from './trimStart';
 export * from './types';
