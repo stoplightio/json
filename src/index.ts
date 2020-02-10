@@ -22,4 +22,3 @@ export * from './toPropertyPath';
 export * from './traverse';
 export * from './trimStart';
 export * from './types';
-
