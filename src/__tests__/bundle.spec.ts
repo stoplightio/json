@@ -1,8 +1,10 @@
+import { cloneDeep } from 'lodash';
+
 import { bundleTarget } from '../bundle';
 
 describe('bundleTargetPath()', () => {
   it('should work', () => {
-    const root = {
+    const document = {
       definitions: {
         user: {
           id: 'foo',
@@ -27,9 +29,15 @@ describe('bundleTargetPath()', () => {
       },
     };
 
+    const clone = cloneDeep(document);
+
     const result = bundleTarget({
-      root,
+      document: clone,
+      path: '#/__target__',
     });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
 
     expect(result).toEqual({
       entity: {
