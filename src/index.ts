@@ -19,6 +19,7 @@ export * from './safeParse';
 export * from './safeStringify';
 export * from './startsWith';
 export * from './toPropertyPath';
+export * from './trapAccess';
 export * from './traverse';
 export * from './trimStart';
 export * from './types';
