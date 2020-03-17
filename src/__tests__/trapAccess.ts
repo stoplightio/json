@@ -6,7 +6,7 @@ describe('trapAccess', () => {
     expect(Reflect.ownKeys(obj)).toEqual(['200', '404']);
   });
 
-  test('given no KEYS, should use KEYS in ownKeys trap', () => {
+  test('given KEYS, should use KEYS in ownKeys trap', () => {
     const obj = trapAccess({ '404': null, '200': null, [KEYS]: ['404', '200'] });
     expect(Reflect.ownKeys(obj)).toEqual(['404', '200']);
   });
