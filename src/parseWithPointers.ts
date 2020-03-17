@@ -1,5 +1,6 @@
 import { DiagnosticSeverity, IDiagnostic, IParserASTResult, IRange, JsonPath } from '@stoplight/types';
 import { JSONVisitor, NodeType, ParseErrorCode, printParseErrorCode, visit } from 'jsonc-parser';
+import { KEYS, trapAccess } from './trapAccess';
 import { IJsonASTNode, IParseOptions, JsonParserResult } from './types';
 
 export const parseWithPointers = <T = any>(
@@ -15,14 +16,6 @@ export const parseWithPointers = <T = any>(
     ast,
     lineMap,
   };
-};
-
-const KEYS = Symbol('object_keys');
-
-const traps = {
-  ownKeys(target: object) {
-    return target[KEYS];
-  },
 };
 
 // based on source code of "https://github.com/Microsoft/node-jsonc-parser
@@ -267,7 +260,7 @@ function getJsonPath(node: IJsonASTNode, path: JsonPath = []): JsonPath {
 
 function createObjectLiteral(preserveKeyOrder: boolean): { [key in PropertyKey]: unknown } {
   if (preserveKeyOrder) {
-    const container = new Proxy({}, traps);
+    const container = trapAccess({});
     Reflect.defineProperty(container, KEYS, {
       value: [],
     });
