@@ -5858,6 +5858,11 @@ optionator@^0.8.1:
     type-check "~0.3.2"
     wordwrap "~1.0.0"
 
+ordered-object-literal@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/ordered-object-literal/-/ordered-object-literal-0.0.4.tgz#01a7125ffcb7ee37da1d8340098d7bc3db397de8"
+  integrity sha512-c4uIKmGzP6uILkeUIaw2yqPVmKzU4c8n7mKeO38t0tvC5qFl1i5LzPnKejS/beqkvvrTjEBghQLkGA3eZg54cA==
+
 os-homedir@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/os-homedir/-/os-homedir-1.0.2.tgz#ffbc4988336e0e833de0c168c7ef152121aa7fb3"
