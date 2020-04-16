@@ -783,6 +783,11 @@
     lodash "^4.17.4"
     read-pkg-up "^7.0.0"
 
+"@stoplight/ordered-object-literal@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@stoplight/ordered-object-literal/-/ordered-object-literal-1.0.0.tgz#c47523924a5ff573d00a46e231e0060060fdbc6d"
+  integrity sha512-nnyPqCeWUqBY2hmeF9psftty35anYytP5Gz1iI7qL/hiSb+hkFAV6k6FuLYZZShaQdmHAPsanG3f6rvhA8sOzg==
+
 "@stoplight/scripts@^7.0.4":
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/@stoplight/scripts/-/scripts-7.0.4.tgz#0099f9f7ef8e2e480bc38cc646d196e15f4c33d2"
@@ -5857,11 +5862,6 @@ optionator@^0.8.1:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
     wordwrap "~1.0.0"
-
-ordered-object-literal@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/ordered-object-literal/-/ordered-object-literal-0.0.4.tgz#01a7125ffcb7ee37da1d8340098d7bc3db397de8"
-  integrity sha512-c4uIKmGzP6uILkeUIaw2yqPVmKzU4c8n7mKeO38t0tvC5qFl1i5LzPnKejS/beqkvvrTjEBghQLkGA3eZg54cA==
 
 os-homedir@^1.0.0:
   version "1.0.2"

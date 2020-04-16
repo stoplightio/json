@@ -1,6 +1,6 @@
+import createOrderedObject, { getOrder } from '@stoplight/ordered-object-literal';
 import { DiagnosticSeverity, Dictionary, IDiagnostic, IParserASTResult, IRange, JsonPath } from '@stoplight/types';
 import { JSONVisitor, NodeType, ParseErrorCode, printParseErrorCode, visit } from 'jsonc-parser';
-import createOrderedObject, { getOrder } from 'ordered-object-literal';
 import { IJsonASTNode, IParseOptions, JsonParserResult } from './types';
 
 export const parseWithPointers = <T = any>(

@@ -1,4 +1,4 @@
-import { ORDER_KEY_ID } from 'ordered-object-literal';
+import { ORDER_KEY_ID } from '@stoplight/ordered-object-literal';
 
 export const KEYS = Symbol.for(ORDER_KEY_ID);
 
