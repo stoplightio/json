@@ -1,6 +1,6 @@
-import { DiagnosticSeverity, IDiagnostic, IParserASTResult, IRange, JsonPath } from '@stoplight/types';
+import createOrderedObject, { getOrder } from '@stoplight/ordered-object-literal';
+import { DiagnosticSeverity, Dictionary, IDiagnostic, IParserASTResult, IRange, JsonPath } from '@stoplight/types';
 import { JSONVisitor, NodeType, ParseErrorCode, printParseErrorCode, visit } from 'jsonc-parser';
-import { KEYS, trapAccess } from './trapAccess';
 import { IJsonASTNode, IParseOptions, JsonParserResult } from './types';
 
 export const parseWithPointers = <T = any>(
@@ -76,10 +76,6 @@ export function parseTree<T>(
   }
 
   function onParsedComplexEnd() {
-    if (KEYS in currentParsedParent) {
-      currentParsedParent[KEYS].push(KEYS);
-    }
-
     currentParsedParent = previousParsedParents.pop();
   }
 
@@ -121,8 +117,8 @@ export function parseTree<T>(
         }
       }
 
-      if (options.preserveKeyOrder === true && KEYS in currentParsedParent) {
-        pushKey(currentParsedParent, name);
+      if (options.preserveKeyOrder === true) {
+        swapKey(currentParsedParent, name);
       }
 
       currentParsedProperty = name;
@@ -259,23 +255,16 @@ function getJsonPath(node: IJsonASTNode, path: JsonPath = []): JsonPath {
 }
 
 function createObjectLiteral(preserveKeyOrder: boolean): { [key in PropertyKey]: unknown } {
-  if (preserveKeyOrder) {
-    const container = trapAccess({});
-    Reflect.defineProperty(container, KEYS, {
-      value: [],
-    });
-
-    return container;
-  }
-
-  return {};
+  return preserveKeyOrder ? createOrderedObject({}) : {};
 }
 
-function pushKey(container: object, key: string) {
-  const index = key in container ? container[KEYS].indexOf(key) : -1;
-  if (index !== -1) {
-    container[KEYS].splice(index, 1);
-  }
+function swapKey(container: Dictionary<unknown>, key: string) {
+  if (!(key in container)) return;
 
-  container[KEYS].push(key);
+  const order = getOrder(container)!;
+  const index = order.indexOf(key);
+  if (index !== -1) {
+    order.splice(index, 1);
+    order.push(key);
+  }
 }

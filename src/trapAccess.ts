@@ -1,4 +1,6 @@
-export const KEYS = Symbol('object_keys');
+import { ORDER_KEY_ID } from '@stoplight/ordered-object-literal';
+
+export const KEYS = Symbol.for(ORDER_KEY_ID);
 
 const traps = {
   ownKeys(target: object) {
