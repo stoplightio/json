@@ -783,10 +783,10 @@
     lodash "^4.17.4"
     read-pkg-up "^7.0.0"
 
-"@stoplight/ordered-object-literal@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@stoplight/ordered-object-literal/-/ordered-object-literal-1.0.0.tgz#c47523924a5ff573d00a46e231e0060060fdbc6d"
-  integrity sha512-nnyPqCeWUqBY2hmeF9psftty35anYytP5Gz1iI7qL/hiSb+hkFAV6k6FuLYZZShaQdmHAPsanG3f6rvhA8sOzg==
+"@stoplight/ordered-object-literal@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@stoplight/ordered-object-literal/-/ordered-object-literal-1.0.1.tgz#01ece81ba5dda199ca3dc5ec7464691efa5d5b76"
+  integrity sha512-kDcBIKwzAXZTkgzaiPXH2I0JXavBkOb3jFzYNFS5cBuvZS3s/K+knpk2wLVt0n8XrnRQsSffzN6XG9HqUhfq6Q==
 
 "@stoplight/scripts@^7.0.4":
   version "7.0.4"
