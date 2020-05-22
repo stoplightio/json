@@ -1,5 +1,6 @@
 import { cloneDeep, get, set } from 'lodash';
 
+import { isLocalRef } from './isLocalRef';
 import { pointerToPath } from './pointerToPath';
 import { traverse } from './traverse';
 
@@ -10,7 +11,7 @@ const _bundle = (document: unknown, path: string, cur?: unknown) => {
   const objectToBundle = get(document, pointerToPath(path));
 
   traverse(cur ? cur : objectToBundle, ({ property, propertyValue }) => {
-    if (property === '$ref' && typeof propertyValue === 'string') {
+    if (property === '$ref' && typeof propertyValue === 'string' && isLocalRef(propertyValue)) {
       const _path = pointerToPath(propertyValue);
       const bundled$Ref = get(document, _path);
       const exists = !!get(objectToBundle, _path);
