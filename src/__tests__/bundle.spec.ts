@@ -126,9 +126,9 @@ describe('bundleTargetPath()', () => {
         {},
         {
           schema: {
-            name: 'param'
-          }
-        }
+            name: 'param',
+          },
+        },
       ],
       responses: {
         '200': {
@@ -136,9 +136,9 @@ describe('bundleTargetPath()', () => {
           schema: {
             title: 'OK',
             parameter: {
-              $ref: '#/parameters/1/schema'
-            }
-          }
+              $ref: '#/parameters/1/schema',
+            },
+          },
         },
       },
       __target__: {
@@ -166,18 +166,18 @@ describe('bundleTargetPath()', () => {
         undefined,
         {
           schema: {
-            name: 'param'
-          }
-        }
+            name: 'param',
+          },
+        },
       ],
       responses: {
         '200': {
           schema: {
             title: 'OK',
             parameter: {
-              $ref: '#/parameters/1/schema'
-            }
-          }
+              $ref: '#/parameters/1/schema',
+            },
+          },
         },
       },
     });
