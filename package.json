@@ -39,8 +39,8 @@
   },
   "dependencies": {
     "@stoplight/ordered-object-literal": "^1.0.1",
-    "@stoplight/types": "^11.4.0",
-    "jsonc-parser": "~2.2.0",
+    "@stoplight/types": "^11.6.0",
+    "jsonc-parser": "~2.2.1",
     "lodash": "^4.17.15",
     "safe-stable-stringify": "^1.1"
   },

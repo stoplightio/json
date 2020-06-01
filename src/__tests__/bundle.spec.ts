@@ -119,4 +119,67 @@ describe('bundleTargetPath()', () => {
       },
     });
   });
+
+  it('should mirror original source decision re arrays or objects', () => {
+    const document = {
+      parameters: [
+        {},
+        {
+          schema: {
+            name: 'param',
+          },
+        },
+      ],
+      responses: {
+        '200': {
+          other: 'foo',
+          schema: {
+            title: 'OK',
+            parameter: {
+              $ref: '#/parameters/1/schema',
+            },
+          },
+        },
+      },
+      __target__: {
+        entity: {
+          $ref: '#/responses/200/schema',
+        },
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/__target__',
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    expect(result).toEqual({
+      entity: {
+        $ref: '#/responses/200/schema',
+      },
+      parameters: [
+        undefined,
+        {
+          schema: {
+            name: 'param',
+          },
+        },
+      ],
+      responses: {
+        '200': {
+          schema: {
+            title: 'OK',
+            parameter: {
+              $ref: '#/parameters/1/schema',
+            },
+          },
+        },
+      },
+    });
+  });
 });
