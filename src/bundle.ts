@@ -1,4 +1,4 @@
-import { cloneDeep, get, set } from 'lodash';
+import { cloneDeep, get, set, has } from 'lodash';
 
 import { isLocalRef } from './isLocalRef';
 import { pointerToPath } from './pointerToPath';
@@ -14,8 +14,25 @@ const _bundle = (document: unknown, path: string, cur?: unknown) => {
     if (property === '$ref' && typeof propertyValue === 'string' && isLocalRef(propertyValue)) {
       const _path = pointerToPath(propertyValue);
       const bundled$Ref = get(document, _path);
-      const exists = !!get(objectToBundle, _path);
+      const exists = has(objectToBundle, _path);
       if (bundled$Ref && !exists) {
+        const pathProcessed = [];
+
+        // make sure arrays and object decisions are preserved when copying over the portion of the tree
+        for (const index in _path) {
+          const key = _path[index];
+          pathProcessed.push(key);
+
+          if (has(objectToBundle, pathProcessed)) continue;
+
+          const target = get(document, pathProcessed)
+          if (Array.isArray(target)) {
+            set(objectToBundle, pathProcessed, []);
+          } else if (typeof target === 'object') {
+            set(objectToBundle, pathProcessed, {});
+          }
+        }
+
         set(objectToBundle, _path, bundled$Ref);
         _bundle(document, path, bundled$Ref);
       }
