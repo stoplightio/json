@@ -1,39 +1,56 @@
 import { cloneDeep, get, has, set } from 'lodash';
 
+import { hasRef } from './hasRef';
 import { isLocalRef } from './isLocalRef';
+import { pathToPointer } from './pathToPointer';
 import { pointerToPath } from './pointerToPath';
 import { traverse } from './traverse';
+
+export const BUNDLE_ROOT = '__bundled__';
 
 export const bundleTarget = <T = unknown>({ document, path }: { document: T; path: string }, cur?: unknown) =>
   _bundle(cloneDeep(document), path, cur);
 
-const _bundle = (document: unknown, path: string, cur?: unknown) => {
+const _bundle = (document: unknown, path: string, cur?: unknown, bundledRefInventory: any = {}) => {
   const objectToBundle = get(document, pointerToPath(path));
 
-  traverse(cur ? cur : objectToBundle, ({ property, propertyValue }) => {
-    if (property === '$ref' && typeof propertyValue === 'string' && isLocalRef(propertyValue)) {
-      const _path = pointerToPath(propertyValue);
+  traverse(cur ? cur : objectToBundle, ({ parent }) => {
+    if (hasRef(parent) && isLocalRef(parent.$ref)) {
+      if (bundledRefInventory[parent.$ref]) {
+        parent.$ref = bundledRefInventory[parent.$ref];
+
+        // no need to continue, this $ref has already been bundled
+        return;
+      }
+
+      const _path = pointerToPath(parent.$ref);
+      const inventoryPath = [BUNDLE_ROOT, ..._path];
+      const inventoryRef = pathToPointer(inventoryPath);
+
       const bundled$Ref = get(document, _path);
-      const exists = has(objectToBundle, _path);
-      if (bundled$Ref && !exists) {
+      if (bundled$Ref) {
         const pathProcessed = [];
+
+        bundledRefInventory[parent.$ref] = inventoryRef;
+        parent.$ref = inventoryRef;
 
         // make sure arrays and object decisions are preserved when copying over the portion of the tree
         for (const key of _path) {
           pathProcessed.push(key);
 
-          if (has(objectToBundle, pathProcessed)) continue;
+          const inventoryPathProcessed = [BUNDLE_ROOT, ...pathProcessed];
+          if (has(objectToBundle, inventoryPathProcessed)) continue;
 
           const target = get(document, pathProcessed);
           if (Array.isArray(target)) {
-            set(objectToBundle, pathProcessed, []);
+            set(objectToBundle, inventoryPathProcessed, []);
           } else if (typeof target === 'object') {
-            set(objectToBundle, pathProcessed, {});
+            set(objectToBundle, inventoryPathProcessed, {});
           }
         }
 
-        set(objectToBundle, _path, bundled$Ref);
-        _bundle(document, path, bundled$Ref);
+        set(objectToBundle, inventoryPath, bundled$Ref);
+        _bundle(document, path, bundled$Ref, bundledRefInventory);
       }
     }
   });

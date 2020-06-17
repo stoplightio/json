@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash';
 
-import { bundleTarget } from '../bundle';
+import { BUNDLE_ROOT, bundleTarget } from '../bundle';
 
 describe('bundleTargetPath()', () => {
   it('should work', () => {
@@ -41,19 +41,21 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: '#/definitions/user',
+        $ref: `#/${BUNDLE_ROOT}/definitions/user`,
       },
-      definitions: {
-        user: {
-          id: 'foo',
-          address: {
-            $ref: '#/definitions/address',
-          },
-        },
-        address: {
-          street: 'foo',
+      [BUNDLE_ROOT]: {
+        definitions: {
           user: {
-            $ref: '#/definitions/user',
+            id: 'foo',
+            address: {
+              $ref: `#/${BUNDLE_ROOT}/definitions/address`,
+            },
+          },
+          address: {
+            street: 'foo',
+            user: {
+              $ref: `#/${BUNDLE_ROOT}/definitions/user`,
+            },
           },
         },
       },
@@ -98,22 +100,24 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: '#/definitions/user',
+        $ref: `#/${BUNDLE_ROOT}/definitions/user`,
       },
       entity2: {
         $ref: './path/to/pet.json',
       },
-      definitions: {
-        user: {
-          id: 'foo',
-          address: {
-            $ref: '#/definitions/address',
-          },
-        },
-        address: {
-          street: 'foo',
+      [BUNDLE_ROOT]: {
+        definitions: {
           user: {
-            $ref: '#/definitions/user',
+            id: 'foo',
+            address: {
+              $ref: `#/${BUNDLE_ROOT}/definitions/address`,
+            },
+          },
+          address: {
+            street: 'foo',
+            user: {
+              $ref: `#/${BUNDLE_ROOT}/definitions/user`,
+            },
           },
         },
       },
@@ -160,22 +164,94 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: '#/responses/200/schema',
+        $ref: `#/${BUNDLE_ROOT}/responses/200/schema`,
       },
-      parameters: [
-        undefined,
-        {
-          schema: {
-            name: 'param',
+      [BUNDLE_ROOT]: {
+        parameters: [
+          undefined,
+          {
+            schema: {
+              name: 'param',
+            },
+          },
+        ],
+        responses: {
+          '200': {
+            schema: {
+              title: 'OK',
+              parameter: {
+                $ref: `#/${BUNDLE_ROOT}/parameters/1/schema`,
+              },
+            },
           },
         },
-      ],
+      },
+    });
+  });
+
+  it('should support $ref to original document that collides with path on self', () => {
+    const document = {
+      schemas: {
+        user: {
+          friend: {
+            $ref: '#/schemas/user',
+          },
+        },
+      },
       responses: {
         '200': {
+          other: 'foo',
           schema: {
-            title: 'OK',
-            parameter: {
-              $ref: '#/parameters/1/schema',
+            $ref: '#/schemas/user',
+          },
+        },
+      },
+      __target__: {
+        user: {
+          $ref: '#/schemas/user',
+        },
+        responses: {
+          '200': {
+            // as you can see, responses/200 is a path that also exists on __target__
+            $ref: '#/responses/200',
+          },
+        },
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/__target__',
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    expect(result).toEqual({
+      user: {
+        $ref: `#/${BUNDLE_ROOT}/schemas/user`,
+      },
+      responses: {
+        '200': {
+          $ref: `#/${BUNDLE_ROOT}/responses/200`,
+        },
+      },
+      [BUNDLE_ROOT]: {
+        schemas: {
+          user: {
+            friend: {
+              // check recursive
+              $ref: `#/${BUNDLE_ROOT}/schemas/user`,
+            },
+          },
+        },
+        responses: {
+          '200': {
+            other: 'foo',
+            schema: {
+              $ref: `#/${BUNDLE_ROOT}/schemas/user`,
             },
           },
         },
