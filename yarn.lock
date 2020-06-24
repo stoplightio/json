@@ -827,10 +827,10 @@
     shelljs "0.8.x"
     tslib "1.9.3"
 
-"@stoplight/types@^11.7.0":
-  version "11.7.0"
-  resolved "https://registry.yarnpkg.com/@stoplight/types/-/types-11.7.0.tgz#24eb35e2df963a6759fac978f837715628ec381a"
-  integrity sha512-lXZemvVzH2SdedC68COMV3dYweYZOrBMmkx1h7zBO/5BWI5PUq7ez/CzlOt6uGbpc+fkIMzb4s7zNkXKP+FcJw==
+"@stoplight/types@^11.8.0":
+  version "11.8.0"
+  resolved "https://registry.yarnpkg.com/@stoplight/types/-/types-11.8.0.tgz#5fba735d730bd50754ed587e86854a8becbf90bb"
+  integrity sha512-JSCLtuy9Buf89rRV9AmnK452mUqen3cpZgx0eOQdv+ayDuy8uuezU6hcsC93cfQ9E3OOpWs91El4sTrjZkv9IQ==
   dependencies:
     "@types/json-schema" "^7.0.4"
     utility-types "^3.10.0"
