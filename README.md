@@ -11,7 +11,7 @@ Useful functions when working with JSON.
 Supported in modern browsers and node.
 
 ```bash
-# latest stable
+# latest stable version
 yarn add @stoplight/json
 ```
 
