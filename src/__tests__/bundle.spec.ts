@@ -258,4 +258,85 @@ describe('bundleTargetPath()', () => {
       },
     });
   });
+
+  it('should handle circular $ref', () => {
+    const document = {
+      "openapi": "3.0.0",
+      "components": {
+        "schemas": {
+          "Hello": {
+            "title": "Hello",
+            "type": "object",
+            "properties": {
+              "Hello": {
+                "$ref": "#/components/schemas/Hello"
+              },
+              "World": {
+                "$ref": "#/components/schemas/World"
+              },
+            }
+          },
+          "World": {
+            "title": "World",
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/components/schemas/Hello',
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    expect(result).toEqual({
+      "title": "Hello",
+      "type": "object",
+      "properties": {
+        "Hello": {
+          "$ref": `#/${BUNDLE_ROOT}/components/schemas/Hello`
+        },
+        "World": {
+          "$ref": `#/${BUNDLE_ROOT}/components/schemas/World`
+        },
+      },
+      [BUNDLE_ROOT]: {
+        "components": {
+          "schemas": {
+            "Hello": {
+              "title": "Hello",
+              "type": "object",
+              "properties": {
+                "Hello": {
+                  "$ref": `#/${BUNDLE_ROOT}/components/schemas/Hello`
+                },
+                "World": {
+                  "$ref": `#/${BUNDLE_ROOT}/components/schemas/World`
+                },
+              }
+            },
+            "World": {
+              "title": "World",
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+    });
+  });
 });
