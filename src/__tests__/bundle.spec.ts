@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash';
 
 import { BUNDLE_ROOT, bundleTarget } from '../bundle';
+import { safeStringify } from '../safeStringify';
 
 describe('bundleTargetPath()', () => {
   it('should work', () => {
@@ -299,44 +300,35 @@ describe('bundleTargetPath()', () => {
     // Do not mutate document
     expect(clone).toEqual(document);
 
-    expect(result).toEqual({
-      title: 'Hello',
-      type: 'object',
-      properties: {
-        Hello: {
-          $ref: `#/${BUNDLE_ROOT}/components/schemas/Hello`,
-        },
-        World: {
-          $ref: `#/${BUNDLE_ROOT}/components/schemas/World`,
-        },
-      },
-      [BUNDLE_ROOT]: {
-        components: {
-          schemas: {
-            Hello: {
-              title: 'Hello',
-              type: 'object',
-              properties: {
-                Hello: {
-                  $ref: `#/${BUNDLE_ROOT}/components/schemas/Hello`,
+    expect(safeStringify(result)).toEqual(
+      safeStringify({
+        [BUNDLE_ROOT]: {
+          components: {
+            schemas: {
+              Hello: '[Circular]',
+              World: {
+                properties: {
+                  name: {
+                    type: 'string',
+                  },
                 },
-                World: {
-                  $ref: `#/${BUNDLE_ROOT}/components/schemas/World`,
-                },
-              },
-            },
-            World: {
-              title: 'World',
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                },
+                title: 'World',
+                type: 'object',
               },
             },
           },
         },
-      },
-    });
+        properties: {
+          Hello: {
+            $ref: `#/${BUNDLE_ROOT}/components/schemas/Hello`,
+          },
+          World: {
+            $ref: `#/${BUNDLE_ROOT}/components/schemas/World`,
+          },
+        },
+        title: 'Hello',
+        type: 'object',
+      }),
+    );
   });
 });
