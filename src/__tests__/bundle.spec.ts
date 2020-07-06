@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash';
 
 import { BUNDLE_ROOT, bundleTarget } from '../bundle';
+import { safeStringify } from '../safeStringify';
 
 describe('bundleTargetPath()', () => {
   it('should work', () => {
@@ -257,5 +258,77 @@ describe('bundleTargetPath()', () => {
         },
       },
     });
+  });
+
+  it('should handle circular $ref', () => {
+    const document = {
+      openapi: '3.0.0',
+      components: {
+        schemas: {
+          Hello: {
+            title: 'Hello',
+            type: 'object',
+            properties: {
+              Hello: {
+                $ref: '#/components/schemas/Hello',
+              },
+              World: {
+                $ref: '#/components/schemas/World',
+              },
+            },
+          },
+          World: {
+            title: 'World',
+            type: 'object',
+            properties: {
+              name: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/components/schemas/Hello',
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    expect(safeStringify(result)).toEqual(
+      safeStringify({
+        [BUNDLE_ROOT]: {
+          components: {
+            schemas: {
+              Hello: '[Circular]',
+              World: {
+                properties: {
+                  name: {
+                    type: 'string',
+                  },
+                },
+                title: 'World',
+                type: 'object',
+              },
+            },
+          },
+        },
+        properties: {
+          Hello: {
+            $ref: `#/${BUNDLE_ROOT}/components/schemas/Hello`,
+          },
+          World: {
+            $ref: `#/${BUNDLE_ROOT}/components/schemas/World`,
+          },
+        },
+        title: 'Hello',
+        type: 'object',
+      }),
+    );
   });
 });

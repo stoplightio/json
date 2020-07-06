@@ -11,7 +11,13 @@ export const BUNDLE_ROOT = '__bundled__';
 export const bundleTarget = <T = unknown>({ document, path }: { document: T; path: string }, cur?: unknown) =>
   _bundle(cloneDeep(document), path, cur);
 
-const _bundle = (document: unknown, path: string, cur?: unknown, bundledRefInventory: any = {}) => {
+const _bundle = (
+  document: unknown,
+  path: string,
+  cur?: unknown,
+  bundledRefInventory: any = {},
+  bundledObj: any = {},
+) => {
   const objectToBundle = get(document, pointerToPath(path));
 
   traverse(cur ? cur : objectToBundle, ({ parent }) => {
@@ -39,21 +45,23 @@ const _bundle = (document: unknown, path: string, cur?: unknown, bundledRefInven
           pathProcessed.push(key);
 
           const inventoryPathProcessed = [BUNDLE_ROOT, ...pathProcessed];
-          if (has(objectToBundle, inventoryPathProcessed)) continue;
+          if (has(bundledObj, inventoryPathProcessed)) continue;
 
           const target = get(document, pathProcessed);
           if (Array.isArray(target)) {
-            set(objectToBundle, inventoryPathProcessed, []);
+            set(bundledObj, inventoryPathProcessed, []);
           } else if (typeof target === 'object') {
-            set(objectToBundle, inventoryPathProcessed, {});
+            set(bundledObj, inventoryPathProcessed, {});
           }
         }
 
-        set(objectToBundle, inventoryPath, bundled$Ref);
-        _bundle(document, path, bundled$Ref, bundledRefInventory);
+        set(bundledObj, inventoryPath, bundled$Ref);
+        _bundle(document, path, bundled$Ref, bundledRefInventory, bundledObj);
       }
     }
   });
+
+  set(objectToBundle, BUNDLE_ROOT, bundledObj[BUNDLE_ROOT]);
 
   return objectToBundle;
 };
