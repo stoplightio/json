@@ -7,6 +7,7 @@ import { pointerToPath } from './pointerToPath';
 import { traverse } from './traverse';
 
 export const BUNDLE_ROOT = '__bundled__';
+export const ERRORS_ROOT = '__errors__';
 
 export const bundleTarget = <T = unknown>({ document, path }: { document: T; path: string }, cur?: unknown) =>
   _bundle(cloneDeep(document), path, cur);
@@ -17,11 +18,14 @@ const _bundle = (
   cur?: unknown,
   bundledRefInventory: any = {},
   bundledObj: any = {},
+  errorsObj: any = {},
 ) => {
   const objectToBundle = get(document, pointerToPath(path));
 
   traverse(cur ? cur : objectToBundle, ({ parent }) => {
     if (hasRef(parent) && isLocalRef(parent.$ref)) {
+      if (errorsObj[parent.$ref]) return;
+
       if (bundledRefInventory[parent.$ref]) {
         parent.$ref = bundledRefInventory[parent.$ref];
 
@@ -29,9 +33,21 @@ const _bundle = (
         return;
       }
 
-      const _path = pointerToPath(parent.$ref);
-      const inventoryPath = [BUNDLE_ROOT, ..._path];
-      const inventoryRef = pathToPointer(inventoryPath);
+      let _path;
+      let inventoryPath;
+      let inventoryRef;
+
+      try {
+        _path = pointerToPath(parent.$ref);
+        inventoryPath = [BUNDLE_ROOT, ..._path];
+        inventoryRef = pathToPointer(inventoryPath);
+      } catch (error) {
+        errorsObj[parent.$ref] = error.message;
+      }
+
+      // Ignore invalid $refs and carry on
+      if (!_path || !inventoryPath || !inventoryRef) return;
+
 
       const bundled$Ref = get(document, _path);
       if (bundled$Ref) {
@@ -56,12 +72,16 @@ const _bundle = (
         }
 
         set(bundledObj, inventoryPath, bundled$Ref);
-        _bundle(document, path, bundled$Ref, bundledRefInventory, bundledObj);
+        _bundle(document, path, bundled$Ref, bundledRefInventory, bundledObj, errorsObj);
       }
     }
   });
 
   set(objectToBundle, BUNDLE_ROOT, bundledObj[BUNDLE_ROOT]);
+
+  if (Object.keys(errorsObj).length) {
+    set(objectToBundle, ERRORS_ROOT, errorsObj);
+  }
 
   return objectToBundle;
 };

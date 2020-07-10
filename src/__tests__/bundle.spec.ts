@@ -125,6 +125,95 @@ describe('bundleTargetPath()', () => {
     });
   });
 
+  it('should ignore invalid pointers', () => {
+    const document = {
+      practice: {
+        title: 'Account',
+        allOf: [
+          {
+            $ref: '#./UuidModel',
+          },
+          {
+            type: 'object',
+            properties: {
+              address: {
+                $ref: '#./Address',
+              },
+              email: {
+                type: 'string',
+                format: 'email',
+              },
+              name: {
+                type: 'string',
+              },
+              phone: {
+                type: 'string',
+              },
+              website: {
+                type: 'string',
+                format: 'uri',
+              },
+              owner: {
+                $ref: '#./Account',
+              },
+            },
+            required: ['name'],
+          },
+        ],
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/practice',
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    expect(result).toEqual({
+      title: 'Account',
+      allOf: [
+        {
+          $ref: '#./UuidModel',
+        },
+        {
+          type: 'object',
+          properties: {
+            address: {
+              $ref: '#./Address',
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+            },
+            name: {
+              type: 'string',
+            },
+            phone: {
+              type: 'string',
+            },
+            website: {
+              type: 'string',
+              format: 'uri',
+            },
+            owner: {
+              $ref: '#./Account',
+            },
+          },
+          required: ['name'],
+        },
+      ],
+      __errors__: {
+        '#./UuidModel': 'Invalid JSON Pointer syntax.',
+        '#./Address': 'Invalid JSON Pointer syntax.',
+        '#./Account': 'Invalid JSON Pointer syntax.',
+      },
+    });
+  });
+
   it('should mirror original source decision re arrays or objects', () => {
     const document = {
       parameters: [
