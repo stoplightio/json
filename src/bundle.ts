@@ -48,7 +48,6 @@ const _bundle = (
       // Ignore invalid $refs and carry on
       if (!_path || !inventoryPath || !inventoryRef) return;
 
-
       const bundled$Ref = get(document, _path);
       if (bundled$Ref) {
         const pathProcessed = [];
