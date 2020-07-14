@@ -125,6 +125,196 @@ describe('bundleTargetPath()', () => {
     });
   });
 
+  it('should throw if invalid pointer for bundle target', () => {
+    const document = {
+      definitions: {
+        user: {
+          id: 'foo',
+          address: {
+            $ref: '#/definitions/address',
+          },
+        },
+        address: {
+          street: 'foo',
+          user: {
+            $ref: '#/definitions/user',
+          },
+        },
+        card: {
+          zip: '20815',
+        },
+      },
+      __target__: {
+        entity: {
+          $ref: '#/definitions/user',
+        },
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    expect(() =>
+      bundleTarget({
+        document: clone,
+        path: 'invalid_pointer',
+      }),
+    ).toThrow('Invalid JSON Pointer syntax; URI fragment identifiers must begin with a hash.');
+  });
+
+  it('should handle invalid pointers for internal $refs', () => {
+    const document = {
+      definitions: {
+        user: {
+          id: 'foo',
+          address: {
+            $ref: '#/definitions/address',
+          },
+        },
+        address: {
+          street: 'foo',
+          invalidPointer: {
+            $ref: '#./definitions/card',
+          },
+        },
+        card: {
+          zip: '20815',
+        },
+      },
+      __target__: {
+        entity: {
+          $ref: '#/definitions/user',
+        },
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/__target__',
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    expect(result).toEqual({
+      entity: {
+        $ref: '#/__bundled__/definitions/user',
+      },
+      __bundled__: {
+        definitions: {
+          user: {
+            id: 'foo',
+            address: {
+              $ref: '#/__bundled__/definitions/address',
+            },
+          },
+          address: {
+            street: 'foo',
+            invalidPointer: {
+              $ref: '#./definitions/card',
+            },
+          },
+        },
+      },
+      __errors__: {
+        '#./definitions/card': 'Invalid JSON Pointer syntax.',
+      },
+    });
+  });
+
+  it('should ignore invalid pointers', () => {
+    const document = {
+      practice: {
+        title: 'Account',
+        allOf: [
+          {
+            $ref: '#./UuidModel',
+          },
+          {
+            type: 'object',
+            properties: {
+              address: {
+                $ref: '#./Address',
+              },
+              email: {
+                type: 'string',
+                format: 'email',
+              },
+              name: {
+                type: 'string',
+              },
+              phone: {
+                type: 'string',
+              },
+              website: {
+                type: 'string',
+                format: 'uri',
+              },
+              owner: {
+                $ref: '#./Account',
+              },
+            },
+            required: ['name'],
+          },
+        ],
+      },
+      __target__: {
+        $ref: '#/practice',
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/practice',
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    expect(result).toEqual({
+      title: 'Account',
+      allOf: [
+        {
+          $ref: '#./UuidModel',
+        },
+        {
+          type: 'object',
+          properties: {
+            address: {
+              $ref: '#./Address',
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+            },
+            name: {
+              type: 'string',
+            },
+            phone: {
+              type: 'string',
+            },
+            website: {
+              type: 'string',
+              format: 'uri',
+            },
+            owner: {
+              $ref: '#./Account',
+            },
+          },
+          required: ['name'],
+        },
+      ],
+      __errors__: {
+        '#./UuidModel': 'Invalid JSON Pointer syntax.',
+        '#./Address': 'Invalid JSON Pointer syntax.',
+        '#./Account': 'Invalid JSON Pointer syntax.',
+      },
+    });
+  });
+
   it('should mirror original source decision re arrays or objects', () => {
     const document = {
       parameters: [
