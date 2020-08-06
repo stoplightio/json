@@ -53,6 +53,40 @@ describe('safeStringify', () => {
     expect(safeStringify(undefined)).toBeUndefined();
   });
 
+  it('should cover toJSON', () => {
+    expect(safeStringify({ toJSON: () => 2 })).toEqual('2');
+    expect(safeStringify({ toJSON: () => null })).toEqual('null');
+    expect(safeStringify({ toJSON: () => undefined })).toBeUndefined();
+    expect(
+      safeStringify({
+        toJSON: () => {
+          /* nada */
+        },
+      }),
+    ).toBeUndefined();
+    expect(safeStringify({ toJSON: () => Symbol('d') })).toBeUndefined();
+    expect(safeStringify({ toJSON: () => Function })).toBeUndefined();
+    expect(
+      safeStringify({
+        a: undefined,
+        toJSON() {
+          return this.a;
+        },
+      }),
+    ).toBeUndefined();
+    expect(
+      safeStringify({
+        toJSON() {
+          if (Function('return Math.random() > 1')()) {
+            return 2;
+          }
+
+          return;
+        },
+      }),
+    ).toBeUndefined();
+  });
+
   it('should handle falsy values correctly', () => {
     expect(safeStringify(null)).toBe('null');
     expect(safeStringify(0)).toBe('0');
