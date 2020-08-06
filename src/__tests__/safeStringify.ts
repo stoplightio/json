@@ -47,11 +47,16 @@ describe('safeStringify', () => {
     expect(safeStringify([0, 1])).toEqual('[0,1]');
   });
 
+  it('should not serialize undefined', () => {
+    expect(safeStringify(undefined)).toBeUndefined();
+  });
+
   it('should handle falsy values correctly', () => {
     expect(safeStringify(null)).toBe('null');
     expect(safeStringify(0)).toBe('0');
+    expect(safeStringify(-0)).toBe('0');
+    expect(safeStringify(NaN)).toBe('null');
     expect(safeStringify(false)).toBe('false');
-    expect(safeStringify(undefined)).toBeUndefined();
     expect(safeStringify({ value: undefined })).toBe('{}');
   });
 
