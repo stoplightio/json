@@ -8,9 +8,15 @@ type Replacer = (key: string, value: any) => any | Array<number | string> | null
 type Voidable = undefined | Function | symbol | { toJSON(): undefined | Function | symbol };
 type Serializable = string | boolean | number | object | null;
 
+type NotBigInt<T> = T extends bigint ? never : T;
+
 export function safeStringify(value: Voidable, replacer?: Replacer, space?: string | number): undefined;
 export function safeStringify(value: Serializable, replacer?: Replacer, space?: string | number): string;
-export function safeStringify(value: unknown, replacer?: Replacer, space?: string | number): Optional<string> {
+export function safeStringify(
+  value: NotBigInt<unknown>,
+  replacer?: Replacer,
+  space?: string | number,
+): Optional<string> {
   if (typeof value === 'string') {
     return value;
   }
