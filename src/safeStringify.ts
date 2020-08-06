@@ -5,7 +5,7 @@ import fastStringify from 'safe-stable-stringify';
 
 type Replacer = (key: string, value: any) => any | Array<number | string> | null;
 
-type Voidable = undefined | Function | symbol;
+type Voidable = undefined | Function | symbol | void;
 type Serializable = string | boolean | number | object | null;
 
 export function safeStringify(value: Voidable, replacer?: Replacer, space?: string | number): undefined;
