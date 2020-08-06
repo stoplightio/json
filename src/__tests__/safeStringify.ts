@@ -47,7 +47,9 @@ describe('safeStringify', () => {
     expect(safeStringify([0, 1])).toEqual('[0,1]');
   });
 
-  it('should not serialize undefined', () => {
+  it('should not serialize undefined, symbols and functions', () => {
+    expect(safeStringify(Symbol('d'))).toBeUndefined();
+    expect(safeStringify(Function)).toBeUndefined();
     expect(safeStringify(undefined)).toBeUndefined();
   });
 
