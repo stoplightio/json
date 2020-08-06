@@ -5,17 +5,17 @@ import fastStringify from 'safe-stable-stringify';
 
 type Replacer = (key: string, value: any) => any | Array<number | string> | null;
 
-type Voidable =
-  | undefined
-  | Function
-  | symbol
-  | { [key: string]: any; [key: number]: any; toJSON(): undefined | Function | symbol };
-
+type Voidable = undefined | Function | symbol;
 type Serializable = string | boolean | number | object | null;
 
 type NotBigInt<T> = T extends bigint ? never : T;
 
 export function safeStringify(value: Voidable, replacer?: Replacer, space?: string | number): undefined;
+export function safeStringify<T extends object>(
+  value: T,
+  replacer?: Replacer,
+  space?: string | number,
+): T extends { toJSON(): infer R } ? (R extends Voidable ? undefined : string) : string;
 export function safeStringify(value: Serializable, replacer?: Replacer, space?: string | number): string;
 export function safeStringify(
   value: NotBigInt<unknown>,
