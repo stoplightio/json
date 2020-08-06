@@ -5,7 +5,12 @@ import fastStringify from 'safe-stable-stringify';
 
 type Replacer = (key: string, value: any) => any | Array<number | string> | null;
 
-type Voidable = undefined | Function | symbol | { toJSON(): undefined | Function | symbol };
+type Voidable =
+  | undefined
+  | Function
+  | symbol
+  | { [key: string]: any; [key: number]: any; toJSON(): undefined | Function | symbol };
+
 type Serializable = string | boolean | number | object | null;
 
 type NotBigInt<T> = T extends bigint ? never : T;
