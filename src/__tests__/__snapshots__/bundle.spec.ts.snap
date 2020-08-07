@@ -1,42 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`bundleTargetPath() should handle circular refs in combiners like allOf 1`] = `
+exports[`bundleTargetPath() should handle deep circular refs 1`] = `
 Object {
   "__bundled__": Object {
     "components": Object {
       "schemas": Object {
         "GeographicalCoordinate": Object {
-          "description": "A set of geographical coordinates of a specific point such as the longitude, latitude and altitude.",
-          "properties": Object {
-            "foo": Object {
-              "type": "number",
-            },
-          },
           "type": "object",
         },
         "Location": [Circular],
       },
     },
   },
-  "description": "A physical location or place.",
   "properties": Object {
     "PhysicalGeographicalCoordinate": Object {
-      "allOf": Array [
-        Object {
-          "$ref": "#/__bundled__/components/schemas/GeographicalCoordinate",
-        },
-      ],
-      "description": "Geographical coordinate information for this location.",
-      "type": "object",
+      "$ref": "#/__bundled__/components/schemas/GeographicalCoordinate",
     },
     "RelatedLocation": Object {
-      "allOf": Array [
-        Object {
-          "$ref": "#/__bundled__/components/schemas/Location",
-        },
-      ],
-      "description": "A location related to this location.",
-      "type": "object",
+      "$ref": "#/__bundled__/components/schemas/Location",
     },
   },
   "type": "object",

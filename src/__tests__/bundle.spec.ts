@@ -1,31 +1,31 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from "lodash";
 
-import { BUNDLE_ROOT, bundleTarget } from '../bundle';
-import { safeStringify } from '../safeStringify';
+import { BUNDLE_ROOT, bundleTarget } from "../bundle";
+import { safeStringify } from "../safeStringify";
 
-describe('bundleTargetPath()', () => {
-  it('should work', () => {
+describe("bundleTargetPath()", () => {
+  it("should work", () => {
     const document = {
       definitions: {
         user: {
-          id: 'foo',
+          id: "foo",
           address: {
-            $ref: '#/definitions/address',
+            $ref: "#/definitions/address",
           },
         },
         address: {
-          street: 'foo',
+          street: "foo",
           user: {
-            $ref: '#/definitions/user',
+            $ref: "#/definitions/user",
           },
         },
         card: {
-          zip: '20815',
+          zip: "20815",
         },
       },
       __target__: {
         entity: {
-          $ref: '#/definitions/user',
+          $ref: "#/definitions/user",
         },
       },
     };
@@ -34,7 +34,7 @@ describe('bundleTargetPath()', () => {
 
     const result = bundleTarget({
       document: clone,
-      path: '#/__target__',
+      path: "#/__target__",
     });
 
     // Do not mutate document
@@ -47,13 +47,13 @@ describe('bundleTargetPath()', () => {
       [BUNDLE_ROOT]: {
         definitions: {
           user: {
-            id: 'foo',
+            id: "foo",
             address: {
               $ref: `#/${BUNDLE_ROOT}/definitions/address`,
             },
           },
           address: {
-            street: 'foo',
+            street: "foo",
             user: {
               $ref: `#/${BUNDLE_ROOT}/definitions/user`,
             },
@@ -63,28 +63,28 @@ describe('bundleTargetPath()', () => {
     });
   });
 
-  it('should not throw erorr', () => {
+  it("should not throw erorr", () => {
     const document = {
       definitions: {
         user: {
-          id: 'foo',
+          id: "foo",
           address: {
-            $ref: '#/definitions/address',
+            $ref: "#/definitions/address",
           },
         },
         address: {
-          street: 'foo',
+          street: "foo",
           user: {
-            $ref: '#/definitions/user',
+            $ref: "#/definitions/user",
           },
         },
       },
       __target__: {
         entity: {
-          $ref: '#/definitions/user',
+          $ref: "#/definitions/user",
         },
         entity2: {
-          $ref: './path/to/pet.json',
+          $ref: "./path/to/pet.json",
         },
       },
     };
@@ -93,7 +93,7 @@ describe('bundleTargetPath()', () => {
 
     const result = bundleTarget({
       document: clone,
-      path: '#/__target__',
+      path: "#/__target__",
     });
 
     // Do not mutate document
@@ -104,18 +104,18 @@ describe('bundleTargetPath()', () => {
         $ref: `#/${BUNDLE_ROOT}/definitions/user`,
       },
       entity2: {
-        $ref: './path/to/pet.json',
+        $ref: "./path/to/pet.json",
       },
       [BUNDLE_ROOT]: {
         definitions: {
           user: {
-            id: 'foo',
+            id: "foo",
             address: {
               $ref: `#/${BUNDLE_ROOT}/definitions/address`,
             },
           },
           address: {
-            street: 'foo',
+            street: "foo",
             user: {
               $ref: `#/${BUNDLE_ROOT}/definitions/user`,
             },
@@ -125,28 +125,28 @@ describe('bundleTargetPath()', () => {
     });
   });
 
-  it('should throw if invalid pointer for bundle target', () => {
+  it("should throw if invalid pointer for bundle target", () => {
     const document = {
       definitions: {
         user: {
-          id: 'foo',
+          id: "foo",
           address: {
-            $ref: '#/definitions/address',
+            $ref: "#/definitions/address",
           },
         },
         address: {
-          street: 'foo',
+          street: "foo",
           user: {
-            $ref: '#/definitions/user',
+            $ref: "#/definitions/user",
           },
         },
         card: {
-          zip: '20815',
+          zip: "20815",
         },
       },
       __target__: {
         entity: {
-          $ref: '#/definitions/user',
+          $ref: "#/definitions/user",
         },
       },
     };
@@ -156,33 +156,35 @@ describe('bundleTargetPath()', () => {
     expect(() =>
       bundleTarget({
         document: clone,
-        path: 'invalid_pointer',
-      }),
-    ).toThrow('Invalid JSON Pointer syntax; URI fragment identifiers must begin with a hash.');
+        path: "invalid_pointer",
+      })
+    ).toThrow(
+      "Invalid JSON Pointer syntax; URI fragment identifiers must begin with a hash."
+    );
   });
 
-  it('should handle invalid pointers for internal $refs', () => {
+  it("should handle invalid pointers for internal $refs", () => {
     const document = {
       definitions: {
         user: {
-          id: 'foo',
+          id: "foo",
           address: {
-            $ref: '#/definitions/address',
+            $ref: "#/definitions/address",
           },
         },
         address: {
-          street: 'foo',
+          street: "foo",
           invalidPointer: {
-            $ref: '#./definitions/card',
+            $ref: "#./definitions/card",
           },
         },
         card: {
-          zip: '20815',
+          zip: "20815",
         },
       },
       __target__: {
         entity: {
-          $ref: '#/definitions/user',
+          $ref: "#/definitions/user",
         },
       },
     };
@@ -191,7 +193,7 @@ describe('bundleTargetPath()', () => {
 
     const result = bundleTarget({
       document: clone,
-      path: '#/__target__',
+      path: "#/__target__",
     });
 
     // Do not mutate document
@@ -199,68 +201,68 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: '#/__bundled__/definitions/user',
+        $ref: "#/__bundled__/definitions/user",
       },
       __bundled__: {
         definitions: {
           user: {
-            id: 'foo',
+            id: "foo",
             address: {
-              $ref: '#/__bundled__/definitions/address',
+              $ref: "#/__bundled__/definitions/address",
             },
           },
           address: {
-            street: 'foo',
+            street: "foo",
             invalidPointer: {
-              $ref: '#./definitions/card',
+              $ref: "#./definitions/card",
             },
           },
         },
       },
       __errors__: {
-        '#./definitions/card': 'Invalid JSON Pointer syntax.',
+        "#./definitions/card": "Invalid JSON Pointer syntax.",
       },
     });
   });
 
-  it('should ignore invalid pointers', () => {
+  it("should ignore invalid pointers", () => {
     const document = {
       practice: {
-        title: 'Account',
+        title: "Account",
         allOf: [
           {
-            $ref: '#./UuidModel',
+            $ref: "#./UuidModel",
           },
           {
-            type: 'object',
+            type: "object",
             properties: {
               address: {
-                $ref: '#./Address',
+                $ref: "#./Address",
               },
               email: {
-                type: 'string',
-                format: 'email',
+                type: "string",
+                format: "email",
               },
               name: {
-                type: 'string',
+                type: "string",
               },
               phone: {
-                type: 'string',
+                type: "string",
               },
               website: {
-                type: 'string',
-                format: 'uri',
+                type: "string",
+                format: "uri",
               },
               owner: {
-                $ref: '#./Account',
+                $ref: "#./Account",
               },
             },
-            required: ['name'],
+            required: ["name"],
           },
         ],
       },
       __target__: {
-        $ref: '#/practice',
+        $ref: "#/practice",
       },
     };
 
@@ -268,77 +270,77 @@ describe('bundleTargetPath()', () => {
 
     const result = bundleTarget({
       document: clone,
-      path: '#/practice',
+      path: "#/practice",
     });
 
     // Do not mutate document
     expect(clone).toEqual(document);
 
     expect(result).toEqual({
-      title: 'Account',
+      title: "Account",
       allOf: [
         {
-          $ref: '#./UuidModel',
+          $ref: "#./UuidModel",
         },
         {
-          type: 'object',
+          type: "object",
           properties: {
             address: {
-              $ref: '#./Address',
+              $ref: "#./Address",
             },
             email: {
-              type: 'string',
-              format: 'email',
+              type: "string",
+              format: "email",
             },
             name: {
-              type: 'string',
+              type: "string",
             },
             phone: {
-              type: 'string',
+              type: "string",
             },
             website: {
-              type: 'string',
-              format: 'uri',
+              type: "string",
+              format: "uri",
             },
             owner: {
-              $ref: '#./Account',
+              $ref: "#./Account",
             },
           },
-          required: ['name'],
+          required: ["name"],
         },
       ],
       __errors__: {
-        '#./UuidModel': 'Invalid JSON Pointer syntax.',
-        '#./Address': 'Invalid JSON Pointer syntax.',
-        '#./Account': 'Invalid JSON Pointer syntax.',
+        "#./UuidModel": "Invalid JSON Pointer syntax.",
+        "#./Address": "Invalid JSON Pointer syntax.",
+        "#./Account": "Invalid JSON Pointer syntax.",
       },
     });
   });
 
-  it('should mirror original source decision re arrays or objects', () => {
+  it("should mirror original source decision re arrays or objects", () => {
     const document = {
       parameters: [
         {},
         {
           schema: {
-            name: 'param',
+            name: "param",
           },
         },
       ],
       responses: {
-        '200': {
-          other: 'foo',
+        "200": {
+          other: "foo",
           schema: {
-            title: 'OK',
+            title: "OK",
             parameter: {
-              $ref: '#/parameters/1/schema',
+              $ref: "#/parameters/1/schema",
             },
           },
         },
       },
       __target__: {
         entity: {
-          $ref: '#/responses/200/schema',
+          $ref: "#/responses/200/schema",
         },
       },
     };
@@ -347,7 +349,7 @@ describe('bundleTargetPath()', () => {
 
     const result = bundleTarget({
       document: clone,
-      path: '#/__target__',
+      path: "#/__target__",
     });
 
     // Do not mutate document
@@ -362,14 +364,14 @@ describe('bundleTargetPath()', () => {
           undefined,
           {
             schema: {
-              name: 'param',
+              name: "param",
             },
           },
         ],
         responses: {
-          '200': {
+          "200": {
             schema: {
-              title: 'OK',
+              title: "OK",
               parameter: {
                 $ref: `#/${BUNDLE_ROOT}/parameters/1/schema`,
               },
@@ -380,31 +382,31 @@ describe('bundleTargetPath()', () => {
     });
   });
 
-  it('should support $ref to original document that collides with path on self', () => {
+  it("should support $ref to original document that collides with path on self", () => {
     const document = {
       schemas: {
         user: {
           friend: {
-            $ref: '#/schemas/user',
+            $ref: "#/schemas/user",
           },
         },
       },
       responses: {
-        '200': {
-          other: 'foo',
+        "200": {
+          other: "foo",
           schema: {
-            $ref: '#/schemas/user',
+            $ref: "#/schemas/user",
           },
         },
       },
       __target__: {
         user: {
-          $ref: '#/schemas/user',
+          $ref: "#/schemas/user",
         },
         responses: {
-          '200': {
+          "200": {
             // as you can see, responses/200 is a path that also exists on __target__
-            $ref: '#/responses/200',
+            $ref: "#/responses/200",
           },
         },
       },
@@ -414,7 +416,7 @@ describe('bundleTargetPath()', () => {
 
     const result = bundleTarget({
       document: clone,
-      path: '#/__target__',
+      path: "#/__target__",
     });
 
     // Do not mutate document
@@ -425,7 +427,7 @@ describe('bundleTargetPath()', () => {
         $ref: `#/${BUNDLE_ROOT}/schemas/user`,
       },
       responses: {
-        '200': {
+        "200": {
           $ref: `#/${BUNDLE_ROOT}/responses/200`,
         },
       },
@@ -439,8 +441,8 @@ describe('bundleTargetPath()', () => {
           },
         },
         responses: {
-          '200': {
-            other: 'foo',
+          "200": {
+            other: "foo",
             schema: {
               $ref: `#/${BUNDLE_ROOT}/schemas/user`,
             },
@@ -450,29 +452,29 @@ describe('bundleTargetPath()', () => {
     });
   });
 
-  it('should handle circular $ref', () => {
+  it("should handle circular $ref", () => {
     const document = {
-      openapi: '3.0.0',
+      openapi: "3.0.0",
       components: {
         schemas: {
           Hello: {
-            title: 'Hello',
-            type: 'object',
+            title: "Hello",
+            type: "object",
             properties: {
               Hello: {
-                $ref: '#/components/schemas/Hello',
+                $ref: "#/components/schemas/Hello",
               },
               World: {
-                $ref: '#/components/schemas/World',
+                $ref: "#/components/schemas/World",
               },
             },
           },
           World: {
-            title: 'World',
-            type: 'object',
+            title: "World",
+            type: "object",
             properties: {
               name: {
-                type: 'string',
+                type: "string",
               },
             },
           },
@@ -484,7 +486,7 @@ describe('bundleTargetPath()', () => {
 
     const result = bundleTarget({
       document: clone,
-      path: '#/components/schemas/Hello',
+      path: "#/components/schemas/Hello",
     });
 
     // Do not mutate document
@@ -495,15 +497,15 @@ describe('bundleTargetPath()', () => {
         [BUNDLE_ROOT]: {
           components: {
             schemas: {
-              Hello: '[Circular]',
+              Hello: "[Circular]",
               World: {
                 properties: {
                   name: {
-                    type: 'string',
+                    type: "string",
                   },
                 },
-                title: 'World',
-                type: 'object',
+                title: "World",
+                type: "object",
               },
             },
           },
@@ -516,47 +518,27 @@ describe('bundleTargetPath()', () => {
             $ref: `#/${BUNDLE_ROOT}/components/schemas/World`,
           },
         },
-        title: 'Hello',
-        type: 'object',
-      }),
+        title: "Hello",
+        type: "object",
+      })
     );
   });
 
-  it('should handle circular refs in combiners like allOf', () => {
+  it("should handle deep circular refs", () => {
     const document = {
       components: {
         schemas: {
           GeographicalCoordinate: {
-            type: 'object',
-            description:
-              'A set of geographical coordinates of a specific point such as the longitude, latitude and altitude.',
-            properties: {
-              foo: {
-                type: 'number',
-              },
-            },
+            type: "object",
           },
           Location: {
-            type: 'object',
-            description: 'A physical location or place.',
+            type: "object",
             properties: {
               PhysicalGeographicalCoordinate: {
-                type: 'object',
-                allOf: [
-                  {
-                    $ref: '#/components/schemas/GeographicalCoordinate',
-                  },
-                ],
-                description: 'Geographical coordinate information for this location.',
+                $ref: "#/components/schemas/GeographicalCoordinate",
               },
               RelatedLocation: {
-                type: 'object',
-                allOf: [
-                  {
-                    $ref: '#/components/schemas/Location',
-                  },
-                ],
-                description: 'A location related to this location.',
+                $ref: "#/components/schemas/Location",
               },
             },
           },
@@ -568,7 +550,7 @@ describe('bundleTargetPath()', () => {
 
     const result = bundleTarget({
       document: clone,
-      path: '#/components/schemas/Location',
+      path: "#/components/schemas/Location",
     });
 
     // Do not mutate document
