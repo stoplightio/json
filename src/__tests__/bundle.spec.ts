@@ -521,4 +521,39 @@ describe('bundleTargetPath()', () => {
       }),
     );
   });
+
+  it('should handle deep circular refs', () => {
+    const document = {
+      components: {
+        schemas: {
+          GeographicalCoordinate: {
+            type: 'object',
+          },
+          Location: {
+            type: 'object',
+            properties: {
+              PhysicalGeographicalCoordinate: {
+                $ref: '#/components/schemas/GeographicalCoordinate',
+              },
+              RelatedLocation: {
+                $ref: '#/components/schemas/Location',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/components/schemas/Location',
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    expect(result).toMatchSnapshot();
+  });
 });

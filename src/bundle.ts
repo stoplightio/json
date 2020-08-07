@@ -1,5 +1,6 @@
 import { cloneDeep, get, has, set } from 'lodash';
 
+import { Dictionary } from '@stoplight/types';
 import { hasRef } from './hasRef';
 import { isLocalRef } from './isLocalRef';
 import { pathToPointer } from './pathToPointer';
@@ -10,11 +11,12 @@ export const BUNDLE_ROOT = '__bundled__';
 export const ERRORS_ROOT = '__errors__';
 
 export const bundleTarget = <T = unknown>({ document, path }: { document: T; path: string }, cur?: unknown) =>
-  _bundle(cloneDeep(document), path, cur);
+  _bundle(cloneDeep(document), path, { [path]: true }, cur);
 
 const _bundle = (
   document: unknown,
   path: string,
+  stack: Dictionary<boolean>,
   cur?: unknown,
   bundledRefInventory: any = {},
   bundledObj: any = {},
@@ -24,10 +26,11 @@ const _bundle = (
 
   traverse(cur ? cur : objectToBundle, ({ parent }) => {
     if (hasRef(parent) && isLocalRef(parent.$ref)) {
-      if (errorsObj[parent.$ref]) return;
+      const $ref = parent.$ref;
+      if (errorsObj[$ref]) return;
 
-      if (bundledRefInventory[parent.$ref]) {
-        parent.$ref = bundledRefInventory[parent.$ref];
+      if (bundledRefInventory[$ref]) {
+        parent.$ref = bundledRefInventory[$ref];
 
         // no need to continue, this $ref has already been bundled
         return;
@@ -38,11 +41,11 @@ const _bundle = (
       let inventoryRef;
 
       try {
-        _path = pointerToPath(parent.$ref);
+        _path = pointerToPath($ref);
         inventoryPath = [BUNDLE_ROOT, ..._path];
         inventoryRef = pathToPointer(inventoryPath);
       } catch (error) {
-        errorsObj[parent.$ref] = error.message;
+        errorsObj[$ref] = error.message;
       }
 
       // Ignore invalid $refs and carry on
@@ -52,7 +55,7 @@ const _bundle = (
       if (bundled$Ref) {
         const pathProcessed = [];
 
-        bundledRefInventory[parent.$ref] = inventoryRef;
+        bundledRefInventory[$ref] = inventoryRef;
         parent.$ref = inventoryRef;
 
         // make sure arrays and object decisions are preserved when copying over the portion of the tree
@@ -71,7 +74,11 @@ const _bundle = (
         }
 
         set(bundledObj, inventoryPath, bundled$Ref);
-        _bundle(document, path, bundled$Ref, bundledRefInventory, bundledObj, errorsObj);
+        if (!stack[$ref]) {
+          stack[$ref] = true;
+          _bundle(document, path, stack, bundled$Ref, bundledRefInventory, bundledObj, errorsObj);
+          stack[$ref] = false;
+        }
       }
     }
   });

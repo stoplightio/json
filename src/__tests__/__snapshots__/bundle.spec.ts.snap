@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`bundleTargetPath() should handle deep circular refs 1`] = `
+Object {
+  "__bundled__": Object {
+    "components": Object {
+      "schemas": Object {
+        "GeographicalCoordinate": Object {
+          "type": "object",
+        },
+        "Location": [Circular],
+      },
+    },
+  },
+  "properties": Object {
+    "PhysicalGeographicalCoordinate": Object {
+      "$ref": "#/__bundled__/components/schemas/GeographicalCoordinate",
+    },
+    "RelatedLocation": Object {
+      "$ref": "#/__bundled__/components/schemas/Location",
+    },
+  },
+  "type": "object",
+}
+`;
