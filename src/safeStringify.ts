@@ -3,19 +3,11 @@ import { Optional } from '@stoplight/types';
 // Be very careful if considering switching out the underlying library to a different one!
 import fastStringify from 'safe-stable-stringify';
 
-type Replacer = (key: string, value: any) => any | Array<number | string> | null;
-
-type Voidable = undefined | Function | symbol | void;
-type Serializable = string | boolean | number | object | null;
-
-export function safeStringify(value: Voidable, replacer?: Replacer, space?: string | number): undefined;
-export function safeStringify<T extends object>(
-  value: T,
-  replacer?: Replacer,
+export const safeStringify = (
+  value: any,
+  replacer?: (key: string, value: any) => any | Array<number | string> | null,
   space?: string | number,
-): T extends { toJSON(): infer R } ? (R extends Voidable ? undefined : string) : string;
-export function safeStringify(value: Serializable, replacer?: Replacer, space?: string | number): string;
-export function safeStringify(value: unknown, replacer?: Replacer, space?: string | number): Optional<string> {
+): Optional<string> => {
   if (typeof value === 'string') {
     return value;
   }
@@ -27,4 +19,4 @@ export function safeStringify(value: unknown, replacer?: Replacer, space?: strin
   } catch {
     return fastStringify(value, replacer, space);
   }
-}
+};
