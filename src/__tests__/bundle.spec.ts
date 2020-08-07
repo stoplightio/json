@@ -521,4 +521,59 @@ describe('bundleTargetPath()', () => {
       }),
     );
   });
+
+  it('should handle circular refs in combiners like allOf', () => {
+    const document = {
+      components: {
+        schemas: {
+          GeographicalCoordinate: {
+            type: 'object',
+            description:
+              'A set of geographical coordinates of a specific point such as the longitude, latitude and altitude.',
+            properties: {
+              foo: {
+                type: 'number',
+              },
+            },
+          },
+          Location: {
+            type: 'object',
+            description: 'A physical location or place.',
+            properties: {
+              PhysicalGeographicalCoordinate: {
+                type: 'object',
+                allOf: [
+                  {
+                    $ref: '#/components/schemas/GeographicalCoordinate',
+                  },
+                ],
+                description: 'Geographical coordinate information for this location.',
+              },
+              RelatedLocation: {
+                type: 'object',
+                allOf: [
+                  {
+                    $ref: '#/components/schemas/Location',
+                  },
+                ],
+                description: 'A location related to this location.',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/components/schemas/Location',
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    expect(result).toMatchSnapshot();
+  });
 });
