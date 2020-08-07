@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`bundleTargetPath() should handle big circular 1`] = `
+exports[`bundleTargetPath() should handle circular refs in combiners like allOf 1`] = `
 Object {
   "__bundled__": Object {
     "components": Object {
