@@ -18,6 +18,7 @@ export * from './renameObjectKey';
 export * from './safeParse';
 export * from './safeStringify';
 export * from './startsWith';
+export * from './stringify';
 export * from './toPropertyPath';
 export * from './trapAccess';
 export * from './traverse';

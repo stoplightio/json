@@ -1,7 +1,3 @@
-/**
- * @jest-environment node
- */
-
 import { safeStringify } from '../safeStringify';
 import * as jsonFixtures from './fixtures/json';
 
