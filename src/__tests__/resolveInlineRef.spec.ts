@@ -20,6 +20,28 @@ describe('resolveInlineRef', () => {
     expect(resolveInlineRef(doc, '#/a')).toEqual('woo!');
   });
 
+  test('should follow refs #2', () => {
+    const doc = {
+      a: {
+        $ref: '#/b/foo',
+      },
+      b: {
+        foo: {
+          $ref: '#/c',
+        },
+        bar: {
+          $ref: '#/e',
+        },
+      },
+      c: {
+        $ref: '#/b/bar',
+      },
+      e: 'woo!',
+    };
+
+    expect(resolveInlineRef(doc, '#/a')).toEqual('woo!');
+  });
+
   test('should handle direct circular refs', () => {
     const doc = {
       a: {
@@ -57,12 +79,7 @@ describe('resolveInlineRef', () => {
     };
 
     expect(resolveInlineRef(doc, '#/a')).toEqual({
-      bar: {
-        $ref: '#/e',
-      },
-      foo: {
-        $ref: '#/c',
-      },
+      $ref: '#/b/foo',
     });
   });
 

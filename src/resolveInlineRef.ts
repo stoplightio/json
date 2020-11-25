@@ -21,14 +21,14 @@ function _resolveInlineRef(document: Dictionary<unknown>, ref: string, seen: Set
 
     value = value[segment];
 
-    if (seen.has(value)) {
-      // circular, let's stop
-      return value;
-    }
-
-    seen.add(value);
-
     if (isObject(value) && '$ref' in value) {
+      if (seen.has(value)) {
+        // circular, let's stop
+        return value;
+      }
+
+      seen.add(value);
+
       if (typeof value.$ref !== 'string') {
         throw new TypeError('$ref should be a string');
       }
