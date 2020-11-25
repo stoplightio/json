@@ -558,7 +558,7 @@ describe('bundleTargetPath()', () => {
     expect(result).toMatchSnapshot();
   });
 
-  test('should not create sparse arrays', () => {
+  it('should not create sparse arrays', () => {
     const document = {
       components: {
         schemas: {
