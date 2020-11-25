@@ -74,6 +74,12 @@ const _bundle = (
         }
 
         set(bundledObj, inventoryPath, bundled$Ref);
+        const parentObj =
+          inventoryPath.length === 1 ? bundledObj : get(bundledObj, inventoryPath.slice(0, inventoryPath.length - 1));
+        if (Array.isArray(parentObj)) {
+          ensureNoSparseArray(parentObj);
+        }
+
         if (!stack[$ref]) {
           stack[$ref] = true;
           _bundle(document, path, stack, bundled$Ref, bundledRefInventory, bundledObj, errorsObj);
@@ -91,3 +97,13 @@ const _bundle = (
 
   return objectToBundle;
 };
+
+function ensureNoSparseArray(arr: unknown[]) {
+  for (let i = 0; i < arr.length; i++) {
+    if (!(i in arr)) {
+      arr[i] = null;
+    }
+  }
+
+  return arr;
+}

@@ -1,6 +1,7 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, get } from 'lodash';
 
 import { BUNDLE_ROOT, bundleTarget } from '../bundle';
+import { pointerToPath } from '../pointerToPath';
 import { safeStringify } from '../safeStringify';
 
 describe('bundleTargetPath()', () => {
@@ -555,5 +556,56 @@ describe('bundleTargetPath()', () => {
     expect(clone).toEqual(document);
 
     expect(result).toMatchSnapshot();
+  });
+
+  it('should not create sparse arrays', () => {
+    const document = {
+      components: {
+        schemas: {
+          foo: {
+            allOf: [
+              {},
+              {
+                type: 'object',
+                properties: {
+                  attributes: {
+                    allOf: [{}, {}],
+                  },
+                },
+              },
+            ],
+          },
+          foo_again: {
+            allOf: [
+              {
+                $ref: '#/components/schemas/foo/allOf/0',
+              },
+              {
+                type: 'object',
+                properties: {
+                  attributes: {
+                    allOf: [
+                      {},
+                      {
+                        $ref: '#/components/schemas/foo/allOf/1/properties/attributes/allOf/1',
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    };
+
+    const result = bundleTarget({
+      document,
+      path: '#/components/schemas/foo_again',
+    });
+
+    expect(
+      '0' in get(result, pointerToPath('#/__bundled__/components/schemas/foo/allOf/1/properties/attributes/allOf')),
+    ).toBe(true);
   });
 });
