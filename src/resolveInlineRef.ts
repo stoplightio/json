@@ -6,7 +6,7 @@ function isObject(maybeObj: unknown): maybeObj is { [key in PropertyKey]: unknow
   return typeof maybeObj === 'object' && maybeObj !== null;
 }
 
-function _resolveInlineRef(document: Dictionary<unknown>, ref: string, seen: Set<unknown>): unknown {
+function _resolveInlineRef(document: Dictionary<unknown>, ref: string, seen: unknown[]): unknown {
   const source = extractSourceFromRef(ref);
   if (source !== null) {
     throw new ReferenceError('Cannot resolve external references');
@@ -22,12 +22,12 @@ function _resolveInlineRef(document: Dictionary<unknown>, ref: string, seen: Set
     value = value[segment];
 
     if (isObject(value) && '$ref' in value) {
-      if (seen.has(value)) {
+      if (seen.includes(value)) {
         // circular, let's stop
-        return value;
+        return seen[seen.length - 1];
       }
 
-      seen.add(value);
+      seen.push(value);
 
       if (typeof value.$ref !== 'string') {
         throw new TypeError('$ref should be a string');
@@ -41,5 +41,5 @@ function _resolveInlineRef(document: Dictionary<unknown>, ref: string, seen: Set
 }
 
 export function resolveInlineRef(document: Dictionary<unknown>, ref: string): unknown {
-  return _resolveInlineRef(document, ref, new Set());
+  return _resolveInlineRef(document, ref, []);
 }

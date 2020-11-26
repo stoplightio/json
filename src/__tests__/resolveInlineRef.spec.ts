@@ -53,7 +53,7 @@ describe('resolveInlineRef', () => {
     };
 
     expect(resolveInlineRef(doc, '#/a')).toEqual({
-      $ref: '#/b',
+      $ref: '#/a',
     });
   });
 
@@ -79,7 +79,7 @@ describe('resolveInlineRef', () => {
     };
 
     expect(resolveInlineRef(doc, '#/a')).toEqual({
-      $ref: '#/b/foo',
+      $ref: '#/a',
     });
   });
 
