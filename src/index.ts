@@ -15,6 +15,7 @@ export * from './parseWithPointers';
 export * from './pathToPointer';
 export * from './pointerToPath';
 export * from './renameObjectKey';
+export * from './resolveInlineRef';
 export * from './safeParse';
 export * from './safeStringify';
 export * from './startsWith';
