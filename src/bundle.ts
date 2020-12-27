@@ -52,7 +52,7 @@ const _bundle = (
       if (!_path || !inventoryPath || !inventoryRef) return;
 
       const bundled$Ref = get(document, _path);
-      if (bundled$Ref) {
+      if (bundled$Ref !== void 0) {
         const pathProcessed = [];
 
         bundledRefInventory[$ref] = inventoryRef;

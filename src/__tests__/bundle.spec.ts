@@ -64,6 +64,77 @@ describe('bundleTargetPath()', () => {
     });
   });
 
+  it('should include falsy values', () => {
+    const document = {
+      definitions: {
+        user: {
+          id: {
+            $ref: '#/definitions/id',
+          },
+          address: {
+            $ref: '#/definitions/address',
+          },
+        },
+        address: {
+          street: {
+            $ref: '#/definitions/street',
+          },
+          user: {
+            $ref: '#/definitions/user',
+          },
+        },
+        card: {
+          zip: '20815',
+        },
+        street: null,
+        id: 0,
+      },
+      __target__: {
+        entity: {
+          $ref: '#/definitions/user',
+        },
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/__target__',
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    expect(result).toEqual({
+      entity: {
+        $ref: `#/${BUNDLE_ROOT}/definitions/user`,
+      },
+      [BUNDLE_ROOT]: {
+        definitions: {
+          user: {
+            id: {
+              $ref: `#/${BUNDLE_ROOT}/definitions/id`,
+            },
+            address: {
+              $ref: `#/${BUNDLE_ROOT}/definitions/address`,
+            },
+          },
+          address: {
+            street: {
+              $ref: `#/${BUNDLE_ROOT}/definitions/street`,
+            },
+            user: {
+              $ref: `#/${BUNDLE_ROOT}/definitions/user`,
+            },
+          },
+          id: 0,
+          street: null,
+        },
+      },
+    });
+  });
+
   it('should not throw erorr', () => {
     const document = {
       definitions: {
