@@ -1,7 +1,6 @@
-import { cloneDeep, get } from 'lodash';
+import { cloneDeep } from 'lodash';
 
 import { BUNDLE_ROOT, bundleTarget } from '../bundle';
-import { pointerToPath } from '../pointerToPath';
 import { safeStringify } from '../safeStringify';
 
 describe('bundleTargetPath()', () => {
@@ -360,7 +359,7 @@ describe('bundleTargetPath()', () => {
       },
       [BUNDLE_ROOT]: {
         parameters: [
-          undefined,
+          null,
           {
             schema: {
               name: 'param',
@@ -562,6 +561,17 @@ describe('bundleTargetPath()', () => {
     const document = {
       components: {
         schemas: {
+          bar: {
+            type: 'array',
+            items: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'number',
+              },
+            ],
+          },
           foo: {
             allOf: [
               {},
@@ -575,25 +585,20 @@ describe('bundleTargetPath()', () => {
               },
             ],
           },
-          foo_again: {
-            allOf: [
-              {
-                $ref: '#/components/schemas/foo/allOf/0',
-              },
-              {
-                type: 'object',
-                properties: {
-                  attributes: {
-                    allOf: [
-                      {},
-                      {
-                        $ref: '#/components/schemas/foo/allOf/1/properties/attributes/allOf/1',
-                      },
-                    ],
+          baz: {
+            type: 'object',
+            properties: {
+              attributes: {
+                anyOf: [
+                  {
+                    $ref: '#/components/schemas/bar/items/1',
                   },
-                },
+                  {
+                    $ref: '#/components/schemas/foo/allOf/1/properties/attributes/allOf/1',
+                  },
+                ],
               },
-            ],
+            },
           },
         },
       },
@@ -601,11 +606,49 @@ describe('bundleTargetPath()', () => {
 
     const result = bundleTarget({
       document,
-      path: '#/components/schemas/foo_again',
+      path: '#/components/schemas/baz',
     });
 
-    expect(
-      '0' in get(result, pointerToPath('#/__bundled__/components/schemas/foo/allOf/1/properties/attributes/allOf')),
-    ).toBe(true);
+    expect(result).toStrictEqual({
+      type: 'object',
+      properties: {
+        attributes: {
+          anyOf: [
+            {
+              $ref: '#/__bundled__/components/schemas/bar/items/1',
+            },
+            {
+              $ref: '#/__bundled__/components/schemas/foo/allOf/1/properties/attributes/allOf/1',
+            },
+          ],
+        },
+      },
+      __bundled__: {
+        components: {
+          schemas: {
+            bar: {
+              items: [
+                null,
+                {
+                  type: 'number',
+                },
+              ],
+            },
+            foo: {
+              allOf: [
+                null,
+                {
+                  properties: {
+                    attributes: {
+                      allOf: [null, {}],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    });
   });
 });
