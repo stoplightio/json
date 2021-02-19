@@ -179,4 +179,37 @@ describe('getLocationForJsonPath', () => {
       );
     });
   });
+
+  describe('incomplete property pair', () => {
+    const result = parseWithPointers(`{
+ "foo": {
+   "bar": {
+     "baz",
+   }
+ }
+}`);
+
+    test.each`
+      start      | end       | path                                 | closest
+      ${[2, 10]} | ${[4, 4]} | ${['foo', 'bar', 'baz', 'baz-inga']} | ${true}
+      ${[]}      | ${[]}     | ${['foo', 'bar', 'baz', 'baz-inga']} | ${false}
+    `('should return proper location for given JSONPath $path', ({ start, end, path, closest }) => {
+      expect(getLocationForJsonPath(result, path, closest)).toEqual(
+        start.length > 0 && end.length > 0
+          ? {
+              range: {
+                start: {
+                  character: start[1],
+                  line: start[0],
+                },
+                end: {
+                  character: end[1],
+                  line: end[0],
+                },
+              },
+            }
+          : void 0,
+      );
+    });
+  });
 });

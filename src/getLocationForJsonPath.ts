@@ -25,7 +25,11 @@ function findNodeAtPath(node: IJsonASTNode, path: JsonPath, closest: boolean): I
       }
 
       for (const propertyNode of node.children) {
-        if (Array.isArray(propertyNode.children) && propertyNode.children[0].value === String(segment)) {
+        if (
+          Array.isArray(propertyNode.children) &&
+          propertyNode.children[0].value === String(segment) &&
+          propertyNode.children.length === 2
+        ) {
           node = propertyNode.children[1];
           continue pathLoop;
         }
