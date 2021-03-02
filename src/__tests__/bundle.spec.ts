@@ -42,21 +42,19 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: `#/${BUNDLE_ROOT}/definitions/user`,
+        $ref: `#/${BUNDLE_ROOT}/user`,
       },
       [BUNDLE_ROOT]: {
-        definitions: {
-          user: {
-            id: 'foo',
-            address: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/address`,
-            },
-          },
+        user: {
+          id: 'foo',
           address: {
-            street: 'foo',
-            user: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/user`,
-            },
+            $ref: `#/${BUNDLE_ROOT}/address`,
+          },
+        },
+        address: {
+          street: 'foo',
+          user: {
+            $ref: `#/${BUNDLE_ROOT}/user`,
           },
         },
       },
@@ -107,29 +105,27 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: `#/${BUNDLE_ROOT}/definitions/user`,
+        $ref: `#/${BUNDLE_ROOT}/user`,
       },
       [BUNDLE_ROOT]: {
-        definitions: {
-          user: {
-            id: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/id`,
-            },
-            address: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/address`,
-            },
+        user: {
+          id: {
+            $ref: `#/${BUNDLE_ROOT}/id`,
           },
           address: {
-            street: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/street`,
-            },
-            user: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/user`,
-            },
+            $ref: `#/${BUNDLE_ROOT}/address`,
           },
-          id: 0,
-          street: null,
         },
+        address: {
+          street: {
+            $ref: `#/${BUNDLE_ROOT}/street`,
+          },
+          user: {
+            $ref: `#/${BUNDLE_ROOT}/user`,
+          },
+        },
+        id: 0,
+        street: null,
       },
     });
   });
@@ -172,24 +168,22 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: `#/${BUNDLE_ROOT}/definitions/user`,
+        $ref: `#/${BUNDLE_ROOT}/user`,
       },
       entity2: {
         $ref: './path/to/pet.json',
       },
       [BUNDLE_ROOT]: {
-        definitions: {
-          user: {
-            id: 'foo',
-            address: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/address`,
-            },
-          },
+        user: {
+          id: 'foo',
           address: {
-            street: 'foo',
-            user: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/user`,
-            },
+            $ref: `#/${BUNDLE_ROOT}/address`,
+          },
+        },
+        address: {
+          street: 'foo',
+          user: {
+            $ref: `#/${BUNDLE_ROOT}/user`,
           },
         },
       },
@@ -270,21 +264,19 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: '#/__bundled__/definitions/user',
+        $ref: '#/__bundled__/user',
       },
       __bundled__: {
-        definitions: {
-          user: {
-            id: 'foo',
-            address: {
-              $ref: '#/__bundled__/definitions/address',
-            },
-          },
+        user: {
+          id: 'foo',
           address: {
-            street: 'foo',
-            invalidPointer: {
-              $ref: '#./definitions/card',
-            },
+            $ref: '#/__bundled__/address',
+          },
+        },
+        address: {
+          street: 'foo',
+          invalidPointer: {
+            $ref: '#./definitions/card',
           },
         },
       },
@@ -426,26 +418,17 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: `#/${BUNDLE_ROOT}/responses/200/schema`,
+        $ref: `#/${BUNDLE_ROOT}/schema`,
       },
       [BUNDLE_ROOT]: {
-        parameters: [
-          null,
-          {
-            schema: {
-              name: 'param',
-            },
+        schema: {
+          title: 'OK',
+          parameter: {
+            $ref: `#/${BUNDLE_ROOT}/schema_1`,
           },
-        ],
-        responses: {
-          '200': {
-            schema: {
-              title: 'OK',
-              parameter: {
-                $ref: `#/${BUNDLE_ROOT}/parameters/1/schema`,
-              },
-            },
-          },
+        },
+        schema_1: {
+          name: 'param',
         },
       },
     });
@@ -493,28 +476,24 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       user: {
-        $ref: `#/${BUNDLE_ROOT}/schemas/user`,
+        $ref: `#/${BUNDLE_ROOT}/user`,
       },
       responses: {
         '200': {
-          $ref: `#/${BUNDLE_ROOT}/responses/200`,
+          $ref: `#/${BUNDLE_ROOT}/200`,
         },
       },
       [BUNDLE_ROOT]: {
-        schemas: {
-          user: {
-            friend: {
-              // check recursive
-              $ref: `#/${BUNDLE_ROOT}/schemas/user`,
-            },
+        user: {
+          friend: {
+            // check recursive
+            $ref: `#/${BUNDLE_ROOT}/user`,
           },
         },
-        responses: {
-          '200': {
-            other: 'foo',
-            schema: {
-              $ref: `#/${BUNDLE_ROOT}/schemas/user`,
-            },
+        '200': {
+          other: 'foo',
+          schema: {
+            $ref: `#/${BUNDLE_ROOT}/user`,
           },
         },
       },
@@ -564,27 +543,23 @@ describe('bundleTargetPath()', () => {
     expect(safeStringify(result)).toEqual(
       safeStringify({
         [BUNDLE_ROOT]: {
-          components: {
-            schemas: {
-              Hello: '[Circular]',
-              World: {
-                properties: {
-                  name: {
-                    type: 'string',
-                  },
-                },
-                title: 'World',
-                type: 'object',
+          Hello: '[Circular]',
+          World: {
+            properties: {
+              name: {
+                type: 'string',
               },
             },
+            title: 'World',
+            type: 'object',
           },
         },
         properties: {
           Hello: {
-            $ref: `#/${BUNDLE_ROOT}/components/schemas/Hello`,
+            $ref: `#/${BUNDLE_ROOT}/Hello`,
           },
           World: {
-            $ref: `#/${BUNDLE_ROOT}/components/schemas/World`,
+            $ref: `#/${BUNDLE_ROOT}/World`,
           },
         },
         title: 'Hello',
@@ -625,7 +600,25 @@ describe('bundleTargetPath()', () => {
     // Do not mutate document
     expect(clone).toEqual(document);
 
-    expect(result).toMatchSnapshot();
+    expect(safeStringify(result)).toEqual(
+      safeStringify({
+        __bundled__: {
+          GeographicalCoordinate: {
+            type: 'object',
+          },
+          Location: '[Circular]',
+        },
+        properties: {
+          PhysicalGeographicalCoordinate: {
+            $ref: '#/__bundled__/GeographicalCoordinate',
+          },
+          RelatedLocation: {
+            $ref: '#/__bundled__/Location',
+          },
+        },
+        type: 'object',
+      }),
+    );
   });
 
   it('should not create sparse arrays', () => {
@@ -686,39 +679,19 @@ describe('bundleTargetPath()', () => {
         attributes: {
           anyOf: [
             {
-              $ref: '#/__bundled__/components/schemas/bar/items/1',
+              $ref: '#/__bundled__/items_1',
             },
             {
-              $ref: '#/__bundled__/components/schemas/foo/allOf/1/properties/attributes/allOf/1',
+              $ref: '#/__bundled__/allOf_1',
             },
           ],
         },
       },
       __bundled__: {
-        components: {
-          schemas: {
-            bar: {
-              items: [
-                null,
-                {
-                  type: 'number',
-                },
-              ],
-            },
-            foo: {
-              allOf: [
-                null,
-                {
-                  properties: {
-                    attributes: {
-                      allOf: [null, {}],
-                    },
-                  },
-                },
-              ],
-            },
-          },
+        items_1: {
+          type: 'number',
         },
+        allOf_1: {},
       },
     });
   });
