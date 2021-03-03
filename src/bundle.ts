@@ -70,17 +70,19 @@ const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
 
           inventoryKey = _inventoryKey;
 
-          let i = 1;
-          while (takenKeys.has(inventoryKey)) {
-            i++;
-            inventoryKey = `${_inventoryKey}_${i}`;
+          if (!$ref.startsWith(`#/${bundleRoot}`)) {
+            let i = 1;
+            while (takenKeys.has(inventoryKey)) {
+              i++;
+              inventoryKey = `${_inventoryKey}_${i}`;
 
-            if (i > 20) {
-              throw new Error(`Keys ${_inventoryKey}_2 through ${_inventoryKey}_${20} already taken.`);
+              if (i > 20) {
+                throw new Error(`Keys ${_inventoryKey}_2 through ${_inventoryKey}_${20} already taken.`);
+              }
             }
-          }
 
-          takenKeys.add(inventoryKey);
+            takenKeys.add(inventoryKey);
+          }
 
           inventoryPath = [bundleRoot, inventoryKey];
 
@@ -117,10 +119,14 @@ const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
       }
     });
 
-    set(objectToBundle, bundleRoot, {
+    const finalObjectToBundle = {
       ...scopedBundledObj,
       ...bundledObj[bundleRoot],
-    });
+    };
+
+    if (Object.keys(finalObjectToBundle).length) {
+      set(objectToBundle, bundleRoot, finalObjectToBundle);
+    }
 
     if (Object.keys(errorsObj).length) {
       set(objectToBundle, errorsRoot, errorsObj);
