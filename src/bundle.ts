@@ -136,7 +136,7 @@ const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
       set(objectToBundle, bundleRootPath, finalObjectToBundle);
     }
 
-    if (Object.keys(errorsObj).length) {
+    if (Object.keys(errorsObj).length || has(document, errorsRootPath)) {
       set(objectToBundle, errorsRootPath, has(document, errorsRootPath) ? get(document, errorsRootPath) : errorsObj);
     }
 
