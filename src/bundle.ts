@@ -8,7 +8,7 @@ import { pointerToPath } from './pointerToPath';
 import { traverse } from './traverse';
 
 export const BUNDLE_ROOT = '#/__bundled__';
-export const ERRORS_ROOT = '__errors__';
+export const ERRORS_ROOT = '#/__errors__';
 
 export const bundleTarget = <T = unknown>(
   {
@@ -19,7 +19,7 @@ export const bundleTarget = <T = unknown>(
   }: { document: T; path: string; bundleRoot?: string; errorsRoot?: string },
   cur?: unknown,
 ) => {
-  if (`${path}/`.startsWith(`${bundleRoot}/`) || `${path}/`.startsWith(`#/${errorsRoot}/`)) {
+  if (`${path}/`.startsWith(`${bundleRoot}/`) || `${path}/`.startsWith(`${errorsRoot}/`)) {
     throw new Error(`Roots do not make any sense`);
   }
 
@@ -28,6 +28,7 @@ export const bundleTarget = <T = unknown>(
 
 const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
   const bundleRootPath = pointerToPath(bundleRoot);
+  const errorsRootPath = pointerToPath(errorsRoot);
   const scopedBundledObj = get(document, bundleRootPath);
 
   const takenKeys = new Set<string | number>(
@@ -136,7 +137,7 @@ const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
     }
 
     if (Object.keys(errorsObj).length) {
-      set(objectToBundle, errorsRoot, errorsObj);
+      set(objectToBundle, errorsRootPath, has(document, errorsRootPath) ? get(document, errorsRootPath) : errorsObj);
     }
 
     return objectToBundle;

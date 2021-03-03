@@ -736,9 +736,9 @@ describe('bundleTargetPath()', () => {
       });
 
       // Do not mutate document
-      expect(clone).toEqual(document);
+      expect(clone).toStrictEqual(document);
 
-      expect(result).toEqual({
+      expect(result).toStrictEqual({
         entity: {
           $ref: `${bundleRoot}/user`,
         },
@@ -796,9 +796,9 @@ describe('bundleTargetPath()', () => {
       });
 
       // Do not mutate document
-      expect(clone).toEqual(document);
+      expect(clone).toStrictEqual(document);
 
-      expect(result).toEqual({
+      expect(result).toStrictEqual({
         entity: {
           $ref: `${bundleRoot}/user`,
         },
@@ -883,9 +883,9 @@ describe('bundleTargetPath()', () => {
       });
 
       // Do not mutate document
-      expect(clone).toEqual(document);
+      expect(clone).toStrictEqual(document);
 
-      expect(result).toEqual({
+      expect(result).toStrictEqual({
         entity: {
           $ref: `${bundleRoot}/user_3`,
         },
@@ -968,9 +968,9 @@ describe('bundleTargetPath()', () => {
       });
 
       // Do not mutate document
-      expect(clone).toEqual(document);
+      expect(clone).toStrictEqual(document);
 
-      expect(result).toEqual({
+      expect(result).toStrictEqual({
         entity: {
           $ref: `${bundleRoot}/user`,
         },
@@ -1022,10 +1022,136 @@ describe('bundleTargetPath()', () => {
   });
 
   describe('when custom errorsRoot is provided', () => {
-    it.todo('should work');
+    it('should work', () => {
+      const document = {
+        definitions: {
+          invalidPointer: {
+            $ref: '#./definitions/card',
+          },
+        },
+        __target__: {
+          entity: {
+            $ref: '#/definitions/invalidPointer',
+          },
+        },
+      };
 
-    it.todo('should not override existing property');
+      const result = bundleTarget({
+        document: cloneDeep(document),
+        path: '#/__target__',
+        errorsRoot: '#/errors',
+      });
 
-    it.todo('should validate it against provided path');
+      expect(result).toStrictEqual({
+        __bundled__: {
+          invalidPointer: {
+            $ref: '#./definitions/card',
+          },
+        },
+        entity: {
+          $ref: '#/__bundled__/invalidPointer',
+        },
+        errors: {
+          '#./definitions/card': 'Invalid JSON Pointer syntax.',
+        },
+      });
+    });
+
+    it('should work for nested root', () => {
+      const document = {
+        definitions: {
+          invalidPointer: {
+            $ref: '#./definitions/card',
+          },
+        },
+        __target__: {
+          entity: {
+            $ref: '#/definitions/invalidPointer',
+          },
+        },
+      };
+
+      const result = bundleTarget({
+        document: cloneDeep(document),
+        path: '#/__target__',
+        errorsRoot: '#/errors/bundling',
+      });
+
+      expect(result).toStrictEqual({
+        __bundled__: {
+          invalidPointer: {
+            $ref: '#./definitions/card',
+          },
+        },
+        entity: {
+          $ref: '#/__bundled__/invalidPointer',
+        },
+        errors: {
+          bundling: {
+            '#./definitions/card': 'Invalid JSON Pointer syntax.',
+          },
+        },
+      });
+    });
+
+    it('should not override existing property', () => {
+      const document = {
+        definitions: {
+          invalidPointer: {
+            $ref: '#./definitions/card',
+          },
+        },
+        __target__: {
+          entity: {
+            $ref: '#/definitions/invalidPointer',
+          },
+        },
+        errors: 'do not override me',
+      };
+
+      const result = bundleTarget({
+        document: cloneDeep(document),
+        path: '#/__target__',
+        errorsRoot: '#/errors',
+      });
+
+      expect(result).toStrictEqual({
+        __bundled__: {
+          invalidPointer: {
+            $ref: '#./definitions/card',
+          },
+        },
+        entity: {
+          $ref: '#/__bundled__/invalidPointer',
+        },
+        errors: 'do not override me',
+      });
+    });
+
+    it('should validate it against provided path', () => {
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__',
+          errorsRoot: '#/__target__',
+        }),
+      ).toThrow('Roots do not make any sense');
+
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__/test',
+          errorsRoot: '#/__target__',
+        }),
+      ).toThrow('Roots do not make any sense');
+
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__',
+          errorsRoot: '#/__target___',
+        }),
+      ).not.toThrow();
+    });
   });
 });
