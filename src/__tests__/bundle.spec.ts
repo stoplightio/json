@@ -771,6 +771,8 @@ describe('bundleTargetPath()', () => {
           address: {
             id: 'address',
           },
+          cities_0: 'Washington D.C.',
+          cities_2: 'Miami',
         },
         definitions: {
           user: {
@@ -785,6 +787,7 @@ describe('bundleTargetPath()', () => {
               $ref: '#/definitions/user',
             },
           },
+          cities: ['Austin', 'Dallas', 'New York', 'Los Angeles', 'Las Vegas'],
           card: {
             zip: '20815',
           },
@@ -793,6 +796,17 @@ describe('bundleTargetPath()', () => {
           entity: {
             $ref: '#/definitions/user',
           },
+          cities: [
+            {
+              $ref: '#/definitions/cities/0',
+            },
+            {
+              $ref: '#/definitions/cities/4',
+            },
+            {
+              $ref: '#/definitions/cities/2',
+            },
+          ],
         },
       };
 
@@ -811,6 +825,17 @@ describe('bundleTargetPath()', () => {
         entity: {
           $ref: `#/${bundleRoot}/user_3`,
         },
+        cities: [
+          {
+            $ref: `#/${bundleRoot}/cities_0_2`,
+          },
+          {
+            $ref: `#/${bundleRoot}/cities_4`,
+          },
+          {
+            $ref: `#/${bundleRoot}/cities_2_2`,
+          },
+        ],
         [bundleRoot]: {
           user: {
             id: 'my-existing-user',
@@ -833,6 +858,11 @@ describe('bundleTargetPath()', () => {
               $ref: `#/${bundleRoot}/user_3`,
             },
           },
+          cities_0: 'Washington D.C.',
+          cities_2: 'Miami',
+          cities_4: 'Las Vegas',
+          cities_0_2: 'Austin',
+          cities_2_2: 'New York',
         },
       });
     });
