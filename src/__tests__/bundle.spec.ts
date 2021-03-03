@@ -929,5 +929,63 @@ describe('bundleTargetPath()', () => {
         },
       });
     });
+
+    it('should validate it against provided path', () => {
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__',
+          bundleRoot: '__target__',
+        }),
+      ).toThrow('Roots do not make any sense');
+
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__/test',
+          bundleRoot: '__target__',
+        }),
+      ).toThrow('Roots do not make any sense');
+
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__',
+          bundleRoot: '__target___',
+        }),
+      ).not.toThrow();
+    });
+  });
+
+  describe('when custom errorsRoot is provided', () => {
+    it.todo('should work');
+
+    it.todo('should not override existing property');
+
+    it('should validate it against provided path', () => {
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__',
+          errorsRoot: '__target__',
+        }),
+      ).toThrow('Roots do not make any sense');
+
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__/test',
+          errorsRoot: '__target__',
+        }),
+      ).toThrow('Roots do not make any sense');
+
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__',
+          errorsRoot: '__target___',
+        }),
+      ).not.toThrow();
+    });
   });
 });

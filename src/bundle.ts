@@ -18,7 +18,13 @@ export const bundleTarget = <T = unknown>(
     errorsRoot = ERRORS_ROOT,
   }: { document: T; path: string; bundleRoot?: string; errorsRoot?: string },
   cur?: unknown,
-) => bundle(cloneDeep(document), bundleRoot, errorsRoot)(path, { [path]: true }, cur);
+) => {
+  if (`${path}/`.startsWith(`#/${bundleRoot}/`) || `${path}/`.startsWith(`#/${errorsRoot}/`)) {
+    throw new Error(`Roots do not make any sense`);
+  }
+
+  return bundle(cloneDeep(document), bundleRoot, errorsRoot)(path, { [path]: true }, cur);
+};
 
 const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
   const scopedBundledObj = get(document, bundleRoot);
