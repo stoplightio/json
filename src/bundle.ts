@@ -18,11 +18,16 @@ export const bundleTarget = <T = unknown>(
     errorsRoot = ERRORS_ROOT,
   }: { document: T; path: string; bundleRoot?: string; errorsRoot?: string },
   cur?: unknown,
-) => bundle(bundleRoot, errorsRoot)(cloneDeep(document), path, { [path]: true }, cur);
+) => bundle(cloneDeep(document), bundleRoot, errorsRoot)(path, { [path]: true }, cur);
 
-const bundle = (bundleRoot: string, errorsRoot: string) => {
+const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
+  const scopedBundledObj = get(document, bundleRoot);
+
+  const takenKeys = new Set<string | number>(
+    typeof scopedBundledObj === 'object' && scopedBundledObj !== null ? [...Object.keys(scopedBundledObj)] : [],
+  );
+
   const _bundle = (
-    document: unknown,
     path: string,
     stack: Dictionary<boolean>,
     cur?: unknown,
@@ -48,26 +53,36 @@ const bundle = (bundleRoot: string, errorsRoot: string) => {
 
         let _path;
         let inventoryPath;
-        let inventoryKeyRoot;
         let inventoryKey;
         let inventoryRef;
 
         try {
           _path = pointerToPath($ref);
 
-          // TODO: recursive keygen to generate 1, 2, 3, etc if multiple collisions, w some tests
-          inventoryKeyRoot = _path[_path.length - 2];
+          let _inventoryKey;
+
           if (Array.isArray(get(document, _path.slice(0, -1)))) {
-            inventoryKey = `${inventoryKeyRoot}_${_path[_path.length - 1]}`;
+            const inventoryKeyRoot = _path[_path.length - 2];
+            _inventoryKey = `${inventoryKeyRoot}_${_path[_path.length - 1]}`;
           } else {
-            inventoryKey = _path[_path.length - 1];
+            _inventoryKey = _path[_path.length - 1];
           }
 
-          inventoryPath = [bundleRoot, inventoryKey];
-          if (has(bundledObj, inventoryPath)) {
-            inventoryKey = `${inventoryKey}_1`;
-            inventoryPath = [bundleRoot, inventoryKey];
+          inventoryKey = _inventoryKey;
+
+          let i = 1;
+          while (takenKeys.has(inventoryKey)) {
+            i++;
+            inventoryKey = `${_inventoryKey}_${i}`;
+
+            if (i > 20) {
+              throw new Error(`Keys ${_inventoryKey}_2 through ${_inventoryKey}_${20} already taken.`);
+            }
           }
+
+          takenKeys.add(inventoryKey);
+
+          inventoryPath = [bundleRoot, inventoryKey];
 
           inventoryRef = pathToPointer(inventoryPath);
         } catch (error) {
@@ -94,7 +109,7 @@ const bundle = (bundleRoot: string, errorsRoot: string) => {
 
             if (!stack[$ref]) {
               stack[$ref] = true;
-              _bundle(document, path, stack, bundled$Ref, bundledRefInventory, bundledObj, errorsObj);
+              _bundle(path, stack, bundled$Ref, bundledRefInventory, bundledObj, errorsObj);
               stack[$ref] = false;
             }
           }
@@ -102,7 +117,10 @@ const bundle = (bundleRoot: string, errorsRoot: string) => {
       }
     });
 
-    set(objectToBundle, bundleRoot, bundledObj[bundleRoot]);
+    set(objectToBundle, bundleRoot, {
+      ...scopedBundledObj,
+      ...bundledObj[bundleRoot],
+    });
 
     if (Object.keys(errorsObj).length) {
       set(objectToBundle, errorsRoot, errorsObj);

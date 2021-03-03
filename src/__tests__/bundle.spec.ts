@@ -695,4 +695,132 @@ describe('bundleTargetPath()', () => {
       },
     });
   });
+
+  it('should handle custom bundleRoot', () => {
+    const bundleRoot = 'definitions';
+
+    const document = {
+      definitions: {
+        user: {
+          id: 'foo',
+          address: {
+            $ref: '#/definitions/address',
+          },
+        },
+        address: {
+          street: 'foo',
+          user: {
+            $ref: '#/definitions/user',
+          },
+        },
+        card: {
+          zip: '20815',
+        },
+      },
+      __target__: {
+        entity: {
+          $ref: '#/definitions/user',
+        },
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/__target__',
+      bundleRoot,
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    expect(result).toEqual({
+      entity: {
+        $ref: `#/${bundleRoot}/user`,
+      },
+      [bundleRoot]: {
+        user: {
+          id: 'foo',
+          address: {
+            $ref: `#/${bundleRoot}/address`,
+          },
+        },
+        address: {
+          street: 'foo',
+          user: {
+            $ref: `#/${bundleRoot}/user`,
+          },
+        },
+      },
+    });
+  });
+
+  it('should handle collisions', () => {
+    const bundleRoot = 'custom';
+
+    const document = {
+      custom: {
+        user: {
+          id: 'my-existing-user',
+        },
+      },
+      definitions: {
+        user: {
+          id: 'foo',
+          address: {
+            $ref: '#/definitions/address',
+          },
+        },
+        address: {
+          street: 'foo',
+          user: {
+            $ref: '#/definitions/user',
+          },
+        },
+        card: {
+          zip: '20815',
+        },
+      },
+      __target__: {
+        entity: {
+          $ref: '#/definitions/user',
+        },
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/__target__',
+      bundleRoot,
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    expect(result).toEqual({
+      entity: {
+        $ref: `#/${bundleRoot}/user_2`,
+      },
+      [bundleRoot]: {
+        user: {
+          id: 'my-existing-user',
+        },
+        user_2: {
+          id: 'foo',
+          address: {
+            $ref: `#/${bundleRoot}/address`,
+          },
+        },
+        address: {
+          street: 'foo',
+          user: {
+            $ref: `#/${bundleRoot}/user_2`,
+          },
+        },
+      },
+    });
+  });
 });
