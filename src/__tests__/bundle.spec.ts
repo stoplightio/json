@@ -821,24 +821,16 @@ describe('bundleTargetPath()', () => {
       });
     });
 
-    it('should take existing properties into account and generate unique keys', () => {
-      const bundleRoot = '#/custom';
+    it('should support bundleRoot that is a parent of target path', () => {
+      const bundleRoot = '#/definitions';
 
       const document = {
-        custom: {
-          user: {
-            id: 'my-existing-user',
-          },
-          user_2: {
-            id: 'my-existing-user-2',
-          },
-          address: {
-            id: 'address',
-          },
-          cities_0: 'Washington D.C.',
-          cities_2: 'Miami',
-        },
         definitions: {
+          embedded: {
+            entity: {
+              $ref: '#/definitions/user',
+            },
+          },
           user: {
             id: 'foo',
             address: {
@@ -851,24 +843,100 @@ describe('bundleTargetPath()', () => {
               $ref: '#/definitions/user',
             },
           },
-          cities: ['Austin', 'Dallas', 'New York', 'Los Angeles', 'Las Vegas'],
           card: {
             zip: '20815',
           },
         },
-        __target__: {
-          entity: {
-            $ref: '#/definitions/user',
+      };
+
+      const clone = cloneDeep(document);
+
+      const result = bundleTarget({
+        document: clone,
+        path: `${bundleRoot}/embedded`,
+        bundleRoot,
+      });
+
+      // Do not mutate document
+      expect(clone).toStrictEqual(document);
+
+      expect(result).toStrictEqual({
+        definitions: {
+          address: {
+            street: 'foo',
+            user: {
+              $ref: '#/definitions/user',
+            },
           },
+          user: {
+            id: 'foo',
+            address: {
+              $ref: `${bundleRoot}/address`,
+            },
+          },
+        },
+        entity: {
+          $ref: '#/definitions/user',
+        },
+      });
+    });
+
+    it('should generate unique keys', () => {
+      const bundleRoot = '#/custom';
+
+      const document = {
+        custom: {
+          largestCity: 'Tokyo',
+          cities_0: 'Shanghai',
+          cities_2: 'Sao Paulo',
+        },
+        definitions: {
+          europe: {
+            cities: ['Moscow', 'Berlin', 'Paris', 'Madrid', 'Rome'],
+            largestCity: 'Moscow',
+          },
+          asean: {
+            cities: ['Kuala Lumpur', 'Singapore', 'Hanoi', 'Vientiane', 'Bangkok', 'Jakarta'],
+            largestCity: 'Jakarta',
+          },
+          us: {
+            cities: ['Austin', 'Dallas', 'New York', 'Los Angeles', 'Las Vegas'],
+            largestCity: 'New York',
+          },
+        },
+        __target__: {
+          largestCities: [
+            {
+              $ref: '#/definitions/asean/largestCity',
+            },
+            {
+              $ref: '#/definitions/us/largestCity',
+            },
+            {
+              $ref: '#/definitions/europe/largestCity',
+            },
+          ],
           cities: [
             {
-              $ref: '#/definitions/cities/0',
+              $ref: '#/definitions/us/cities/0',
             },
             {
-              $ref: '#/definitions/cities/4',
+              $ref: '#/definitions/asean/cities/0',
             },
             {
-              $ref: '#/definitions/cities/2',
+              $ref: '#/definitions/asean/cities/2',
+            },
+            {
+              $ref: '#/definitions/us/cities/4',
+            },
+            {
+              $ref: '#/definitions/asean/cities/3',
+            },
+            {
+              $ref: '#/definitions/us/cities/3',
+            },
+            {
+              $ref: '#/definitions/europe/cities/3',
             },
           ],
         },
@@ -886,111 +954,52 @@ describe('bundleTargetPath()', () => {
       expect(clone).toStrictEqual(document);
 
       expect(result).toStrictEqual({
-        entity: {
-          $ref: `${bundleRoot}/user_3`,
+        custom: {
+          cities_0: 'Austin',
+          cities_0_2: 'Kuala Lumpur',
+          cities_2: 'Hanoi',
+          cities_3: 'Vientiane',
+          cities_3_2: 'Los Angeles',
+          cities_3_3: 'Madrid',
+          cities_4: 'Las Vegas',
+          largestCity: 'Jakarta',
+          largestCity_2: 'New York',
+          largestCity_3: 'Moscow',
         },
+        largestCities: [
+          {
+            $ref: `${bundleRoot}/largestCity`,
+          },
+          {
+            $ref: `${bundleRoot}/largestCity_2`,
+          },
+          {
+            $ref: `${bundleRoot}/largestCity_3`,
+          },
+        ],
         cities: [
           {
+            $ref: `${bundleRoot}/cities_0`,
+          },
+          {
             $ref: `${bundleRoot}/cities_0_2`,
+          },
+          {
+            $ref: `${bundleRoot}/cities_2`,
           },
           {
             $ref: `${bundleRoot}/cities_4`,
           },
           {
-            $ref: `${bundleRoot}/cities_2_2`,
+            $ref: `${bundleRoot}/cities_3`,
+          },
+          {
+            $ref: `${bundleRoot}/cities_3_2`,
+          },
+          {
+            $ref: `${bundleRoot}/cities_3_3`,
           },
         ],
-        custom: {
-          user: {
-            id: 'my-existing-user',
-          },
-          user_2: {
-            id: 'my-existing-user-2',
-          },
-          user_3: {
-            id: 'foo',
-            address: {
-              $ref: `${bundleRoot}/address_2`,
-            },
-          },
-          address: {
-            id: 'address',
-          },
-          address_2: {
-            street: 'foo',
-            user: {
-              $ref: `${bundleRoot}/user_3`,
-            },
-          },
-          cities_0: 'Washington D.C.',
-          cities_2: 'Miami',
-          cities_4: 'Las Vegas',
-          cities_0_2: 'Austin',
-          cities_2_2: 'New York',
-        },
-      });
-    });
-
-    it('should already existing $refs placed somewhere under bundleRoot', () => {
-      const bundleRoot = '#/definitions';
-
-      const document = {
-        definitions: {
-          user: {
-            id: 'foo',
-            address: {
-              $ref: '#/definitions/address',
-            },
-          },
-          address: {
-            street: 'foo',
-            user: {
-              $ref: '#/definitions/user',
-            },
-          },
-          card: {
-            zip: '20815',
-          },
-        },
-        __target__: {
-          entity: {
-            $ref: '#/definitions/user',
-          },
-        },
-      };
-
-      const clone = cloneDeep(document);
-
-      const result = bundleTarget({
-        document: clone,
-        path: '#/__target__',
-        bundleRoot,
-      });
-
-      // Do not mutate document
-      expect(clone).toStrictEqual(document);
-
-      expect(result).toStrictEqual({
-        entity: {
-          $ref: `${bundleRoot}/user`,
-        },
-        definitions: {
-          user: {
-            id: 'foo',
-            address: {
-              $ref: `${bundleRoot}/address`,
-            },
-          },
-          address: {
-            street: 'foo',
-            user: {
-              $ref: `${bundleRoot}/user`,
-            },
-          },
-          card: {
-            zip: '20815',
-          },
-        },
       });
     });
 
@@ -1008,14 +1017,6 @@ describe('bundleTargetPath()', () => {
           document: {},
           path: '#/__target__/test',
           bundleRoot: '#/__target__',
-        }),
-      ).toThrow('Roots do not make any sense');
-
-      expect(
-        bundleTarget.bind(null, {
-          document: {},
-          path: '#/__target__',
-          bundleRoot: '#/__target___',
         }),
       ).not.toThrow();
     });
@@ -1142,14 +1143,6 @@ describe('bundleTargetPath()', () => {
           document: {},
           path: '#/__target__/test',
           errorsRoot: '#/__target__',
-        }),
-      ).toThrow('Roots do not make any sense');
-
-      expect(
-        bundleTarget.bind(null, {
-          document: {},
-          path: '#/__target__',
-          errorsRoot: '#/__target___',
         }),
       ).not.toThrow();
     });

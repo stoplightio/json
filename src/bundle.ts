@@ -1,6 +1,6 @@
 import { cloneDeep, get, has, set } from 'lodash';
 
-import { Dictionary } from '@stoplight/types';
+import { Dictionary, JsonPath } from '@stoplight/types';
 import { hasRef } from './hasRef';
 import { isLocalRef } from './isLocalRef';
 import { pathToPointer } from './pathToPointer';
@@ -19,21 +19,15 @@ export const bundleTarget = <T = unknown>(
   }: { document: T; path: string; bundleRoot?: string; errorsRoot?: string },
   cur?: unknown,
 ) => {
-  if (`${path}/`.startsWith(`${bundleRoot}/`) || `${path}/`.startsWith(`${errorsRoot}/`)) {
+  if (path === bundleRoot || path === errorsRoot) {
     throw new Error(`Roots do not make any sense`);
   }
 
-  return bundle(cloneDeep(document), bundleRoot, errorsRoot)(path, { [path]: true }, cur);
+  return bundle(cloneDeep(document), pointerToPath(bundleRoot), pointerToPath(errorsRoot))(path, { [path]: true }, cur);
 };
 
-const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
-  const bundleRootPath = pointerToPath(bundleRoot);
-  const errorsRootPath = pointerToPath(errorsRoot);
-  const scopedBundledObj = get(document, bundleRootPath);
-
-  const takenKeys = new Set<string | number>(
-    typeof scopedBundledObj === 'object' && scopedBundledObj !== null ? [...Object.keys(scopedBundledObj)] : [],
-  );
+const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath) => {
+  const takenKeys = new Set<string | number>();
 
   const _bundle = (
     path: string,
@@ -77,21 +71,19 @@ const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
 
           inventoryKey = _inventoryKey;
 
-          if (!$ref.startsWith(bundleRoot)) {
-            let i = 1;
-            while (takenKeys.has(inventoryKey)) {
-              i++;
-              inventoryKey = `${_inventoryKey}_${i}`;
+          let i = 1;
+          while (takenKeys.has(inventoryKey)) {
+            i++;
+            inventoryKey = `${_inventoryKey}_${i}`;
 
-              if (i > 20) {
-                throw new Error(`Keys ${_inventoryKey}_2 through ${_inventoryKey}_${20} already taken.`);
-              }
+            if (i > 20) {
+              throw new Error(`Keys ${_inventoryKey}_2 through ${_inventoryKey}_${20} already taken.`);
             }
-
-            takenKeys.add(inventoryKey);
           }
 
-          inventoryPath = [...bundleRootPath, inventoryKey];
+          takenKeys.add(inventoryKey);
+
+          inventoryPath = [...bundleRoot, inventoryKey];
 
           inventoryRef = pathToPointer(inventoryPath);
         } catch (error) {
@@ -126,17 +118,14 @@ const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
       }
     });
 
-    const finalObjectToBundle = {
-      ...scopedBundledObj,
-      ...get(bundledObj, bundleRootPath),
-    };
+    const finalObjectToBundle = get(bundledObj, bundleRoot);
 
-    if (Object.keys(finalObjectToBundle).length) {
-      set(objectToBundle, bundleRootPath, finalObjectToBundle);
+    if (finalObjectToBundle && Object.keys(finalObjectToBundle).length) {
+      set(objectToBundle, bundleRoot, finalObjectToBundle);
     }
 
-    if (Object.keys(errorsObj).length || has(document, errorsRootPath)) {
-      set(objectToBundle, errorsRootPath, has(document, errorsRootPath) ? get(document, errorsRootPath) : errorsObj);
+    if (Object.keys(errorsObj).length || has(document, errorsRoot)) {
+      set(objectToBundle, errorsRoot, has(document, errorsRoot) ? get(document, errorsRoot) : errorsObj);
     }
 
     return objectToBundle;
