@@ -1,7 +1,9 @@
 import { cloneDeep } from 'lodash';
 
-import { BUNDLE_ROOT, bundleTarget } from '../bundle';
+import { BUNDLE_ROOT as BUNDLE_ROOT_POINTER, bundleTarget } from '../bundle';
 import { safeStringify } from '../safeStringify';
+
+const BUNDLE_ROOT = BUNDLE_ROOT_POINTER.slice(2);
 
 describe('bundleTargetPath()', () => {
   it('should work', () => {
@@ -42,21 +44,19 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: `#/${BUNDLE_ROOT}/definitions/user`,
+        $ref: `#/${BUNDLE_ROOT}/user`,
       },
       [BUNDLE_ROOT]: {
-        definitions: {
-          user: {
-            id: 'foo',
-            address: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/address`,
-            },
-          },
+        user: {
+          id: 'foo',
           address: {
-            street: 'foo',
-            user: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/user`,
-            },
+            $ref: `#/${BUNDLE_ROOT}/address`,
+          },
+        },
+        address: {
+          street: 'foo',
+          user: {
+            $ref: `#/${BUNDLE_ROOT}/user`,
           },
         },
       },
@@ -107,29 +107,27 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: `#/${BUNDLE_ROOT}/definitions/user`,
+        $ref: `#/${BUNDLE_ROOT}/user`,
       },
       [BUNDLE_ROOT]: {
-        definitions: {
-          user: {
-            id: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/id`,
-            },
-            address: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/address`,
-            },
+        user: {
+          id: {
+            $ref: `#/${BUNDLE_ROOT}/id`,
           },
           address: {
-            street: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/street`,
-            },
-            user: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/user`,
-            },
+            $ref: `#/${BUNDLE_ROOT}/address`,
           },
-          id: 0,
-          street: null,
         },
+        address: {
+          street: {
+            $ref: `#/${BUNDLE_ROOT}/street`,
+          },
+          user: {
+            $ref: `#/${BUNDLE_ROOT}/user`,
+          },
+        },
+        id: 0,
+        street: null,
       },
     });
   });
@@ -172,24 +170,22 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: `#/${BUNDLE_ROOT}/definitions/user`,
+        $ref: `#/${BUNDLE_ROOT}/user`,
       },
       entity2: {
         $ref: './path/to/pet.json',
       },
       [BUNDLE_ROOT]: {
-        definitions: {
-          user: {
-            id: 'foo',
-            address: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/address`,
-            },
-          },
+        user: {
+          id: 'foo',
           address: {
-            street: 'foo',
-            user: {
-              $ref: `#/${BUNDLE_ROOT}/definitions/user`,
-            },
+            $ref: `#/${BUNDLE_ROOT}/address`,
+          },
+        },
+        address: {
+          street: 'foo',
+          user: {
+            $ref: `#/${BUNDLE_ROOT}/user`,
           },
         },
       },
@@ -270,21 +266,19 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: '#/__bundled__/definitions/user',
+        $ref: '#/__bundled__/user',
       },
       __bundled__: {
-        definitions: {
-          user: {
-            id: 'foo',
-            address: {
-              $ref: '#/__bundled__/definitions/address',
-            },
-          },
+        user: {
+          id: 'foo',
           address: {
-            street: 'foo',
-            invalidPointer: {
-              $ref: '#./definitions/card',
-            },
+            $ref: '#/__bundled__/address',
+          },
+        },
+        address: {
+          street: 'foo',
+          invalidPointer: {
+            $ref: '#./definitions/card',
           },
         },
       },
@@ -426,26 +420,17 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       entity: {
-        $ref: `#/${BUNDLE_ROOT}/responses/200/schema`,
+        $ref: `#/${BUNDLE_ROOT}/schema`,
       },
       [BUNDLE_ROOT]: {
-        parameters: [
-          null,
-          {
-            schema: {
-              name: 'param',
-            },
+        schema: {
+          title: 'OK',
+          parameter: {
+            $ref: `#/${BUNDLE_ROOT}/schema_2`,
           },
-        ],
-        responses: {
-          '200': {
-            schema: {
-              title: 'OK',
-              parameter: {
-                $ref: `#/${BUNDLE_ROOT}/parameters/1/schema`,
-              },
-            },
-          },
+        },
+        schema_2: {
+          name: 'param',
         },
       },
     });
@@ -493,28 +478,24 @@ describe('bundleTargetPath()', () => {
 
     expect(result).toEqual({
       user: {
-        $ref: `#/${BUNDLE_ROOT}/schemas/user`,
+        $ref: `#/${BUNDLE_ROOT}/user`,
       },
       responses: {
         '200': {
-          $ref: `#/${BUNDLE_ROOT}/responses/200`,
+          $ref: `#/${BUNDLE_ROOT}/200`,
         },
       },
       [BUNDLE_ROOT]: {
-        schemas: {
-          user: {
-            friend: {
-              // check recursive
-              $ref: `#/${BUNDLE_ROOT}/schemas/user`,
-            },
+        user: {
+          friend: {
+            // check recursive
+            $ref: `#/${BUNDLE_ROOT}/user`,
           },
         },
-        responses: {
-          '200': {
-            other: 'foo',
-            schema: {
-              $ref: `#/${BUNDLE_ROOT}/schemas/user`,
-            },
+        '200': {
+          other: 'foo',
+          schema: {
+            $ref: `#/${BUNDLE_ROOT}/user`,
           },
         },
       },
@@ -564,27 +545,23 @@ describe('bundleTargetPath()', () => {
     expect(safeStringify(result)).toEqual(
       safeStringify({
         [BUNDLE_ROOT]: {
-          components: {
-            schemas: {
-              Hello: '[Circular]',
-              World: {
-                properties: {
-                  name: {
-                    type: 'string',
-                  },
-                },
-                title: 'World',
-                type: 'object',
+          Hello: '[Circular]',
+          World: {
+            properties: {
+              name: {
+                type: 'string',
               },
             },
+            title: 'World',
+            type: 'object',
           },
         },
         properties: {
           Hello: {
-            $ref: `#/${BUNDLE_ROOT}/components/schemas/Hello`,
+            $ref: `#/${BUNDLE_ROOT}/Hello`,
           },
           World: {
-            $ref: `#/${BUNDLE_ROOT}/components/schemas/World`,
+            $ref: `#/${BUNDLE_ROOT}/World`,
           },
         },
         title: 'Hello',
@@ -625,7 +602,25 @@ describe('bundleTargetPath()', () => {
     // Do not mutate document
     expect(clone).toEqual(document);
 
-    expect(result).toMatchSnapshot();
+    expect(safeStringify(result)).toEqual(
+      safeStringify({
+        __bundled__: {
+          GeographicalCoordinate: {
+            type: 'object',
+          },
+          Location: '[Circular]',
+        },
+        properties: {
+          PhysicalGeographicalCoordinate: {
+            $ref: '#/__bundled__/GeographicalCoordinate',
+          },
+          RelatedLocation: {
+            $ref: '#/__bundled__/Location',
+          },
+        },
+        type: 'object',
+      }),
+    );
   });
 
   it('should not create sparse arrays', () => {
@@ -686,40 +681,477 @@ describe('bundleTargetPath()', () => {
         attributes: {
           anyOf: [
             {
-              $ref: '#/__bundled__/components/schemas/bar/items/1',
+              $ref: '#/__bundled__/items_1',
             },
             {
-              $ref: '#/__bundled__/components/schemas/foo/allOf/1/properties/attributes/allOf/1',
+              $ref: '#/__bundled__/allOf_1',
             },
           ],
         },
       },
       __bundled__: {
-        components: {
-          schemas: {
-            bar: {
-              items: [
-                null,
-                {
-                  type: 'number',
-                },
-              ],
+        items_1: {
+          type: 'number',
+        },
+        allOf_1: {},
+      },
+    });
+  });
+
+  describe('when custom bundleRoot is provided', () => {
+    it('should work', () => {
+      const bundleRoot = '#/__custom-root__';
+
+      const document = {
+        definitions: {
+          user: {
+            id: 'foo',
+            address: {
+              $ref: '#/definitions/address',
             },
-            foo: {
-              allOf: [
-                null,
-                {
-                  properties: {
-                    attributes: {
-                      allOf: [null, {}],
-                    },
-                  },
-                },
-              ],
+          },
+          address: {
+            street: 'foo',
+            user: {
+              $ref: '#/definitions/user',
+            },
+          },
+          card: {
+            zip: '20815',
+          },
+        },
+        __target__: {
+          entity: {
+            $ref: '#/definitions/user',
+          },
+        },
+      };
+
+      const clone = cloneDeep(document);
+
+      const result = bundleTarget({
+        document: clone,
+        path: '#/__target__',
+        bundleRoot,
+      });
+
+      // Do not mutate document
+      expect(clone).toStrictEqual(document);
+
+      expect(result).toStrictEqual({
+        entity: {
+          $ref: `${bundleRoot}/user`,
+        },
+        '__custom-root__': {
+          user: {
+            id: 'foo',
+            address: {
+              $ref: `${bundleRoot}/address`,
+            },
+          },
+          address: {
+            street: 'foo',
+            user: {
+              $ref: `${bundleRoot}/user`,
             },
           },
         },
-      },
+      });
+    });
+
+    it('should work for nested root', () => {
+      const bundleRoot = '#/components/schemas';
+
+      const document = {
+        definitions: {
+          user: {
+            id: 'foo',
+            address: {
+              $ref: '#/definitions/address',
+            },
+          },
+          address: {
+            street: 'foo',
+            user: {
+              $ref: '#/definitions/user',
+            },
+          },
+          card: {
+            zip: '20815',
+          },
+        },
+        __target__: {
+          entity: {
+            $ref: '#/definitions/user',
+          },
+        },
+      };
+
+      const clone = cloneDeep(document);
+
+      const result = bundleTarget({
+        document: clone,
+        path: '#/__target__',
+        bundleRoot,
+      });
+
+      // Do not mutate document
+      expect(clone).toStrictEqual(document);
+
+      expect(result).toStrictEqual({
+        entity: {
+          $ref: `${bundleRoot}/user`,
+        },
+        components: {
+          schemas: {
+            user: {
+              id: 'foo',
+              address: {
+                $ref: `${bundleRoot}/address`,
+              },
+            },
+            address: {
+              street: 'foo',
+              user: {
+                $ref: `${bundleRoot}/user`,
+              },
+            },
+          },
+        },
+      });
+    });
+
+    it('should take existing properties into account and generate unique keys', () => {
+      const bundleRoot = '#/custom';
+
+      const document = {
+        custom: {
+          user: {
+            id: 'my-existing-user',
+          },
+          user_2: {
+            id: 'my-existing-user-2',
+          },
+          address: {
+            id: 'address',
+          },
+          cities_0: 'Washington D.C.',
+          cities_2: 'Miami',
+        },
+        definitions: {
+          user: {
+            id: 'foo',
+            address: {
+              $ref: '#/definitions/address',
+            },
+          },
+          address: {
+            street: 'foo',
+            user: {
+              $ref: '#/definitions/user',
+            },
+          },
+          cities: ['Austin', 'Dallas', 'New York', 'Los Angeles', 'Las Vegas'],
+          card: {
+            zip: '20815',
+          },
+        },
+        __target__: {
+          entity: {
+            $ref: '#/definitions/user',
+          },
+          cities: [
+            {
+              $ref: '#/definitions/cities/0',
+            },
+            {
+              $ref: '#/definitions/cities/4',
+            },
+            {
+              $ref: '#/definitions/cities/2',
+            },
+          ],
+        },
+      };
+
+      const clone = cloneDeep(document);
+
+      const result = bundleTarget({
+        document: clone,
+        path: '#/__target__',
+        bundleRoot,
+      });
+
+      // Do not mutate document
+      expect(clone).toStrictEqual(document);
+
+      expect(result).toStrictEqual({
+        entity: {
+          $ref: `${bundleRoot}/user_3`,
+        },
+        cities: [
+          {
+            $ref: `${bundleRoot}/cities_0_2`,
+          },
+          {
+            $ref: `${bundleRoot}/cities_4`,
+          },
+          {
+            $ref: `${bundleRoot}/cities_2_2`,
+          },
+        ],
+        custom: {
+          user: {
+            id: 'my-existing-user',
+          },
+          user_2: {
+            id: 'my-existing-user-2',
+          },
+          user_3: {
+            id: 'foo',
+            address: {
+              $ref: `${bundleRoot}/address_2`,
+            },
+          },
+          address: {
+            id: 'address',
+          },
+          address_2: {
+            street: 'foo',
+            user: {
+              $ref: `${bundleRoot}/user_3`,
+            },
+          },
+          cities_0: 'Washington D.C.',
+          cities_2: 'Miami',
+          cities_4: 'Las Vegas',
+          cities_0_2: 'Austin',
+          cities_2_2: 'New York',
+        },
+      });
+    });
+
+    it('should already existing $refs placed somewhere under bundleRoot', () => {
+      const bundleRoot = '#/definitions';
+
+      const document = {
+        definitions: {
+          user: {
+            id: 'foo',
+            address: {
+              $ref: '#/definitions/address',
+            },
+          },
+          address: {
+            street: 'foo',
+            user: {
+              $ref: '#/definitions/user',
+            },
+          },
+          card: {
+            zip: '20815',
+          },
+        },
+        __target__: {
+          entity: {
+            $ref: '#/definitions/user',
+          },
+        },
+      };
+
+      const clone = cloneDeep(document);
+
+      const result = bundleTarget({
+        document: clone,
+        path: '#/__target__',
+        bundleRoot,
+      });
+
+      // Do not mutate document
+      expect(clone).toStrictEqual(document);
+
+      expect(result).toStrictEqual({
+        entity: {
+          $ref: `${bundleRoot}/user`,
+        },
+        definitions: {
+          user: {
+            id: 'foo',
+            address: {
+              $ref: `${bundleRoot}/address`,
+            },
+          },
+          address: {
+            street: 'foo',
+            user: {
+              $ref: `${bundleRoot}/user`,
+            },
+          },
+          card: {
+            zip: '20815',
+          },
+        },
+      });
+    });
+
+    it('should validate it against provided path', () => {
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__',
+          bundleRoot: '#/__target__',
+        }),
+      ).toThrow('Roots do not make any sense');
+
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__/test',
+          bundleRoot: '#/__target__',
+        }),
+      ).toThrow('Roots do not make any sense');
+
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__',
+          bundleRoot: '#/__target___',
+        }),
+      ).not.toThrow();
+    });
+  });
+
+  describe('when custom errorsRoot is provided', () => {
+    it('should work', () => {
+      const document = {
+        definitions: {
+          invalidPointer: {
+            $ref: '#./definitions/card',
+          },
+        },
+        __target__: {
+          entity: {
+            $ref: '#/definitions/invalidPointer',
+          },
+        },
+      };
+
+      const result = bundleTarget({
+        document: cloneDeep(document),
+        path: '#/__target__',
+        errorsRoot: '#/errors',
+      });
+
+      expect(result).toStrictEqual({
+        __bundled__: {
+          invalidPointer: {
+            $ref: '#./definitions/card',
+          },
+        },
+        entity: {
+          $ref: '#/__bundled__/invalidPointer',
+        },
+        errors: {
+          '#./definitions/card': 'Invalid JSON Pointer syntax.',
+        },
+      });
+    });
+
+    it('should work for nested root', () => {
+      const document = {
+        definitions: {
+          invalidPointer: {
+            $ref: '#./definitions/card',
+          },
+        },
+        __target__: {
+          entity: {
+            $ref: '#/definitions/invalidPointer',
+          },
+        },
+      };
+
+      const result = bundleTarget({
+        document: cloneDeep(document),
+        path: '#/__target__',
+        errorsRoot: '#/errors/bundling',
+      });
+
+      expect(result).toStrictEqual({
+        __bundled__: {
+          invalidPointer: {
+            $ref: '#./definitions/card',
+          },
+        },
+        entity: {
+          $ref: '#/__bundled__/invalidPointer',
+        },
+        errors: {
+          bundling: {
+            '#./definitions/card': 'Invalid JSON Pointer syntax.',
+          },
+        },
+      });
+    });
+
+    it('should not override existing property', () => {
+      const document = {
+        definitions: {
+          invalidPointer: {
+            $ref: '#./definitions/card',
+          },
+        },
+        __target__: {
+          entity: {
+            $ref: '#/definitions/invalidPointer',
+          },
+        },
+        errors: 'do not override me',
+      };
+
+      const result = bundleTarget({
+        document: cloneDeep(document),
+        path: '#/__target__',
+        errorsRoot: '#/errors',
+      });
+
+      expect(result).toStrictEqual({
+        __bundled__: {
+          invalidPointer: {
+            $ref: '#./definitions/card',
+          },
+        },
+        entity: {
+          $ref: '#/__bundled__/invalidPointer',
+        },
+        errors: 'do not override me',
+      });
+    });
+
+    it('should validate it against provided path', () => {
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__',
+          errorsRoot: '#/__target__',
+        }),
+      ).toThrow('Roots do not make any sense');
+
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__/test',
+          errorsRoot: '#/__target__',
+        }),
+      ).toThrow('Roots do not make any sense');
+
+      expect(
+        bundleTarget.bind(null, {
+          document: {},
+          path: '#/__target__',
+          errorsRoot: '#/__target___',
+        }),
+      ).not.toThrow();
     });
   });
 });
