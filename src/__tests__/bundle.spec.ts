@@ -1,7 +1,9 @@
 import { cloneDeep } from 'lodash';
 
-import { BUNDLE_ROOT, bundleTarget } from '../bundle';
+import { BUNDLE_ROOT as BUNDLE_ROOT_POINTER, bundleTarget } from '../bundle';
 import { safeStringify } from '../safeStringify';
+
+const BUNDLE_ROOT = BUNDLE_ROOT_POINTER.slice(2);
 
 describe('bundleTargetPath()', () => {
   it('should work', () => {
@@ -698,7 +700,7 @@ describe('bundleTargetPath()', () => {
 
   describe('when custom bundleRoot is provided', () => {
     it('should work', () => {
-      const bundleRoot = '__custom-root__';
+      const bundleRoot = '#/__custom-root__';
 
       const document = {
         definitions: {
@@ -738,19 +740,81 @@ describe('bundleTargetPath()', () => {
 
       expect(result).toEqual({
         entity: {
-          $ref: `#/${bundleRoot}/user`,
+          $ref: `${bundleRoot}/user`,
         },
-        [bundleRoot]: {
+        '__custom-root__': {
           user: {
             id: 'foo',
             address: {
-              $ref: `#/${bundleRoot}/address`,
+              $ref: `${bundleRoot}/address`,
             },
           },
           address: {
             street: 'foo',
             user: {
-              $ref: `#/${bundleRoot}/user`,
+              $ref: `${bundleRoot}/user`,
+            },
+          },
+        },
+      });
+    });
+
+    it('should work for nested root', () => {
+      const bundleRoot = '#/components/schemas';
+
+      const document = {
+        definitions: {
+          user: {
+            id: 'foo',
+            address: {
+              $ref: '#/definitions/address',
+            },
+          },
+          address: {
+            street: 'foo',
+            user: {
+              $ref: '#/definitions/user',
+            },
+          },
+          card: {
+            zip: '20815',
+          },
+        },
+        __target__: {
+          entity: {
+            $ref: '#/definitions/user',
+          },
+        },
+      };
+
+      const clone = cloneDeep(document);
+
+      const result = bundleTarget({
+        document: clone,
+        path: '#/__target__',
+        bundleRoot,
+      });
+
+      // Do not mutate document
+      expect(clone).toEqual(document);
+
+      expect(result).toEqual({
+        entity: {
+          $ref: `${bundleRoot}/user`,
+        },
+        components: {
+          schemas: {
+            user: {
+              id: 'foo',
+              address: {
+                $ref: `${bundleRoot}/address`,
+              },
+            },
+            address: {
+              street: 'foo',
+              user: {
+                $ref: `${bundleRoot}/user`,
+              },
             },
           },
         },
@@ -758,7 +822,7 @@ describe('bundleTargetPath()', () => {
     });
 
     it('should take existing properties into account and generate unique keys', () => {
-      const bundleRoot = 'custom';
+      const bundleRoot = '#/custom';
 
       const document = {
         custom: {
@@ -823,20 +887,20 @@ describe('bundleTargetPath()', () => {
 
       expect(result).toEqual({
         entity: {
-          $ref: `#/${bundleRoot}/user_3`,
+          $ref: `${bundleRoot}/user_3`,
         },
         cities: [
           {
-            $ref: `#/${bundleRoot}/cities_0_2`,
+            $ref: `${bundleRoot}/cities_0_2`,
           },
           {
-            $ref: `#/${bundleRoot}/cities_4`,
+            $ref: `${bundleRoot}/cities_4`,
           },
           {
-            $ref: `#/${bundleRoot}/cities_2_2`,
+            $ref: `${bundleRoot}/cities_2_2`,
           },
         ],
-        [bundleRoot]: {
+        custom: {
           user: {
             id: 'my-existing-user',
           },
@@ -846,7 +910,7 @@ describe('bundleTargetPath()', () => {
           user_3: {
             id: 'foo',
             address: {
-              $ref: `#/${bundleRoot}/address_2`,
+              $ref: `${bundleRoot}/address_2`,
             },
           },
           address: {
@@ -855,7 +919,7 @@ describe('bundleTargetPath()', () => {
           address_2: {
             street: 'foo',
             user: {
-              $ref: `#/${bundleRoot}/user_3`,
+              $ref: `${bundleRoot}/user_3`,
             },
           },
           cities_0: 'Washington D.C.',
@@ -868,7 +932,7 @@ describe('bundleTargetPath()', () => {
     });
 
     it('should already existing $refs placed somewhere under bundleRoot', () => {
-      const bundleRoot = 'definitions';
+      const bundleRoot = '#/definitions';
 
       const document = {
         definitions: {
@@ -908,19 +972,19 @@ describe('bundleTargetPath()', () => {
 
       expect(result).toEqual({
         entity: {
-          $ref: `#/${bundleRoot}/user`,
+          $ref: `${bundleRoot}/user`,
         },
-        [bundleRoot]: {
+        definitions: {
           user: {
             id: 'foo',
             address: {
-              $ref: `#/${bundleRoot}/address`,
+              $ref: `${bundleRoot}/address`,
             },
           },
           address: {
             street: 'foo',
             user: {
-              $ref: `#/${bundleRoot}/user`,
+              $ref: `${bundleRoot}/user`,
             },
           },
           card: {
@@ -935,7 +999,7 @@ describe('bundleTargetPath()', () => {
         bundleTarget.bind(null, {
           document: {},
           path: '#/__target__',
-          bundleRoot: '__target__',
+          bundleRoot: '#/__target__',
         }),
       ).toThrow('Roots do not make any sense');
 
@@ -943,7 +1007,7 @@ describe('bundleTargetPath()', () => {
         bundleTarget.bind(null, {
           document: {},
           path: '#/__target__/test',
-          bundleRoot: '__target__',
+          bundleRoot: '#/__target__',
         }),
       ).toThrow('Roots do not make any sense');
 
@@ -951,7 +1015,7 @@ describe('bundleTargetPath()', () => {
         bundleTarget.bind(null, {
           document: {},
           path: '#/__target__',
-          bundleRoot: '__target___',
+          bundleRoot: '#/__target___',
         }),
       ).not.toThrow();
     });
@@ -962,30 +1026,6 @@ describe('bundleTargetPath()', () => {
 
     it.todo('should not override existing property');
 
-    it('should validate it against provided path', () => {
-      expect(
-        bundleTarget.bind(null, {
-          document: {},
-          path: '#/__target__',
-          errorsRoot: '__target__',
-        }),
-      ).toThrow('Roots do not make any sense');
-
-      expect(
-        bundleTarget.bind(null, {
-          document: {},
-          path: '#/__target__/test',
-          errorsRoot: '__target__',
-        }),
-      ).toThrow('Roots do not make any sense');
-
-      expect(
-        bundleTarget.bind(null, {
-          document: {},
-          path: '#/__target__',
-          errorsRoot: '__target___',
-        }),
-      ).not.toThrow();
-    });
+    it.todo('should validate it against provided path');
   });
 });

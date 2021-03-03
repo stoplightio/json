@@ -7,7 +7,7 @@ import { pathToPointer } from './pathToPointer';
 import { pointerToPath } from './pointerToPath';
 import { traverse } from './traverse';
 
-export const BUNDLE_ROOT = '__bundled__';
+export const BUNDLE_ROOT = '#/__bundled__';
 export const ERRORS_ROOT = '__errors__';
 
 export const bundleTarget = <T = unknown>(
@@ -19,7 +19,7 @@ export const bundleTarget = <T = unknown>(
   }: { document: T; path: string; bundleRoot?: string; errorsRoot?: string },
   cur?: unknown,
 ) => {
-  if (`${path}/`.startsWith(`#/${bundleRoot}/`) || `${path}/`.startsWith(`#/${errorsRoot}/`)) {
+  if (`${path}/`.startsWith(`${bundleRoot}/`) || `${path}/`.startsWith(`#/${errorsRoot}/`)) {
     throw new Error(`Roots do not make any sense`);
   }
 
@@ -27,7 +27,8 @@ export const bundleTarget = <T = unknown>(
 };
 
 const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
-  const scopedBundledObj = get(document, bundleRoot);
+  const bundleRootPath = pointerToPath(bundleRoot);
+  const scopedBundledObj = get(document, bundleRootPath);
 
   const takenKeys = new Set<string | number>(
     typeof scopedBundledObj === 'object' && scopedBundledObj !== null ? [...Object.keys(scopedBundledObj)] : [],
@@ -76,7 +77,7 @@ const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
 
           inventoryKey = _inventoryKey;
 
-          if (!$ref.startsWith(`#/${bundleRoot}`)) {
+          if (!$ref.startsWith(bundleRoot)) {
             let i = 1;
             while (takenKeys.has(inventoryKey)) {
               i++;
@@ -90,7 +91,7 @@ const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
             takenKeys.add(inventoryKey);
           }
 
-          inventoryPath = [bundleRoot, inventoryKey];
+          inventoryPath = [...bundleRootPath, inventoryKey];
 
           inventoryRef = pathToPointer(inventoryPath);
         } catch (error) {
@@ -127,11 +128,11 @@ const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
 
     const finalObjectToBundle = {
       ...scopedBundledObj,
-      ...bundledObj[bundleRoot],
+      ...get(bundledObj, bundleRootPath),
     };
 
     if (Object.keys(finalObjectToBundle).length) {
-      set(objectToBundle, bundleRoot, finalObjectToBundle);
+      set(objectToBundle, bundleRootPath, finalObjectToBundle);
     }
 
     if (Object.keys(errorsObj).length) {
