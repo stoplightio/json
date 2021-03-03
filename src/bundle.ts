@@ -44,7 +44,6 @@ const bundle = (document: unknown, bundleRoot: string, errorsRoot: string) => {
     errorsObj: any = {},
   ) => {
     const $refTarget = pointerToPath(path);
-    // const $bundleKey = $refTarget[$refTarget.length - 1];
     const objectToBundle = get(document, $refTarget);
 
     traverse(cur ? cur : objectToBundle, ({ parent }) => {
