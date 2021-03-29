@@ -5,6 +5,7 @@ import { hasRef } from './hasRef';
 import { isLocalRef } from './isLocalRef';
 import { pathToPointer } from './pathToPointer';
 import { pointerToPath } from './pointerToPath';
+import { resolveInlineRef } from './resolveInlineRef';
 import { traverse } from './traverse';
 
 export const BUNDLE_ROOT = '#/__bundled__';
@@ -93,7 +94,15 @@ const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath) =
         // Ignore invalid $refs and carry on
         if (!_path || !inventoryPath || !inventoryRef) return;
 
-        const bundled$Ref = get(document, _path);
+        let bundled$Ref: unknown;
+        if (typeof document === 'object' && document !== null) {
+          try {
+            bundled$Ref = resolveInlineRef(Object(document), $ref);
+          } catch (error) {
+            errorsObj[$ref] = error.message;
+          }
+        }
+
         if (bundled$Ref !== void 0) {
           bundledRefInventory[$ref] = inventoryRef;
           parent.$ref = inventoryRef;
