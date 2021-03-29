@@ -98,8 +98,8 @@ const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath) =
         if (typeof document === 'object' && document !== null) {
           try {
             bundled$Ref = resolveInlineRef(Object(document), $ref);
-          } catch (error) {
-            errorsObj[$ref] = error.message;
+          } catch {
+            bundled$Ref = get(document, _path);
           }
         }
 
