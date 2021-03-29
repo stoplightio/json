@@ -623,6 +623,62 @@ describe('bundleTargetPath()', () => {
     );
   });
 
+  it('should follow $refs', () => {
+    const document = {
+      components: {
+        schemas: {
+          GeographicalCoordinate: {
+            $ref: '#/components/schemas/Location',
+          },
+          Location: {
+            type: 'object',
+            properties: {
+              Latitude: {
+                type: 'string',
+              },
+              RelatedLocation: {
+                $ref: '#/components/schemas/GeographicalCoordinate/properties/Latitude',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/components/schemas/Location',
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    expect(safeStringify(result, void 0, 2)).toEqual(
+      safeStringify(
+        {
+          type: 'object',
+          properties: {
+            Latitude: {
+              type: 'string',
+            },
+            RelatedLocation: {
+              $ref: '#/__bundled__/Latitude',
+            },
+          },
+          __bundled__: {
+            Latitude: {
+              type: 'string',
+            },
+          },
+        },
+        void 0,
+        2,
+      ),
+    );
+  });
+
   it('should not create sparse arrays', () => {
     const document = {
       components: {
