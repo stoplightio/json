@@ -37,6 +37,20 @@ function _resolveInlineRef(document: Dictionary<unknown>, ref: string, seen: unk
     }
   }
 
+  if (seen.length === 0) {
+    return value;
+  }
+
+  const sourceDocument = seen[seen.length - 1];
+
+  if (isObject(sourceDocument) && ('summary' in sourceDocument || 'description' in sourceDocument)) {
+    return {
+      ...value,
+      ...('description' in sourceDocument ? { description: sourceDocument.description } : null),
+      ...('summary' in sourceDocument ? { summary: sourceDocument.summary } : null),
+    };
+  }
+
   return value;
 }
 

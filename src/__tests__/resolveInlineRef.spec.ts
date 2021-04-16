@@ -128,4 +128,58 @@ describe('resolveInlineRef', () => {
 
     expect(resolveInlineRef.bind(null, doc, '#/a')).toThrowError('$ref should be a string');
   });
+
+  describe('OAS compatibility', () => {
+    test('should override summary and description fields', () => {
+      const doc = {
+        type: 'object',
+        properties: {
+          caves: {
+            type: 'array',
+            contains: {
+              summary: 'Bear cave',
+              $ref: '#/$defs/Cave',
+              description: 'Apparently Tom likes bears',
+            },
+          },
+          greatestBear: {
+            $ref: '#/$defs/Bear',
+            description: 'The greatest bear!',
+          },
+          bestBear: {
+            $ref: '#/$defs/Bear',
+            summary: 'The best bear!',
+          },
+        },
+        $defs: {
+          Bear: {
+            type: 'string',
+            summary: "Tom's favorite bear",
+          },
+          Cave: {
+            type: 'string',
+            summary: 'A cave',
+            description: '_Everyone_ ~hates~ loves caves',
+          },
+        },
+      };
+
+      expect(resolveInlineRef(doc, '#/properties/caves/contains')).toStrictEqual({
+        type: 'string',
+        summary: 'Bear cave',
+        description: 'Apparently Tom likes bears',
+      });
+
+      expect(resolveInlineRef(doc, '#/properties/greatestBear')).toStrictEqual({
+        type: 'string',
+        description: 'The greatest bear!',
+        summary: "Tom's favorite bear",
+      });
+
+      expect(resolveInlineRef(doc, '#/properties/bestBear')).toStrictEqual({
+        type: 'string',
+        summary: 'The best bear!',
+      });
+    });
+  });
 });
