@@ -1,6 +1,7 @@
 export * from './bundle';
 export * from './decodePointer';
 export * from './decodePointerFragment';
+export * from './decycle';
 export * from './encodePointer';
 export * from './encodePointerFragment';
 export * from './extractPointerFromRef';
