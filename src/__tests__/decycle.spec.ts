@@ -78,7 +78,7 @@ describe('decycle', () => {
   it('should properly encode pointers when decycling a json object', () => {
     const obj2 = {
       circle: {},
-    }
+    };
     obj2.circle = obj2;
 
     const obj = {
@@ -88,18 +88,14 @@ describe('decycle', () => {
         },
       },
     };
-
-
-
     obj.paths['/circle'].obj2 = obj2;
-
 
     expect(decycle(obj)).toEqual({
       paths: {
         '/circle': {
           obj2: {
             circle: {
-              $ref: '#/paths/~1circle/obj2'
+              $ref: '#/paths/~1circle/obj2',
             },
           },
         },

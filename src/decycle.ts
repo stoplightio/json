@@ -1,6 +1,5 @@
-
-import { encodePointer } from './encodePointer';
 import { isPlainObject } from './_utils';
+import { encodePointer } from './encodePointer';
 
 export const decycle = (obj: unknown, replacer?: (value: any) => any) => {
   const objs = new WeakMap<object, string>();
