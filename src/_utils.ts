@@ -26,3 +26,12 @@ export const replaceInString = (str: string, find: string, repl: string): string
 
   return res;
 };
+
+export function isPlainObject(maybeObj: unknown): maybeObj is { [key in PropertyKey]: unknown } {
+  if (typeof maybeObj !== 'object' || maybeObj === null) {
+    return false;
+  }
+
+  const proto = Object.getPrototypeOf(maybeObj);
+  return proto === null || proto === Object.prototype;
+}
