@@ -1,3 +1,5 @@
+
+import { encodePointer } from './encodePointer';
 import { isPlainObject } from './_utils';
 
 export const decycle = (obj: unknown, replacer?: (value: any) => any) => {
@@ -14,7 +16,7 @@ export const decycle = (obj: unknown, replacer?: (value: any) => any) => {
       const oldPath = objs.get(value);
       // If the value is an object or array, look to see if we have already
       // encountered it. If so, return a {"$ref":PATH} object.
-      if (oldPath) return { $ref: oldPath };
+      if (oldPath) return { $ref: encodePointer(oldPath) };
 
       objs.set(value, path);
       // If it is an array, replicate the array.
