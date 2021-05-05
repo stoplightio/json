@@ -8,4 +8,6 @@ test('pointerToPath', () => {
   expect(pointerToPath('#/paths/foo~0users')).toEqual(['paths', 'foo~users']);
   expect(pointerToPath('#')).toEqual([]);
   expect(pointerToPath('#/')).toEqual(['']);
+  expect(pointerToPath('#/foo%20%5E%20bar')).toEqual(['foo ^ bar']);
+  expect(pointerToPath('#/users% ')).toEqual(['users% ']);
 });
