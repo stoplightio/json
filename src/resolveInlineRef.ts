@@ -12,7 +12,7 @@ function _resolveInlineRef(document: Dictionary<unknown>, ref: string, seen: unk
   const path = pointerToPath(ref);
   let value: unknown = document;
   for (const segment of path) {
-    if (!isPlainObject(value) || !(segment in value)) {
+    if ((!isPlainObject(value) && !Array.isArray(value)) || !(segment in value)) {
       throw new ReferenceError(`Could not resolve '${ref}'`);
     }
 
