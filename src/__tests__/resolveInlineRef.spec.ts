@@ -10,11 +10,13 @@ describe('resolveInlineRef', () => {
         $ref: '#/c',
       },
       c: {
-        $ref: '#/d',
+        $ref: '#/d/0',
       },
-      d: {
-        foo: 'woo!',
-      },
+      d: [
+        {
+          foo: 'woo!',
+        },
+      ],
     };
 
     expect(resolveInlineRef(doc, '#/a')).toEqual('woo!');
