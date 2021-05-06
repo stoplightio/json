@@ -102,4 +102,44 @@ describe('decycle', () => {
       },
     });
   });
+
+  it('should not create refs for objects that are not circular', () => {
+    const obj2 = {
+      circle: {},
+    };
+    obj2.circle = obj2;
+
+    const obj3 = {
+      foo: 'bar',
+    };
+
+    const obj = {
+      obj3A: obj3,
+      obj3B: obj3,
+      paths: {
+        '/circle': {
+          obj2: {},
+        },
+      },
+    };
+    obj.paths['/circle'].obj2 = obj2;
+
+    expect(decycle(obj)).toEqual({
+      obj3A: {
+        foo: 'bar',
+      },
+      obj3B: {
+        foo: 'bar',
+      },
+      paths: {
+        '/circle': {
+          obj2: {
+            circle: {
+              $ref: '#/paths/~1circle/obj2',
+            },
+          },
+        },
+      },
+    });
+  });
 });

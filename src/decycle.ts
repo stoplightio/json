@@ -28,6 +28,7 @@ export const decycle = (obj: unknown, replacer?: (value: any) => any) => {
           curObj[name] = derez(value[name], `${path}/${name}`);
         });
       }
+      objs.delete(value);
       return curObj;
     }
     return value;
