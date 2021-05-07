@@ -33,5 +33,11 @@ export function isPlainObject(maybeObj: unknown): maybeObj is { [key in Property
   }
 
   const proto = Object.getPrototypeOf(maybeObj);
-  return proto === null || proto === Object.prototype;
+  return (
+    proto === null ||
+    proto === Object.prototype ||
+    // this is to be more compatible with Lodash.isPlainObject that also checks the constructor
+    (typeof maybeObj.constructor === 'function' &&
+      Function.toString.call(Object) === Function.toString.call(maybeObj.constructor))
+  );
 }
