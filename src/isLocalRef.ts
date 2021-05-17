@@ -1,1 +1,1 @@
-export const isLocalRef = (pointer: string) => pointer.length > 0 && pointer[0] === '#';
+export const isLocalRef = (pointer: string) => pointer.length > 0 && /^#\/?\S*$/.test(pointer);
