@@ -14,6 +14,7 @@ describe('isLocalRef', () => {
     '#/k%22l',
     '#/%20',
     '#/m~0n',
+    '#./d~8z',
   ])('should treat %s as local reference', ref => {
     expect(isLocalRef(ref)).toEqual(true);
   });
