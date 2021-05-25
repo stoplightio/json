@@ -83,19 +83,19 @@ describe('decycle', () => {
 
     const obj = {
       paths: {
-        '/circle': {
+        '/circle/foo': {
           obj2: {},
         },
       },
     };
-    obj.paths['/circle'].obj2 = obj2;
+    obj.paths['/circle/foo'].obj2 = obj2;
 
     expect(decycle(obj)).toEqual({
       paths: {
-        '/circle': {
+        '/circle/foo': {
           obj2: {
             circle: {
-              $ref: '#/paths/~1circle/obj2',
+              $ref: '#/paths/~1circle~1foo/obj2',
             },
           },
         },
