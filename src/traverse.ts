@@ -1,17 +1,37 @@
-import { JsonPath } from '@stoplight/types';
+import { JsonPath, Segment } from '@stoplight/types';
 
-export const traverse = (
-  obj: unknown,
-  func: (opts: { parent: unknown; parentPath: JsonPath; property: string | number; propertyValue: unknown }) => void,
-  path: JsonPath = [],
-) => {
-  if (!obj || typeof obj !== 'object') return;
+type Hooks = {
+  onEnter(ctx: Readonly<{ value: object; path: JsonPath }>): void;
+  onLeave(ctx: Readonly<{ value: object; path: JsonPath }>): void;
+  onProperty(ctx: Readonly<{ parent: object; parentPath: JsonPath; property: Segment; propertyValue: unknown }>): void;
+};
 
-  for (const i in obj) {
-    if (!obj.hasOwnProperty(i)) continue;
-    func({ parent: obj, parentPath: path, property: i, propertyValue: obj[i] });
-    if (obj[i] && typeof obj[i] === 'object') {
-      traverse(obj[i], func, path.concat(i));
+const _traverse = (obj: object, hooks: Partial<Hooks>, path: JsonPath) => {
+  const ctx = { value: obj, path };
+
+  if (hooks.onEnter) {
+    hooks.onEnter(ctx);
+  }
+
+  for (const i of Object.keys(obj)) {
+    const value = obj[i];
+
+    if (hooks.onProperty) {
+      hooks.onProperty({ parent: obj, parentPath: path, property: i, propertyValue: value });
     }
+
+    if (typeof value === 'object' && value !== null) {
+      _traverse(value, hooks, path.concat(i));
+    }
+  }
+
+  if (hooks.onLeave) {
+    hooks.onLeave(ctx);
+  }
+};
+
+export const traverse = (obj: unknown, hooks: Partial<Hooks> | Hooks['onProperty']) => {
+  if (typeof obj === 'object' && obj !== null) {
+    _traverse(obj, typeof hooks === 'function' ? { onProperty: hooks } : hooks, []);
   }
 };
