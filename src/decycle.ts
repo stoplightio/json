@@ -1,4 +1,4 @@
-import { isPlainObject } from './_utils';
+import { isPlainObject } from './isPlainObject';
 import { pathToPointer } from './pathToPointer';
 
 export const decycle = (obj: unknown, replacer?: (value: any) => any) => {

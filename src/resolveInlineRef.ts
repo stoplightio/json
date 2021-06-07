@@ -1,6 +1,6 @@
 import { Dictionary } from '@stoplight/types';
-import { isPlainObject } from './_utils';
 import { extractSourceFromRef } from './extractSourceFromRef';
+import { isPlainObject } from './isPlainObject';
 import { pointerToPath } from './pointerToPath';
 
 function _resolveInlineRef(document: Dictionary<unknown>, ref: string, seen: unknown[]): unknown {

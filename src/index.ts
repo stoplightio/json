@@ -12,6 +12,7 @@ export * from './getLastPathSegment';
 export * from './getLocationForJsonPath';
 export * from './hasRef';
 export * from './isLocalRef';
+export * from './isPlainObject';
 export * from './parseWithPointers';
 export * from './pathToPointer';
 export * from './pointerToPath';
