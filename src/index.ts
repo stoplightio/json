@@ -17,6 +17,7 @@ export * from './parseWithPointers';
 export * from './pathToPointer';
 export * from './pointerToPath';
 export * from './renameObjectKey';
+export * from './reparentBundleTarget';
 export * from './resolveInlineRef';
 export * from './safeParse';
 export * from './safeStringify';
