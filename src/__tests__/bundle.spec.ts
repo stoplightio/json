@@ -63,6 +63,61 @@ describe('bundleTargetPath()', () => {
     });
   });
 
+  it('should operate on original object if `cloneDocument` set to false', () => {
+    const document = {
+      definitions: {
+        user: {
+          id: 'foo',
+          address: {
+            $ref: '#/definitions/address',
+          },
+        },
+        address: {
+          street: 'foo',
+          user: {
+            $ref: '#/definitions/user',
+          },
+        },
+        card: {
+          zip: '20815',
+        },
+      },
+      __target__: {
+        entity: {
+          $ref: '#/definitions/user',
+        },
+      },
+    };
+
+    const result = bundleTarget({
+      document,
+      path: '#/__target__',
+      cloneDocument: false,
+    });
+
+    expect(document.__target__).toStrictEqual(result);
+
+    expect(result).toEqual({
+      entity: {
+        $ref: `#/${BUNDLE_ROOT}/user`,
+      },
+      [BUNDLE_ROOT]: {
+        user: {
+          id: 'foo',
+          address: {
+            $ref: `#/${BUNDLE_ROOT}/address`,
+          },
+        },
+        address: {
+          street: 'foo',
+          user: {
+            $ref: `#/${BUNDLE_ROOT}/user`,
+          },
+        },
+      },
+    });
+  });
+
   it('should include falsy values', () => {
     const document = {
       definitions: {

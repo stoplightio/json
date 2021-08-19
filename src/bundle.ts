@@ -17,14 +17,16 @@ export const bundleTarget = <T = unknown>(
     path,
     bundleRoot = BUNDLE_ROOT,
     errorsRoot = ERRORS_ROOT,
-  }: { document: T; path: string; bundleRoot?: string; errorsRoot?: string },
+    cloneDocument = true,
+  }: { document: T; path: string; bundleRoot?: string; errorsRoot?: string; cloneDocument?: boolean },
   cur?: unknown,
 ) => {
   if (path === bundleRoot || path === errorsRoot) {
     throw new Error(`Roots do not make any sense`);
   }
 
-  return bundle(cloneDeep(document), pointerToPath(bundleRoot), pointerToPath(errorsRoot))(path, { [path]: true }, cur);
+  const workingDocument = cloneDocument ? cloneDeep(document) : document;
+  return bundle(workingDocument, pointerToPath(bundleRoot), pointerToPath(errorsRoot))(path, { [path]: true }, cur);
 };
 
 const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath) => {
