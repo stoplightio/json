@@ -18,7 +18,7 @@ export const bundleTarget = <T = unknown>(
     bundleRoot = BUNDLE_ROOT,
     errorsRoot = ERRORS_ROOT,
     cloneDocument = true,
-  }: { document: T; path: string; bundleRoot?: string; errorsRoot?: string; cloneDocument?: boolean; },
+  }: { document: T; path: string; bundleRoot?: string; errorsRoot?: string; cloneDocument?: boolean },
   cur?: unknown,
 ) => {
   if (path === bundleRoot || path === errorsRoot) {
