@@ -809,6 +809,72 @@ describe('bundleTargetPath()', () => {
     });
   });
 
+  it("should not convert object to array when using numeric keys", () => {
+    const result = bundleTarget({
+      document: {
+        openapi: "3.0.0",
+        paths: {
+          "/path": {
+            get: {
+              responses: {
+                "200": {
+                  content: {
+                    "application/json": {
+                      schema: {
+                        type: "object",
+                        properties: {
+                          numModel: { $ref: "#/components/schemas/200" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        components: {
+          schemas: {
+            "200": {
+              title: "200",
+              type: "object",
+              properties: { id: { type: "string" } },
+            },
+          },
+        },
+        __target__: {
+          id: "?http-operation-id?",
+          method: "get",
+          path: "/path",
+          responses: [
+            {
+              code: "200",
+              headers: [],
+              contents: [
+                {
+                  mediaType: "application/json",
+                  schema: {
+                    type: "object",
+                    properties: {
+                      numModel: { $ref: "#/components/schemas/200" },
+                    },
+                    $schema: "http://json-schema.org/draft-07/schema#",
+                  },
+                  examples: [],
+                  encodings: [],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      path: "#/__target__",
+      bundleRoot: "#/components/schemas",
+    });
+
+    expect(Array.isArray(result.components.schemas)).toBe(false);
+  });
+
   describe('when custom bundleRoot is provided', () => {
     it('should work', () => {
       const bundleRoot = '#/__custom-root__';
