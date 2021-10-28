@@ -809,21 +809,21 @@ describe('bundleTargetPath()', () => {
     });
   });
 
-  it("should not convert object to array when using numeric keys", () => {
+  it('should not convert object to array when using numeric keys', () => {
     const result = bundleTarget({
       document: {
-        openapi: "3.0.0",
+        openapi: '3.0.0',
         paths: {
-          "/path": {
+          '/path': {
             get: {
               responses: {
-                "200": {
+                '200': {
                   content: {
-                    "application/json": {
+                    'application/json': {
                       schema: {
-                        type: "object",
+                        type: 'object',
                         properties: {
-                          numModel: { $ref: "#/components/schemas/200" },
+                          numModel: { $ref: '#/components/schemas/200' },
                         },
                       },
                     },
@@ -835,30 +835,30 @@ describe('bundleTargetPath()', () => {
         },
         components: {
           schemas: {
-            "200": {
-              title: "200",
-              type: "object",
-              properties: { id: { type: "string" } },
+            '200': {
+              title: '200',
+              type: 'object',
+              properties: { id: { type: 'string' } },
             },
           },
         },
         __target__: {
-          id: "?http-operation-id?",
-          method: "get",
-          path: "/path",
+          id: '?http-operation-id?',
+          method: 'get',
+          path: '/path',
           responses: [
             {
-              code: "200",
+              code: '200',
               headers: [],
               contents: [
                 {
-                  mediaType: "application/json",
+                  mediaType: 'application/json',
                   schema: {
-                    type: "object",
+                    type: 'object',
                     properties: {
-                      numModel: { $ref: "#/components/schemas/200" },
+                      numModel: { $ref: '#/components/schemas/200' },
                     },
-                    $schema: "http://json-schema.org/draft-07/schema#",
+                    $schema: 'http://json-schema.org/draft-07/schema#',
                   },
                   examples: [],
                   encodings: [],
@@ -868,8 +868,8 @@ describe('bundleTargetPath()', () => {
           ],
         },
       },
-      path: "#/__target__",
-      bundleRoot: "#/components/schemas",
+      path: '#/__target__',
+      bundleRoot: '#/components/schemas',
     });
 
     expect(Array.isArray(result.components.schemas)).toBe(false);
