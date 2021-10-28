@@ -1,4 +1,4 @@
-import { cloneDeep, get, has, set } from 'lodash';
+import { cloneDeep, get, has, set, setWith } from 'lodash';
 
 import { Dictionary, JsonPath } from '@stoplight/types';
 import { hasRef } from './hasRef';
@@ -114,7 +114,7 @@ const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath) =
             if (Array.isArray(target)) {
               set(bundledObj, inventoryPath, new Array(target.length).fill(null));
             } else if (typeof target === 'object') {
-              set(bundledObj, inventoryPath, {});
+              setWith(bundledObj, inventoryPath, {}, Object);
             }
 
             set(bundledObj, inventoryPath, bundled$Ref);
