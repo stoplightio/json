@@ -110,10 +110,9 @@ const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath) =
           parent.$ref = inventoryRef;
 
           if (!has(bundledObj, inventoryPath)) {
-            const target = get(document, _path);
-            if (Array.isArray(target)) {
-              set(bundledObj, inventoryPath, new Array(target.length).fill(null));
-            } else if (typeof target === 'object') {
+            if (Array.isArray(bundled$Ref)) {
+              set(bundledObj, inventoryPath, new Array(bundled$Ref.length).fill(null));
+            } else if (typeof bundled$Ref === 'object') {
               setWith(bundledObj, inventoryPath, {}, Object);
             }
 
