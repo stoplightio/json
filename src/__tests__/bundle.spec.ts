@@ -809,6 +809,51 @@ describe('bundleTargetPath()', () => {
     });
   });
 
+  it('should prefer data type of $reffed data', () => {
+    const document = {
+      root: {
+        foo: {
+          allOf: [
+            {
+              title: 'user_reference',
+            },
+          ],
+        },
+        bar: {
+          allOf: [
+            {
+              data: {
+                $ref: '#/root/foo',
+              },
+            },
+          ],
+        },
+      },
+      __target__: {
+        responses: {
+          $ref: '#/root/bar/allOf/0/data/allOf/0',
+        },
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/__target__',
+    });
+
+    // Do not mutate document
+    expect(clone).toEqual(document);
+
+    // The __bundled__ value should be an Object not an Array
+    expect(Array.isArray(result[BUNDLE_ROOT])).toBe(false);
+
+    expect(result[BUNDLE_ROOT]).toHaveProperty('0', {
+      title: 'user_reference',
+    });
+  });
+
   it('should not convert object to array when using numeric keys', () => {
     const result = bundleTarget({
       document: {
