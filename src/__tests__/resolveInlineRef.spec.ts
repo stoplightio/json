@@ -1,4 +1,4 @@
-import { resolveInlineRef } from '../resolveInlineRef';
+import { resolveInlineRef, resolveInlineRefWithLocation } from '../resolveInlineRef';
 
 describe('resolveInlineRef', () => {
   test('should follow refs', () => {
@@ -20,6 +20,7 @@ describe('resolveInlineRef', () => {
     };
 
     expect(resolveInlineRef(doc, '#/a')).toEqual('woo!');
+    expect(resolveInlineRefWithLocation(doc, '#/a')).toHaveProperty('location', ['d', '0', 'foo']);
   });
 
   test('should follow refs #2', () => {
@@ -42,6 +43,7 @@ describe('resolveInlineRef', () => {
     };
 
     expect(resolveInlineRef(doc, '#/a')).toEqual('woo!');
+    expect(resolveInlineRefWithLocation(doc, '#/a')).toHaveProperty('location', ['e']);
   });
 
   test('should handle direct circular refs', () => {
@@ -57,6 +59,7 @@ describe('resolveInlineRef', () => {
     expect(resolveInlineRef(doc, '#/a')).toEqual({
       $ref: '#/a',
     });
+    expect(resolveInlineRefWithLocation(doc, '#/a')).toHaveProperty('location', ['b']);
   });
 
   test('should handle direct circular refs #2', () => {
@@ -83,6 +86,7 @@ describe('resolveInlineRef', () => {
     expect(resolveInlineRef(doc, '#/a')).toEqual({
       $ref: '#/a',
     });
+    expect(resolveInlineRefWithLocation(doc, '#/a')).toHaveProperty('location', ['e']);
   });
 
   test('given external reference, should throw', () => {
@@ -172,16 +176,26 @@ describe('resolveInlineRef', () => {
         description: 'Apparently Tom likes bears',
       });
 
+      expect(resolveInlineRefWithLocation(doc, '#/properties/caves/contains')).toHaveProperty('location', [
+        '$defs',
+        'Cave',
+      ]);
+
       expect(resolveInlineRef(doc, '#/properties/greatestBear')).toStrictEqual({
         type: 'string',
         description: 'The greatest bear!',
         summary: "Tom's favorite bear",
       });
+      expect(resolveInlineRefWithLocation(doc, '#/properties/greatestBear')).toHaveProperty('location', [
+        '$defs',
+        'Bear',
+      ]);
 
       expect(resolveInlineRef(doc, '#/properties/bestBear')).toStrictEqual({
         type: 'string',
         summary: 'The best bear!',
       });
+      expect(resolveInlineRefWithLocation(doc, '#/properties/bestBear')).toHaveProperty('location', ['$defs', 'Bear']);
     });
   });
 });
