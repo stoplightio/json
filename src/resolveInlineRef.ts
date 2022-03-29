@@ -1,17 +1,23 @@
-import { Dictionary } from '@stoplight/types';
+import { Dictionary, JsonPath } from '@stoplight/types';
 import { extractSourceFromRef } from './extractSourceFromRef';
 import { isPlainObject } from './isPlainObject';
 import { pointerToPath } from './pointerToPath';
 
-function _resolveInlineRef(document: Dictionary<unknown>, ref: string, seen: unknown[]): unknown {
+function _resolveInlineRef(
+  document: Dictionary<unknown>,
+  ref: string,
+  seen: unknown[],
+  prevLocation?: JsonPath,
+): { location: JsonPath; value: unknown } {
   const source = extractSourceFromRef(ref);
   if (source !== null) {
     throw new ReferenceError('Cannot resolve external references');
   }
 
   const path = pointerToPath(ref);
+  let location = path;
   let value: unknown = document;
-  for (const segment of path) {
+  for (const [i, segment] of path.entries()) {
     if ((!isPlainObject(value) && !Array.isArray(value)) || !(segment in value)) {
       throw new ReferenceError(`Could not resolve '${ref}'`);
     }
@@ -19,38 +25,57 @@ function _resolveInlineRef(document: Dictionary<unknown>, ref: string, seen: unk
     value = value[segment];
 
     if (isPlainObject(value) && '$ref' in value) {
-      if (seen.includes(value)) {
-        // circular, let's stop
-        return seen[seen.length - 1];
-      }
-
-      seen.push(value);
-
       if (typeof value.$ref !== 'string') {
         throw new TypeError('$ref should be a string');
       }
 
-      value = _resolveInlineRef(document, value.$ref, seen);
+      if (seen.includes(value)) {
+        return {
+          location: prevLocation || location,
+          value: seen[seen.length - 1],
+        };
+      }
+
+      seen.push(value);
+
+      ({ value, location } = _resolveInlineRef(document, value.$ref, seen, location));
+      location.push(...path.slice(i + 1));
     }
   }
 
   if (seen.length === 0) {
-    return value;
+    return {
+      location,
+      value,
+    };
   }
 
   const sourceDocument = seen[seen.length - 1];
 
   if (isPlainObject(sourceDocument) && ('summary' in sourceDocument || 'description' in sourceDocument)) {
     return {
-      ...value,
-      ...('description' in sourceDocument ? { description: sourceDocument.description } : null),
-      ...('summary' in sourceDocument ? { summary: sourceDocument.summary } : null),
+      location,
+      value: {
+        ...value,
+        ...('description' in sourceDocument ? { description: sourceDocument.description } : null),
+        ...('summary' in sourceDocument ? { summary: sourceDocument.summary } : null),
+      },
     };
   }
 
-  return value;
+  return {
+    location,
+    value,
+  };
 }
 
 export function resolveInlineRef(document: Dictionary<unknown>, ref: string): unknown {
+  return _resolveInlineRef(document, ref, []).value;
+}
+
+export function resolveInlineRefWithLocation(
+  document: Dictionary<unknown>,
+  ref: string,
+): { location: JsonPath; value: unknown } {
   return _resolveInlineRef(document, ref, []);
 }
