@@ -18,15 +18,7 @@ const decodeFragmentSegments = (segments: string[]): string[] => {
 };
 
 const decodeUriFragmentIdentifier = (ptr: string): string[] => {
-  if (typeof ptr !== 'string') {
-    throw new TypeError('Invalid type: JSON Pointers are represented as strings.');
-  }
-
-  if (ptr.length === 0 || ptr[0] !== '#') {
-    throw new URIError('Invalid JSON Pointer syntax; URI fragment identifiers must begin with a hash.');
-  }
-
-  if (ptr.length === 1) {
+  if (!ptr || ptr.length === 1) {
     return [];
   }
 
