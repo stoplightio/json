@@ -1,9 +1,9 @@
 version: 2
 
 jobs:
-  test_node_10:
+  test_node_16:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:16
     steps:
       - checkout
       - run:
@@ -35,10 +35,10 @@ workflows:
   version: 2
   test_and_release:
     jobs:
-      - test_node_10
+      - test_node_16
       - release:
           filters:
             branches:
               only: master
           requires:
-            - test_node_10
+            - test_node_16
