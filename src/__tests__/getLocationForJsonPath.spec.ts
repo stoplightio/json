@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { join } from 'path';
+
 import { getLocationForJsonPath } from '../getLocationForJsonPath';
 import { parseWithPointers } from '../parseWithPointers';
 
@@ -13,7 +14,7 @@ describe('getLocationForJsonPath', () => {
   describe('pet store fixture', () => {
     const result = parseWithPointers(petStore);
 
-    test.each`
+    it.each`
       start       | end        | path                                   | closest
       ${[8, 21]}  | ${[8, 41]} | ${['info', 'contact', 'email']}        | ${false}
       ${[8, 21]}  | ${[8, 41]} | ${['info', 'contact', 'email']}        | ${true}
@@ -53,7 +54,7 @@ describe('getLocationForJsonPath', () => {
   describe('simple fixture', () => {
     const result = parseWithPointers(simple);
 
-    test.each`
+    it.each`
       start      | end        | path
       ${[2, 13]} | ${[4, 3]}  | ${['address']}
       ${[3, 14]} | ${[3, 17]} | ${['address', 'street']}
@@ -78,7 +79,7 @@ describe('getLocationForJsonPath', () => {
   describe('users fixture', () => {
     const result = parseWithPointers(users);
 
-    test.each`
+    it.each`
       start       | end        | path
       ${[3, 14]}  | ${[3, 19]} | ${['users', 0, 'name']}
       ${[3, 14]}  | ${[3, 19]} | ${['users', '0', 'name']}
@@ -103,7 +104,7 @@ describe('getLocationForJsonPath', () => {
   describe('one-liner', () => {
     const result = parseWithPointers(`{ "foo": true, "bar": false }`);
 
-    test.each`
+    it.each`
       start      | end        | path
       ${[0, 9]}  | ${[0, 13]} | ${['foo']}
       ${[0, 22]} | ${[0, 27]} | ${['bar']}
@@ -126,7 +127,7 @@ describe('getLocationForJsonPath', () => {
   describe('multiline comments', () => {
     const result = parseWithPointers(multilineComments);
 
-    test.each`
+    it.each`
       start       | end         | path
       ${[1, 11]}  | ${[1, 18]}  | ${['hello']}
       ${[7, 14]}  | ${[7, 17]}  | ${['address', 'street']}
@@ -151,7 +152,7 @@ describe('getLocationForJsonPath', () => {
   describe('todos', () => {
     const result = parseWithPointers(todos);
 
-    test.each`
+    it.each`
       start       | end         | path                                                       | closest
       ${[42, 13]} | ${[73, 7]}  | ${['paths', '/todos/{todoId}', 'get']}                     | ${false}
       ${[42, 13]} | ${[73, 7]}  | ${['paths', '/todos/{todoId}', 'get', 'description']}      | ${true}
@@ -189,7 +190,7 @@ describe('getLocationForJsonPath', () => {
  }
 }`);
 
-    test.each`
+    it.each`
       start      | end       | path                                 | closest
       ${[2, 10]} | ${[4, 4]} | ${['foo', 'bar', 'baz', 'baz-inga']} | ${true}
       ${[]}      | ${[]}     | ${['foo', 'bar', 'baz', 'baz-inga']} | ${false}

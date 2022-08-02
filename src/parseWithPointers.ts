@@ -1,6 +1,7 @@
 import createOrderedObject, { getOrder } from '@stoplight/ordered-object-literal';
 import { DiagnosticSeverity, Dictionary, IDiagnostic, IParserASTResult, IRange, JsonPath } from '@stoplight/types';
 import { JSONVisitor, NodeType, ParseErrorCode, printParseErrorCode, visit } from 'jsonc-parser';
+
 import { IJsonASTNode, IParseOptions, JsonParserResult } from './types';
 
 export const parseWithPointers = <T = any>(
@@ -29,7 +30,13 @@ export function parseTree<T>(
   options: IParseOptions,
 ): IParserASTResult<T, IJsonASTNode, number[]> {
   const lineMap = computeLineMap(text);
-  let currentParent: IJsonASTNode = { type: 'array', offset: -1, length: -1, children: [], parent: void 0 }; // artificial root
+  let currentParent: IJsonASTNode = {
+    type: 'array',
+    offset: -1,
+    length: -1,
+    children: [],
+    parent: void 0,
+  }; // artificial root
   let currentParsedProperty: string | null = null;
   let currentParsedParent: any = [];
   const objectKeys = new WeakMap<object, string[]>();
@@ -97,8 +104,20 @@ export function parseTree<T>(
       onParsedComplexBegin(createObjectLiteral(options.preserveKeyOrder === true));
     },
     onObjectProperty: (name: string, offset: number, length: number, startLine: number, startCharacter: number) => {
-      currentParent = onValue({ type: 'property', offset, length: -1, parent: currentParent, children: [] });
-      currentParent.children!.push({ type: 'string', value: name, offset, length, parent: currentParent });
+      currentParent = onValue({
+        type: 'property',
+        offset,
+        length: -1,
+        parent: currentParent,
+        children: [],
+      });
+      currentParent.children!.push({
+        type: 'string',
+        value: name,
+        offset,
+        length,
+        parent: currentParent,
+      });
 
       if (options.ignoreDuplicateKeys === false) {
         const currentObjectKeys = objectKeys.get(currentParent.parent!);
@@ -178,7 +197,7 @@ export function parseTree<T>(
 
       onParsedValue(value);
     },
-    onSeparator: (sep: string, offset: number, length: number) => {
+    onSeparator: (sep: string, offset: number) => {
       if (currentParent.type === 'property') {
         if (sep === ':') {
           currentParent.colonOffset = offset;
@@ -254,7 +273,9 @@ function getJsonPath(node: IJsonASTNode, path: JsonPath = []): JsonPath {
   return path;
 }
 
-function createObjectLiteral(preserveKeyOrder: boolean): { [key in PropertyKey]: unknown } {
+function createObjectLiteral(preserveKeyOrder: boolean): {
+  [key in PropertyKey]: unknown;
+} {
   return preserveKeyOrder ? createOrderedObject({}) : {};
 }
 

@@ -1,19 +1,20 @@
 import { DiagnosticSeverity } from '@stoplight/types';
 import * as fs from 'fs';
 import { join } from 'path';
+
 import { parseWithPointers } from '../parseWithPointers';
 
 const simple = fs.readFileSync(join(__dirname, './fixtures/simple.json'), 'utf-8');
 
 describe('json parser', () => {
-  test('parse simple', () => {
+  it('parse simple', () => {
     expect(parseWithPointers(simple)).toMatchSnapshot({
       ast: expect.any(Object),
       lineMap: expect.any(Array),
     });
   });
 
-  test('parse complex', () => {
+  it('parse complex', () => {
     expect(
       parseWithPointers(`{
   "users": [
@@ -40,7 +41,7 @@ describe('json parser', () => {
     });
   });
 
-  test('does not allow comments by default', () => {
+  it('does not allow comments by default', () => {
     expect(
       parseWithPointers(`{
       // a comment
@@ -72,7 +73,7 @@ describe('json parser', () => {
     ]);
   });
 
-  test('does not allow trailing commas by default', () => {
+  it('does not allow trailing commas by default', () => {
     expect(
       parseWithPointers(`{
       "name": "Antti",
@@ -105,7 +106,7 @@ describe('json parser', () => {
   });
 
   describe('fixtures', () => {
-    test.each(['petstore.oas2.json', 'user.jschema.json'])('parses %s', async filename => {
+    it.each(['petstore.oas2.json', 'user.jschema.json'])('parses %s', async filename => {
       expect(
         parseWithPointers((await fs.promises.readFile(join(__dirname, 'fixtures', filename), 'utf-8')) as string),
       ).toMatchSnapshot({
@@ -116,12 +117,11 @@ describe('json parser', () => {
   });
 
   describe('invalid fixtures', () => {
-    test.each(['schema.json', 'characters.json'])('parses %s', async filename => {
+    it.each(['schema.json', 'characters.json'])('parses %s', async filename => {
       expect(
-        parseWithPointers((await fs.promises.readFile(
-          join(__dirname, 'fixtures/invalid', filename),
-          'utf-8',
-        )) as string),
+        parseWithPointers(
+          (await fs.promises.readFile(join(__dirname, 'fixtures/invalid', filename), 'utf-8')) as string,
+        ),
       ).toMatchSnapshot({
         ast: expect.any(Object),
         lineMap: expect.any(Array),
@@ -130,7 +130,7 @@ describe('json parser', () => {
   });
 
   describe('duplicate keys', () => {
-    test('given object with no duplicate keys, does not report any errors', () => {
+    it('given object with no duplicate keys, does not report any errors', () => {
       expect(
         parseWithPointers(
           `{
@@ -181,7 +181,7 @@ describe('json parser', () => {
       ).toEqual([]);
     });
 
-    test('given object containing with duplicate keys, reports them', () => {
+    it('given object containing with duplicate keys, reports them', () => {
       expect(
         parseWithPointers(
           `{
@@ -278,7 +278,7 @@ describe('json parser', () => {
       ]);
     });
 
-    test('generates correct paths for dupes in arrays', () => {
+    it('generates correct paths for dupes in arrays', () => {
       expect(
         parseWithPointers('{ "A": [{}, { "foo": true, "foo": false,\n "foo": 2 }] }', { ignoreDuplicateKeys: false }),
       ).toHaveProperty('diagnostics', [
@@ -313,7 +313,7 @@ describe('json parser', () => {
     });
   });
 
-  test('includes properties with empty string as keys', () => {
+  it('includes properties with empty string as keys', () => {
     expect(parseWithPointers('{ "": [{ "foo": true, "": false }] }')).toHaveProperty('data', {
       '': [{ '': false, foo: true }],
     });
@@ -372,7 +372,9 @@ describe('json parser', () => {
       });
 
       it('does not touch arrays', () => {
-        const { data } = parseWithPointers(`[0, 1, 2]`, { preserveKeyOrder: true });
+        const { data } = parseWithPointers(`[0, 1, 2]`, {
+          preserveKeyOrder: true,
+        });
 
         expect(Object.keys(data)).toEqual(['0', '1', '2']);
         expect(Object.getOwnPropertySymbols(data)).toEqual([]);

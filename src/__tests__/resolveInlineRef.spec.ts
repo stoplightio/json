@@ -1,7 +1,7 @@
 import { resolveInlineRef, resolveInlineRefWithLocation } from '../resolveInlineRef';
 
 describe('resolveInlineRef', () => {
-  test('should follow refs', () => {
+  it('should follow refs', () => {
     const doc = {
       a: {
         $ref: '#/b/foo',
@@ -23,7 +23,7 @@ describe('resolveInlineRef', () => {
     expect(resolveInlineRefWithLocation(doc, '#/a')).toHaveProperty('location', ['d', '0', 'foo']);
   });
 
-  test('should follow refs #2', () => {
+  it('should follow refs #2', () => {
     const doc = {
       a: {
         $ref: '#/b/foo',
@@ -46,7 +46,7 @@ describe('resolveInlineRef', () => {
     expect(resolveInlineRefWithLocation(doc, '#/a')).toHaveProperty('location', ['e']);
   });
 
-  test('should handle direct circular refs', () => {
+  it('should handle direct circular refs', () => {
     const doc = {
       a: {
         $ref: '#/b',
@@ -62,7 +62,7 @@ describe('resolveInlineRef', () => {
     expect(resolveInlineRefWithLocation(doc, '#/a')).toHaveProperty('location', ['b']);
   });
 
-  test('should handle direct circular refs #2', () => {
+  it('should handle direct circular refs #2', () => {
     const doc = {
       a: {
         $ref: '#/b/foo',
@@ -89,7 +89,7 @@ describe('resolveInlineRef', () => {
     expect(resolveInlineRefWithLocation(doc, '#/a')).toHaveProperty('location', ['e']);
   });
 
-  test('given external reference, should throw', () => {
+  it('given external reference, should throw', () => {
     const doc = {
       a: {
         $ref: './foo#/b/foo',
@@ -99,7 +99,7 @@ describe('resolveInlineRef', () => {
     expect(resolveInlineRef.bind(null, doc, '#/a')).toThrowError('Cannot resolve external references');
   });
 
-  test('given missing segment, should throw', () => {
+  it('given missing segment, should throw', () => {
     const doc = {
       a: {
         $ref: '#/b/foo',
@@ -112,7 +112,7 @@ describe('resolveInlineRef', () => {
     expect(resolveInlineRef.bind(null, doc, '#/a')).toThrowError("Could not resolve '#/b/foo'");
   });
 
-  test('given path pointing at invalid data, should throw', () => {
+  it('given path pointing at invalid data, should throw', () => {
     const doc = {
       a: {
         $ref: '#/b/foo/bar',
@@ -125,7 +125,7 @@ describe('resolveInlineRef', () => {
     expect(resolveInlineRef.bind(null, doc, '#/a')).toThrowError("Could not resolve '#/b/foo/bar'");
   });
 
-  test('given invalid $ref type, should throw', () => {
+  it('given invalid $ref type, should throw', () => {
     const doc = {
       a: {
         $ref: 2,
@@ -136,7 +136,7 @@ describe('resolveInlineRef', () => {
   });
 
   describe('OAS compatibility', () => {
-    test('should override summary and description fields', () => {
+    it('should override summary and description fields', () => {
       const doc = {
         type: 'object',
         properties: {

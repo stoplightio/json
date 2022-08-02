@@ -1,4 +1,5 @@
 import { Dictionary, JsonPath } from '@stoplight/types';
+
 import { extractSourceFromRef } from './extractSourceFromRef';
 import { isPlainObject } from './isPlainObject';
 import { pointerToPath } from './pointerToPath';
@@ -52,7 +53,11 @@ function _resolveInlineRef(
 
   const sourceDocument = seen[seen.length - 1];
 
-  if (isPlainObject(sourceDocument) && ('summary' in sourceDocument || 'description' in sourceDocument)) {
+  if (
+    isPlainObject(value) &&
+    isPlainObject(sourceDocument) &&
+    ('summary' in sourceDocument || 'description' in sourceDocument)
+  ) {
     return {
       location,
       value: {

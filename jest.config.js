@@ -1,4 +1,4 @@
 module.exports = {
   preset: '@stoplight/scripts',
-  testEnvironment: 'node'
+  testEnvironment: 'node',
 };
