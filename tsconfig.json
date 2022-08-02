@@ -2,5 +2,8 @@
   "extends": "@stoplight/scripts/tsconfig.json",
 
   // target all ts files
-  "include": ["."]
+  "include": ["."],
+  "compilerOptions": {
+    "target": "es2017"
+  }
 }

@@ -1,4 +1,4 @@
-import { isObject } from 'lodash';
+import { hasSomeRef } from './resolvers/guards';
 
-export const hasRef = (obj: unknown): obj is object & { $ref: string } =>
-  isObject(obj) && '$ref' in obj && typeof (obj as Partial<{ $ref: unknown }>).$ref === 'string';
+export const hasRef = (obj: unknown): obj is Record<string, unknown> & { $ref: string } =>
+  hasSomeRef(obj) && typeof obj.$ref === 'string';
