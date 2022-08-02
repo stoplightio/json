@@ -1,12 +1,13 @@
 import { reparentBundleTarget } from '../reparentBundleTarget';
 
 describe('reparentBundleTarget', () => {
-  it.each<[string, string]>([['#', '#/components'], ['#/components', '#'], ['#/components/schemas', '#/components']])(
-    'given %p paths, should throw',
-    (from, to) => {
-      expect(reparentBundleTarget.bind(null, {}, from, to)).toThrow();
-    },
-  );
+  it.each<[string, string]>([
+    ['#', '#/components'],
+    ['#/components', '#'],
+    ['#/components/schemas', '#/components'],
+  ])('given %p paths, should throw', (from, to) => {
+    expect(reparentBundleTarget.bind(null, {}, from, to)).toThrow();
+  });
 
   it('should reparent refs', () => {
     const document = {

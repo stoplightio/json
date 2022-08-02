@@ -1,4 +1,5 @@
 import { JsonPath } from '@stoplight/types';
+
 import { encodePointerFragment } from './encodePointerFragment';
 
 export const pathToPointer = (path: JsonPath): string => {

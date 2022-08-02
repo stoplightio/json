@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { join } from 'path';
+
 import { getJsonPathForPosition } from '../getJsonPathForPosition';
 import { parseWithPointers } from '../parseWithPointers';
 
@@ -11,7 +12,7 @@ describe('getJsonPathForPosition', () => {
   describe('simple fixture', () => {
     const result = parseWithPointers(simple);
 
-    test.each`
+    it.each`
       line | character | path
       ${0} | ${0}      | ${void 0}
       ${1} | ${4}      | ${['hello']}
@@ -26,7 +27,7 @@ describe('getJsonPathForPosition', () => {
   describe('users fixture', () => {
     const result = parseWithPointers(users);
 
-    test.each`
+    it.each`
       line | character | path
       ${0} | ${0}      | ${void 0}
       ${0} | ${231}    | ${void 0}
@@ -44,7 +45,7 @@ describe('getJsonPathForPosition', () => {
   describe('one-liner', () => {
     const result = parseWithPointers(`{ "foo": true, "bar": false }`);
 
-    test.each`
+    it.each`
       line | character | path
       ${0} | ${3}      | ${['foo']}
       ${0} | ${12}     | ${['foo']}
@@ -57,7 +58,7 @@ describe('getJsonPathForPosition', () => {
   describe('multiline comments', () => {
     const result = parseWithPointers(multilineComments);
 
-    test.each`
+    it.each`
       line  | character | path
       ${1}  | ${4}      | ${['hello']}
       ${7}  | ${5}      | ${['address', 'street']}

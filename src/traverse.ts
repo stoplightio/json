@@ -3,7 +3,14 @@ import { JsonPath, Segment } from '@stoplight/types';
 type Hooks = {
   onEnter(ctx: Readonly<{ value: object; path: JsonPath }>): void;
   onLeave(ctx: Readonly<{ value: object; path: JsonPath }>): void;
-  onProperty(ctx: Readonly<{ parent: object; parentPath: JsonPath; property: Segment; propertyValue: unknown }>): void;
+  onProperty(
+    ctx: Readonly<{
+      parent: object;
+      parentPath: JsonPath;
+      property: Segment;
+      propertyValue: unknown;
+    }>,
+  ): void;
 };
 
 const _traverse = (obj: object, hooks: Partial<Hooks>, path: JsonPath) => {
@@ -17,7 +24,12 @@ const _traverse = (obj: object, hooks: Partial<Hooks>, path: JsonPath) => {
     const value = obj[i];
 
     if (hooks.onProperty) {
-      hooks.onProperty({ parent: obj, parentPath: path, property: i, propertyValue: value });
+      hooks.onProperty({
+        parent: obj,
+        parentPath: path,
+        property: i,
+        propertyValue: value,
+      });
     }
 
     if (typeof value === 'object' && value !== null) {

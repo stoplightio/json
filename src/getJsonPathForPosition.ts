@@ -1,5 +1,6 @@
 import { GetJsonPathForPosition } from '@stoplight/types';
 import { findNodeAtOffset, getNodePath } from 'jsonc-parser';
+
 import { JsonParserResult } from './types';
 
 export const getJsonPathForPosition: GetJsonPathForPosition<JsonParserResult<unknown>> = (

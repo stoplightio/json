@@ -4,10 +4,10 @@ import * as jsonFixtures from './fixtures/json';
 const Benchmark = require('benchmark');
 
 describe('safeStringify', () => {
-  test.skip('benchmark', async () => {
+  it.skip('benchmark', async () => {
     const suite = new Benchmark.Suite();
 
-    await new Promise(resolve => {
+    await new Promise<void>(resolve => {
       suite
         .add('native stringify small', () => {
           JSON.stringify(jsonFixtures.small);
@@ -28,6 +28,7 @@ describe('safeStringify', () => {
           safeStringify(jsonFixtures.largeCircular);
         })
         .on('cycle', (event: any) => {
+          // eslint-disable-next-line no-console
           console.log(String(event.target));
         })
         .on('complete abort', () => {
