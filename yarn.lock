@@ -1105,10 +1105,15 @@
   dependencies:
     eslint-config-prettier "^8.3.0"
 
-"@stoplight/ordered-object-literal@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@stoplight/ordered-object-literal/-/ordered-object-literal-1.0.2.tgz#2a88a5ebc8b68b54837ac9a9ae7b779cdd862062"
-  integrity sha512-0ZMS/9sNU3kVo/6RF3eAv7MK9DY8WLjiVJB/tVyfF2lhr2R4kqh534jZ0PlrFB9CRXrdndzn1DbX6ihKZXft2w==
+"@stoplight/ordered-object-literal@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@stoplight/ordered-object-literal/-/ordered-object-literal-1.0.3.tgz#1f24572623459c61238ae72176fadac5c40e0a54"
+  integrity sha512-cjJ7PPkhgTXNMTkevAlmyrx9xOOCaI3c6rEeYb6VitL1o1WcZtrz9KyFyISmTmUa7yYTiy2IS/ud9S8s2sn3+A==
+
+"@stoplight/path@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@stoplight/path/-/path-1.3.2.tgz#96e591496b72fde0f0cdae01a61d64f065bd9ede"
+  integrity sha512-lyIc6JUlUA8Ve5ELywPC8I2Sdnh1zc1zmbYgVarhXIp9YeAB0ReeqmGEOWNtlHkbP2DAA1AL65Wfn2ncjK/jtQ==
 
 "@stoplight/scripts@^7.0.4":
   version "7.0.4"
@@ -1140,10 +1145,10 @@
     shelljs "0.8.x"
     tslib "1.9.3"
 
-"@stoplight/types@^13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@stoplight/types/-/types-13.0.0.tgz#69a22d57d3a67f623a01929b10e25401c9635154"
-  integrity sha512-9OTVMiSUz2NlEW14OL6NKOuMTj3dtVVsugRwe3qbq0QnUpx/VLxOuO83n47rXZUTHvk69arOlFrDmRyZMw2DUg==
+"@stoplight/types@^13.6.0":
+  version "13.6.0"
+  resolved "https://registry.yarnpkg.com/@stoplight/types/-/types-13.6.0.tgz#96c6aaae05858b36f589821cd52c95aa9b205ce7"
+  integrity sha512-dzyuzvUjv3m1wmhPfq82lCVYGcXG0xUYgqnWfCq3PCVR4BKFhjdkHrnJ+jIDoMKvXb05AZP/ObQF6+NpDo29IQ==
   dependencies:
     "@types/json-schema" "^7.0.4"
     utility-types "^3.10.0"

@@ -1,4 +1,4 @@
-import { resolveInlineRef, resolveInlineRefWithLocation } from '../resolveInlineRef';
+import { resolveInlineRef, resolveInlineRefWithLocation } from '../resolvers/resolveInlineRef';
 
 describe('resolveInlineRef', () => {
   it('should follow refs', () => {
@@ -133,6 +133,31 @@ describe('resolveInlineRef', () => {
     };
 
     expect(resolveInlineRef.bind(null, doc, '#/a')).toThrowError('$ref should be a string');
+  });
+
+  it('should resolve top-level $ref', () => {
+    const doc = {
+      $ref: '#/$defs/User',
+      $defs: {
+        User: {
+          type: 'object',
+          properties: {},
+        },
+      },
+    };
+
+    expect(resolveInlineRef(doc, '#')).toEqual({
+      type: 'object',
+      properties: {},
+    });
+    expect(resolveInlineRefWithLocation(doc, '#')).toEqual({
+      source: null,
+      location: ['$defs', 'User'],
+      value: {
+        type: 'object',
+        properties: {},
+      },
+    });
   });
 
   describe('OAS compatibility', () => {

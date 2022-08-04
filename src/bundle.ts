@@ -5,7 +5,7 @@ import { hasRef } from './hasRef';
 import { isLocalRef } from './isLocalRef';
 import { pathToPointer } from './pathToPointer';
 import { pointerToPath } from './pointerToPath';
-import { resolveInlineRef } from './resolveInlineRef';
+import { resolveInlineRef } from './resolvers/resolveInlineRef';
 import { traverse } from './traverse';
 
 export const BUNDLE_ROOT = '#/__bundled__';
