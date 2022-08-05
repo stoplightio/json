@@ -599,28 +599,27 @@ describe('bundleTargetPath()', () => {
 
     expect(safeStringify(result)).toEqual(
       safeStringify({
-        [BUNDLE_ROOT]: {
-          Hello: '[Circular]',
-          World: {
-            properties: {
-              name: {
-                type: 'string',
-              },
-            },
-            title: 'World',
-            type: 'object',
-          },
-        },
+        title: 'Hello',
+        type: 'object',
         properties: {
           Hello: {
-            $ref: `#/${BUNDLE_ROOT}/Hello`,
+            $ref: `#`,
           },
           World: {
             $ref: `#/${BUNDLE_ROOT}/World`,
           },
         },
-        title: 'Hello',
-        type: 'object',
+        [BUNDLE_ROOT]: {
+          World: {
+            title: 'World',
+            type: 'object',
+            properties: {
+              name: {
+                type: 'string',
+              },
+            },
+          },
+        },
       }),
     );
   });
@@ -659,21 +658,20 @@ describe('bundleTargetPath()', () => {
 
     expect(safeStringify(result)).toEqual(
       safeStringify({
-        __bundled__: {
-          GeographicalCoordinate: {
-            type: 'object',
-          },
-          Location: '[Circular]',
-        },
+        type: 'object',
         properties: {
           PhysicalGeographicalCoordinate: {
             $ref: '#/__bundled__/GeographicalCoordinate',
           },
           RelatedLocation: {
-            $ref: '#/__bundled__/Location',
+            $ref: '#',
           },
         },
-        type: 'object',
+        __bundled__: {
+          GeographicalCoordinate: {
+            type: 'object',
+          },
+        },
       }),
     );
   });
@@ -918,6 +916,109 @@ describe('bundleTargetPath()', () => {
     });
 
     expect(Array.isArray(result.components.schemas)).toBe(false);
+  });
+
+  it('should rewrite $refs that point at the bundleRoot, to #', () => {
+    const document = {
+      __target__: {
+        type: 'object',
+        properties: {
+          circular: {
+            $ref: '#/__target__',
+          },
+        },
+      },
+    };
+
+    const result = bundleTarget({
+      document,
+      path: '#/__target__',
+    });
+
+    expect(result).toEqual({
+      type: 'object',
+      properties: {
+        circular: {
+          $ref: '#',
+        },
+      },
+    });
+  });
+
+  it('should handle when the target is a direct $ref to itself', () => {
+    const document = {
+      __target__: {
+        $ref: '#/__target__',
+        description: 'Test',
+      },
+    };
+
+    const result = bundleTarget({
+      document,
+      path: '#/__target__',
+    });
+
+    expect(result).toEqual({
+      $ref: '#',
+      description: 'Test',
+    });
+  });
+
+  it('should handle and preserve circular indirect relationships', () => {
+    const document = {
+      definitions: {
+        User: {
+          $ref: '#/definitions/Editor',
+          description: 'Some User with a basic set of permissions',
+        },
+        Admin: {
+          $ref: '#/definitions/User',
+          description: 'Some User with an elevated set of permissions',
+        },
+        Editor: {
+          $ref: '#/definitions/Admin',
+          description: 'Some User with write permissions',
+        },
+      },
+      __target__: {
+        type: 'object',
+        properties: {
+          user: {
+            $ref: '#/definitions/Editor',
+          },
+        },
+        required: ['user'],
+      },
+    };
+
+    const result = bundleTarget({
+      document,
+      path: '#/__target__',
+    });
+
+    expect(result).toEqual({
+      type: 'object',
+      properties: {
+        user: {
+          $ref: `#/${BUNDLE_ROOT}/Editor`,
+        },
+      },
+      required: ['user'],
+      [BUNDLE_ROOT]: {
+        User: {
+          $ref: `#/${BUNDLE_ROOT}/Editor`,
+          description: 'Some User with a basic set of permissions',
+        },
+        Admin: {
+          $ref: `#/${BUNDLE_ROOT}/User`,
+          description: 'Some User with an elevated set of permissions',
+        },
+        Editor: {
+          $ref: `#/${BUNDLE_ROOT}/Admin`,
+          description: 'Some User with write permissions',
+        },
+      },
+    });
   });
 
   describe('when custom keyProvider is provided', () => {
