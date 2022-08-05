@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, get as _get } from 'lodash';
 
 import { BUNDLE_ROOT as BUNDLE_ROOT_POINTER, bundleTarget } from '../bundle';
 import { safeStringify } from '../safeStringify';
@@ -918,6 +918,155 @@ describe('bundleTargetPath()', () => {
     });
 
     expect(Array.isArray(result.components.schemas)).toBe(false);
+  });
+
+  describe('when custom keyProvider is provided', () => {
+    it('should work', () => {
+      const document = {
+        definitions: {
+          user: {
+            id: 'foo',
+            address: {
+              $ref: '#/definitions/address',
+            },
+            'x-stoplight': { id: 'USER_ID' },
+          },
+          address: {
+            street: 'foo',
+            user: {
+              $ref: '#/definitions/user',
+            },
+            city: {
+              $ref: '#/definitions/city',
+            },
+            'x-stoplight': { id: 'ADDRESS_ID' },
+          },
+          city: {
+            name: 'foo',
+          },
+          card: {
+            zip: '20815',
+            'x-stoplight': { id: 'CARD_ID' },
+          },
+        },
+        __target__: {
+          entity: {
+            $ref: '#/definitions/user',
+          },
+        },
+      };
+
+      const clone = cloneDeep(document);
+
+      const result = bundleTarget({
+        document: clone,
+        path: '#/__target__',
+
+        /**
+         * This example fetches the x-stoplight.id value from the object the ref path points at, and
+         * returns that to use as the new $ref key in the bundled object (if id is present, otherwise falls back to default logic)
+         */
+        keyProvider: ({ document, path }) => {
+          const target = _get(document, path);
+          const id = target?.['x-stoplight']?.['id'];
+          return id;
+        },
+      });
+
+      // Do not mutate document
+      expect(clone).toEqual(document);
+
+      expect(result).toEqual({
+        entity: {
+          $ref: `#/${BUNDLE_ROOT}/USER_ID`,
+        },
+        [BUNDLE_ROOT]: {
+          USER_ID: {
+            id: 'foo',
+            address: {
+              $ref: `#/${BUNDLE_ROOT}/ADDRESS_ID`,
+            },
+            'x-stoplight': { id: 'USER_ID' },
+          },
+          ADDRESS_ID: {
+            street: 'foo',
+            user: {
+              $ref: `#/${BUNDLE_ROOT}/USER_ID`,
+            },
+            city: {
+              $ref: `#/${BUNDLE_ROOT}/city`,
+            },
+            'x-stoplight': { id: 'ADDRESS_ID' },
+          },
+          city: {
+            name: 'foo',
+          },
+        },
+      });
+    });
+
+    it('should increment key if duplicate', () => {
+      const document = {
+        definitions: {
+          business_address: {
+            id: 'foo',
+            address: {
+              $ref: '#/definitions/address',
+            },
+            'x-stoplight': { id: 'ADDRESS_ID' },
+          },
+          address: {
+            street: 'foo',
+            'x-stoplight': { id: 'ADDRESS_ID' },
+          },
+        },
+        __target__: {
+          entity1: {
+            $ref: '#/definitions/business_address',
+          },
+          entity2: {
+            $ref: '#/definitions/address',
+          },
+        },
+      };
+
+      const clone = cloneDeep(document);
+
+      const result = bundleTarget({
+        document: clone,
+        path: '#/__target__',
+        keyProvider: ({ document, path }) => {
+          const target = _get(document, path);
+          const id = target?.['x-stoplight']?.['id'];
+          return id;
+        },
+      });
+
+      // Do not mutate document
+      expect(clone).toEqual(document);
+
+      expect(result).toEqual({
+        entity1: {
+          $ref: `#/${BUNDLE_ROOT}/ADDRESS_ID`,
+        },
+        entity2: {
+          $ref: `#/${BUNDLE_ROOT}/ADDRESS_ID_2`,
+        },
+        [BUNDLE_ROOT]: {
+          ADDRESS_ID: {
+            id: 'foo',
+            address: {
+              $ref: `#/${BUNDLE_ROOT}/ADDRESS_ID_2`,
+            },
+            'x-stoplight': { id: 'ADDRESS_ID' },
+          },
+          ADDRESS_ID_2: {
+            street: 'foo',
+            'x-stoplight': { id: 'ADDRESS_ID' },
+          },
+        },
+      });
+    });
   });
 
   describe('when custom bundleRoot is provided', () => {

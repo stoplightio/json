@@ -11,6 +11,8 @@ import { traverse } from './traverse';
 export const BUNDLE_ROOT = '#/__bundled__';
 export const ERRORS_ROOT = '#/__errors__';
 
+type KeyProviderFn = (props: { document: unknown; path: JsonPath }) => string | void | undefined | null;
+
 export const bundleTarget = <T = unknown>(
   {
     document,
@@ -18,12 +20,14 @@ export const bundleTarget = <T = unknown>(
     bundleRoot = BUNDLE_ROOT,
     errorsRoot = ERRORS_ROOT,
     cloneDocument = true,
+    keyProvider,
   }: {
     document: T;
     path: string;
     bundleRoot?: string;
     errorsRoot?: string;
     cloneDocument?: boolean;
+    keyProvider?: KeyProviderFn;
   },
   cur?: unknown,
 ) => {
@@ -32,10 +36,24 @@ export const bundleTarget = <T = unknown>(
   }
 
   const workingDocument = cloneDocument ? cloneDeep(document) : document;
-  return bundle(workingDocument, pointerToPath(bundleRoot), pointerToPath(errorsRoot))(path, { [path]: true }, cur);
+  return bundle(
+    workingDocument,
+    pointerToPath(bundleRoot),
+    pointerToPath(errorsRoot),
+    keyProvider,
+  )(path, { [path]: true }, cur);
 };
 
-const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath) => {
+const defaultKeyProvider = ({ document, path }: { document: unknown; path: JsonPath }) => {
+  if (Array.isArray(get(document, path.slice(0, -1)))) {
+    const inventoryKeyRoot = path[path.length - 2];
+    return `${inventoryKeyRoot}_${path[path.length - 1]}`;
+  } else {
+    return String(path[path.length - 1]);
+  }
+};
+
+const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath, keyProvider?: KeyProviderFn) => {
   const takenKeys = new Set<string | number>();
 
   const _bundle = (
@@ -70,12 +88,12 @@ const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath) =
           _path = pointerToPath($ref);
 
           let _inventoryKey;
+          if (keyProvider) {
+            _inventoryKey = keyProvider({ document, path: _path });
+          }
 
-          if (Array.isArray(get(document, _path.slice(0, -1)))) {
-            const inventoryKeyRoot = _path[_path.length - 2];
-            _inventoryKey = `${inventoryKeyRoot}_${_path[_path.length - 1]}`;
-          } else {
-            _inventoryKey = _path[_path.length - 1];
+          if (!_inventoryKey) {
+            _inventoryKey = defaultKeyProvider({ document, path: _path });
           }
 
           inventoryKey = _inventoryKey;
