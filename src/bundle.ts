@@ -67,97 +67,99 @@ const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath, k
     const $refTarget = pointerToPath(path);
     const objectToBundle = get(document, $refTarget);
 
-    traverse(cur ? cur : objectToBundle, ({ parent }) => {
-      if (hasRef(parent) && isLocalRef(parent.$ref)) {
-        const $ref = parent.$ref;
-        if (errorsObj[$ref]) return;
+    traverse(cur ? cur : objectToBundle, {
+      onEnter: ({ value: parent }) => {
+        if (hasRef(parent) && isLocalRef(parent.$ref)) {
+          const $ref = parent.$ref;
+          if (errorsObj[$ref]) return;
 
-        if ($ref === path) {
-          bundledRefInventory[$ref] = '#';
-        }
-
-        if (bundledRefInventory[$ref]) {
-          parent.$ref = bundledRefInventory[$ref];
-
-          // no need to continue, this $ref has already been bundled
-          return;
-        }
-
-        let _path;
-        let inventoryPath;
-        let inventoryKey;
-        let inventoryRef;
-
-        try {
-          _path = pointerToPath($ref);
-
-          let _inventoryKey;
-          if (keyProvider) {
-            _inventoryKey = keyProvider({ document, path: _path });
+          if ($ref === path) {
+            bundledRefInventory[$ref] = '#';
           }
 
-          if (!_inventoryKey) {
-            _inventoryKey = defaultKeyProvider({ document, path: _path });
+          if (bundledRefInventory[$ref]) {
+            parent.$ref = bundledRefInventory[$ref];
+
+            // no need to continue, this $ref has already been bundled
+            return;
           }
 
-          inventoryKey = _inventoryKey;
+          let _path;
+          let inventoryPath;
+          let inventoryKey;
+          let inventoryRef;
 
-          let i = 1;
-          while (takenKeys.has(inventoryKey)) {
-            i++;
-            inventoryKey = `${_inventoryKey}_${i}`;
+          try {
+            _path = pointerToPath($ref);
 
-            if (i > 20) {
-              throw new Error(`Keys ${_inventoryKey}_2 through ${_inventoryKey}_${20} already taken.`);
+            let _inventoryKey;
+            if (keyProvider) {
+              _inventoryKey = keyProvider({ document, path: _path });
+            }
+
+            if (!_inventoryKey) {
+              _inventoryKey = defaultKeyProvider({ document, path: _path });
+            }
+
+            inventoryKey = _inventoryKey;
+
+            let i = 1;
+            while (takenKeys.has(inventoryKey)) {
+              i++;
+              inventoryKey = `${_inventoryKey}_${i}`;
+
+              if (i > 20) {
+                throw new Error(`Keys ${_inventoryKey}_2 through ${_inventoryKey}_${20} already taken.`);
+              }
+            }
+
+            takenKeys.add(inventoryKey);
+
+            inventoryPath = [...bundleRoot, inventoryKey];
+
+            inventoryRef = pathToPointer(inventoryPath);
+          } catch (error) {
+            errorsObj[$ref] = error instanceof Error ? error.message : String(error);
+          }
+
+          // Ignore invalid $refs and carry on
+          if (!_path || !inventoryPath || !inventoryRef) return;
+
+          let bundled$Ref: unknown;
+          if (typeof document === 'object' && document !== null) {
+            // check the simple way first, to preserve these relationships when possible
+            bundled$Ref = get(document, _path);
+
+            if (!bundled$Ref) {
+              try {
+                // if we could not find it with a simple lookup, check for deep refs etc via resolveInlineRef
+                bundled$Ref = resolveInlineRef(Object(document), $ref);
+              } catch {}
             }
           }
 
-          takenKeys.add(inventoryKey);
+          if (bundled$Ref !== void 0) {
+            bundledRefInventory[$ref] = inventoryRef;
+            parent.$ref = inventoryRef;
 
-          inventoryPath = [...bundleRoot, inventoryKey];
+            if (!has(bundledObj, inventoryPath)) {
+              if (Array.isArray(bundled$Ref)) {
+                set(bundledObj, inventoryPath, new Array(bundled$Ref.length).fill(null));
+              } else if (typeof bundled$Ref === 'object') {
+                setWith(bundledObj, inventoryPath, {}, Object);
+              }
 
-          inventoryRef = pathToPointer(inventoryPath);
-        } catch (error) {
-          errorsObj[$ref] = error instanceof Error ? error.message : String(error);
-        }
+              set(bundledObj, inventoryPath, bundled$Ref);
 
-        // Ignore invalid $refs and carry on
-        if (!_path || !inventoryPath || !inventoryRef) return;
-
-        let bundled$Ref: unknown;
-        if (typeof document === 'object' && document !== null) {
-          // check the simple way first, to preserve these relationships when possible
-          bundled$Ref = get(document, _path);
-
-          if (!bundled$Ref) {
-            try {
-              // if we could not find it with a simple lookup, check for deep refs etc via resolveInlineRef
-              bundled$Ref = resolveInlineRef(Object(document), $ref);
-            } catch {}
-          }
-        }
-
-        if (bundled$Ref !== void 0) {
-          bundledRefInventory[$ref] = inventoryRef;
-          parent.$ref = inventoryRef;
-
-          if (!has(bundledObj, inventoryPath)) {
-            if (Array.isArray(bundled$Ref)) {
-              set(bundledObj, inventoryPath, new Array(bundled$Ref.length).fill(null));
-            } else if (typeof bundled$Ref === 'object') {
-              setWith(bundledObj, inventoryPath, {}, Object);
-            }
-
-            set(bundledObj, inventoryPath, bundled$Ref);
-
-            if (!stack[$ref]) {
-              stack[$ref] = true;
-              _bundle(path, stack, bundled$Ref, bundledRefInventory, bundledObj, errorsObj);
-              stack[$ref] = false;
+              if (!stack[$ref]) {
+                stack[$ref] = true;
+                _bundle(path, stack, bundled$Ref, bundledRefInventory, bundledObj, errorsObj);
+                stack[$ref] = false;
+              }
             }
           }
         }
-      }
+      },
     });
 
     const finalObjectToBundle = get(bundledObj, bundleRoot);
