@@ -72,6 +72,10 @@ const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath, k
         const $ref = parent.$ref;
         if (errorsObj[$ref]) return;
 
+        if ($ref === path) {
+          bundledRefInventory[$ref] = '#';
+        }
+
         if (bundledRefInventory[$ref]) {
           parent.$ref = bundledRefInventory[$ref];
 
@@ -122,10 +126,14 @@ const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath, k
 
         let bundled$Ref: unknown;
         if (typeof document === 'object' && document !== null) {
-          try {
-            bundled$Ref = resolveInlineRef(Object(document), $ref);
-          } catch {
-            bundled$Ref = get(document, _path);
+          // check the simple way first, to preserve these relationships when possible
+          bundled$Ref = get(document, _path);
+
+          if (!bundled$Ref) {
+            try {
+              // if we could not find it with a simple lookup, check for deep refs etc via resolveInlineRef
+              bundled$Ref = resolveInlineRef(Object(document), $ref);
+            } catch {}
           }
         }
 
