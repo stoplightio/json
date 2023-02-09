@@ -16,6 +16,7 @@ export * from './isPlainObject';
 export * from './parseWithPointers';
 export * from './pathToPointer';
 export * from './pointerToPath';
+export * from './remapRefs';
 export * from './renameObjectKey';
 export * from './reparentBundleTarget';
 export * from './resolvers/resolveExternalRef';
