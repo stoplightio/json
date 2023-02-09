@@ -1619,4 +1619,124 @@ describe('bundleTargetPath()', () => {
       ).not.toThrow();
     });
   });
+
+  describe('root json pointers', () => {
+    it('given an OAS document, should handle them gracefully', () => {
+      const input = {
+        openapi: '3.0.0',
+        paths: {
+          '/users': {
+            $ref: '#',
+          },
+        },
+        components: {
+          schemas: {
+            User: {
+              $ref: '#',
+            },
+          },
+        },
+      };
+
+      const output = bundleTarget({ document: input, path: '#/components', bundleRoot: '#/$defs' });
+
+      expect(JSON.stringify.bind(null, output)).not.toThrow();
+      expect(output).toStrictEqual({
+        schemas: {
+          User: {
+            $ref: '#/$defs/root',
+          },
+        },
+        $defs: {
+          root: {
+            openapi: '3.0.0',
+            paths: {
+              '/users': {
+                $ref: '#/$defs/root',
+              },
+            },
+            components: {
+              $ref: '#',
+            },
+          },
+        },
+      });
+    });
+
+    it('given a JSON Schema model, should handle them gracefully', () => {
+      const input = {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+          },
+          node: {
+            $ref: '#/$defs/node',
+          },
+        },
+        $defs: {
+          node: {
+            type: 'object',
+            title: 'node',
+            properties: {
+              id: {
+                type: 'string',
+              },
+              type: {
+                enum: ['directory', 'file'],
+              },
+              children: {
+                type: 'array',
+                items: {
+                  $ref: '#',
+                },
+              },
+            },
+            required: ['directory', 'file'],
+          },
+        },
+      };
+
+      const output = bundleTarget({ document: input, path: '#/$defs/node', bundleRoot: '#/$defs' });
+
+      expect(JSON.stringify.bind(null, output)).not.toThrow();
+      expect(output).toStrictEqual({
+        type: 'object',
+        title: 'node',
+        properties: {
+          id: {
+            type: 'string',
+          },
+          type: {
+            enum: ['directory', 'file'],
+          },
+          children: {
+            type: 'array',
+            items: {
+              $ref: '#/$defs/root',
+            },
+          },
+        },
+        required: ['directory', 'file'],
+        $defs: {
+          root: {
+            type: 'object',
+            properties: {
+              id: {
+                type: 'string',
+              },
+              node: {
+                $ref: '#/$defs/root/$defs/node',
+              },
+            },
+            $defs: {
+              node: {
+                $ref: '#',
+              },
+            },
+          },
+        },
+      });
+    });
+  });
 });

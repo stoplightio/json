@@ -5,6 +5,7 @@ import { hasRef } from './hasRef';
 import { isLocalRef } from './isLocalRef';
 import { pathToPointer } from './pathToPointer';
 import { pointerToPath } from './pointerToPath';
+import { remapRefs } from './remapRefs';
 import { resolveInlineRef } from './resolvers/resolveInlineRef';
 import { traverse } from './traverse';
 
@@ -40,11 +41,16 @@ export const bundleTarget = <T = unknown>(
     workingDocument,
     pointerToPath(bundleRoot),
     pointerToPath(errorsRoot),
+    path,
     keyProvider,
   )(path, { [path]: true }, cur);
 };
 
 const defaultKeyProvider = ({ document, path }: { document: unknown; path: JsonPath }) => {
+  if (path.length === 0) {
+    return 'root';
+  }
+
   if (Array.isArray(get(document, path.slice(0, -1)))) {
     const inventoryKeyRoot = path[path.length - 2];
     return `${inventoryKeyRoot}_${path[path.length - 1]}`;
@@ -53,7 +59,13 @@ const defaultKeyProvider = ({ document, path }: { document: unknown; path: JsonP
   }
 };
 
-const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath, keyProvider?: KeyProviderFn) => {
+const bundle = (
+  document: unknown,
+  bundleRoot: JsonPath,
+  errorsRoot: JsonPath,
+  rootPath: string,
+  keyProvider?: KeyProviderFn,
+) => {
   const takenKeys = new Set<string | number>();
 
   const _bundle = (
@@ -151,7 +163,14 @@ const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath, k
 
               set(bundledObj, inventoryPath, bundled$Ref);
 
-              if (!stack[$ref]) {
+              if ($ref === '#') {
+                const clonedDocument = JSON.parse(JSON.stringify(document));
+                const bundledDocument: { $ref?: string } = {};
+                set(bundledObj, inventoryPath, clonedDocument);
+                set(clonedDocument, pointerToPath(rootPath), bundledDocument);
+                remapRefs(clonedDocument, '#', pathToPointer(inventoryPath));
+                bundledDocument.$ref = '#';
+              } else if (!stack[$ref]) {
                 stack[$ref] = true;
                 _bundle(path, stack, bundled$Ref, bundledRefInventory, bundledObj, errorsObj);
                 stack[$ref] = false;
