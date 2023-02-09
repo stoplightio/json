@@ -1638,21 +1638,22 @@ describe('bundleTargetPath()', () => {
         },
       };
 
-      const output = bundleTarget({ document: input, path: '#/components', bundleRoot: '#/$defs' });
+      const output = bundleTarget({ document: input, path: '#/components' });
 
+      // verifies we have no cycles
       expect(JSON.stringify.bind(null, output)).not.toThrow();
       expect(output).toStrictEqual({
         schemas: {
           User: {
-            $ref: '#/$defs/root',
+            $ref: '#/__bundled__/root',
           },
         },
-        $defs: {
+        __bundled__: {
           root: {
             openapi: '3.0.0',
             paths: {
               '/users': {
-                $ref: '#/$defs/root',
+                $ref: '#/__bundled__/root',
               },
             },
             components: {
@@ -1697,8 +1698,9 @@ describe('bundleTargetPath()', () => {
         },
       };
 
-      const output = bundleTarget({ document: input, path: '#/$defs/node', bundleRoot: '#/$defs' });
+      const output = bundleTarget({ document: input, path: '#/$defs/node' });
 
+      // verifies we have no cycles
       expect(JSON.stringify.bind(null, output)).not.toThrow();
       expect(output).toStrictEqual({
         type: 'object',
@@ -1713,12 +1715,12 @@ describe('bundleTargetPath()', () => {
           children: {
             type: 'array',
             items: {
-              $ref: '#/$defs/root',
+              $ref: '#/__bundled__/root',
             },
           },
         },
         required: ['directory', 'file'],
-        $defs: {
+        __bundled__: {
           root: {
             type: 'object',
             properties: {
@@ -1726,7 +1728,7 @@ describe('bundleTargetPath()', () => {
                 type: 'string',
               },
               node: {
-                $ref: '#/$defs/root/$defs/node',
+                $ref: '#/__bundled__/root/$defs/node',
               },
             },
             $defs: {
