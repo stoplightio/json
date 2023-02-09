@@ -1,5 +1,5 @@
 import { Dictionary, JsonPath } from '@stoplight/types';
-import { cloneDeep, get, has, set, setWith } from 'lodash';
+import { cloneDeep, get, has, omit, set, setWith } from 'lodash';
 
 import { hasRef } from './hasRef';
 import { isLocalRef } from './isLocalRef';
@@ -206,7 +206,9 @@ function bundleRootDocument(
   bundleRoot: JsonPath,
   inventoryPath: JsonPath,
 ) {
-  const clonedDocument = JSON.parse(JSON.stringify(document));
+  const propertyPath = bundleRoot.map(segment => `[${JSON.stringify(segment)}]`).join('');
+  // we want to omit the values that could have been potentially bundled into the document (we mutate the document by default)
+  const clonedDocument = JSON.parse(JSON.stringify(omit(Object(document), propertyPath)));
   // We need to create a new object that will hold the $ref. We don't set a $ref yet because we don't want it to be remapped by remapRefs.
   // the $ref will be set to "#" since we to point at the root of the bundled document
   const fragment: { $ref?: string } = {};
