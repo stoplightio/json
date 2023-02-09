@@ -14,6 +14,11 @@ type Hooks = {
 };
 
 const _traverse = (obj: object, hooks: Partial<Hooks>, path: JsonPath) => {
+  // @ts-ignore
+  // if (obj?.$ref === '#') {
+  //   return;
+  // }
+
   const ctx = { value: obj, path };
 
   if (hooks.onEnter) {

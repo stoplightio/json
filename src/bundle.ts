@@ -70,6 +70,10 @@ const bundle = (document: unknown, bundleRoot: JsonPath, errorsRoot: JsonPath, k
     traverse(cur ? cur : objectToBundle, {
       onEnter: ({ value: parent }) => {
         if (hasRef(parent) && isLocalRef(parent.$ref)) {
+          if (parent.$ref === '#') {
+            throw new Error('it is never OK to reference the document itself from within the document');
+          }
+
           const $ref = parent.$ref;
           if (errorsObj[$ref]) return;
 

@@ -1,3 +1,4 @@
+/* eslint-disable simple-import-sort/imports */
 import { cloneDeep, get as _get } from 'lodash';
 
 import { BUNDLE_ROOT as BUNDLE_ROOT_POINTER, bundleTarget } from '../bundle';
@@ -1619,4 +1620,43 @@ describe('bundleTargetPath()', () => {
       ).not.toThrow();
     });
   });
+
+});
+
+it('whole document refs within a document are broken', () => {
+  const petStore = {
+    openapi: '3.0.0',
+    info: {
+      version: '1.0.0',
+      title: 'Swagger Petstore',
+      description:
+        'A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification',
+      termsOfService: 'http://swagger.io/terms/',
+      contact: {
+        name: 'Swagger API Team',
+        email: 'apiteam@swagger.io',
+        url: 'http://swagger.io',
+      },
+      license: {
+        url: 'https://www.apache.org/licenses/LICENSE-2.0.html',
+        name: 'Apache 2.0',
+      },
+    },
+    servers: [
+      {
+        url: 'http://petstore.swagger.io/api',
+      },
+    ],
+    paths: {
+    },
+    components: {
+      schemas: {
+        Pet: {
+          "$ref": "#",
+        },
+      },
+    },
+  };
+  
+  console.log(JSON.stringify(bundleTarget({ document: petStore, path: '#/components'}), null, 4));
 });
