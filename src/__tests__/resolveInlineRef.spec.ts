@@ -137,7 +137,7 @@ describe('resolveInlineRef', () => {
 
   it('should resolve top-level $ref', () => {
     const doc = {
-      $ref: '#/$defs/User',
+      $ref: '#/%24defs/User',
       $defs: {
         User: {
           type: 'object',
@@ -169,16 +169,16 @@ describe('resolveInlineRef', () => {
             type: 'array',
             contains: {
               summary: 'Bear cave',
-              $ref: '#/$defs/Cave',
+              $ref: '#/%24defs/Cave',
               description: 'Apparently Tom likes bears',
             },
           },
           greatestBear: {
-            $ref: '#/$defs/Bear',
+            $ref: '#/%24defs/Bear',
             description: 'The greatest bear!',
           },
           bestBear: {
-            $ref: '#/$defs/Bear',
+            $ref: '#/%24defs/Bear',
             summary: 'The best bear!',
           },
         },
@@ -221,6 +221,33 @@ describe('resolveInlineRef', () => {
         summary: 'The best bear!',
       });
       expect(resolveInlineRefWithLocation(doc, '#/properties/bestBear')).toHaveProperty('location', ['$defs', 'Bear']);
+    });
+  });
+
+  it('handles encoded characters', () => {
+    const doc = {
+      type: 'object',
+      $defs: {
+        'Cool Bear': {
+          type: 'string',
+        },
+        'самый крутой медведь?': {
+          const: 'винни пух)',
+        },
+      },
+    };
+
+    expect(resolveInlineRef(doc, '#/%24defs/Cool%20Bear')).toStrictEqual({
+      type: 'string',
+    });
+
+    expect(
+      resolveInlineRef(
+        doc,
+        '#/%24defs/%D1%81%D0%B0%D0%BC%D1%8B%D0%B9%20%D0%BA%D1%80%D1%83%D1%82%D0%BE%D0%B9%20%D0%BC%D0%B5%D0%B4%D0%B2%D0%B5%D0%B4%D1%8C%3F',
+      ),
+    ).toStrictEqual({
+      const: 'винни пух)',
     });
   });
 });
