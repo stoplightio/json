@@ -4,6 +4,7 @@ export * from './decodePointerFragment';
 export * from './decycle';
 export * from './encodePointer';
 export * from './encodePointerFragment';
+export * from './encodeUriPointer';
 export * from './extractPointerFromRef';
 export * from './extractSourceFromRef';
 export * from './getFirstPrimitiveProperty';

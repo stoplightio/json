@@ -1,16 +1,15 @@
 import { JsonPath, Segment } from '@stoplight/types';
 
 import { encodePointerFragment } from './encodePointerFragment';
+import { encodeUriPointer } from './encodeUriPointer';
 
 export const pathToPointer = (path: JsonPath): string => {
   return encodeUriFragmentIdentifier(path);
 };
 
-const ENCODABLE_CHAR = /[^a-zA–Z0–9_.!~*'()\/-]/g;
-
 function encode(input: Segment): Segment {
   const encoded = encodePointerFragment(input);
-  return typeof encoded === 'string' ? encoded.replace(ENCODABLE_CHAR, encodeURIComponent) : encoded;
+  return typeof encoded === 'string' ? encodeUriPointer(encoded) : encoded;
 }
 
 const encodeUriFragmentIdentifier = (path: JsonPath): string => {
