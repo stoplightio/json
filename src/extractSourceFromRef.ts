@@ -1,7 +1,7 @@
-import { isLocalRef } from './isLocalRef';
+import { isExternalRef } from './isExternalRef';
 
 export const extractSourceFromRef = (ref: unknown): string | null => {
-  if (typeof ref !== 'string' || ref.length === 0 || isLocalRef(ref)) {
+  if (typeof ref !== 'string' || ref.length === 0 || !isExternalRef(ref)) {
     return null;
   }
 
