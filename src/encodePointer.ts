@@ -1,4 +1,5 @@
 import { replaceInString } from './_utils';
+import { encodeUriPointer } from './encodeUriPointer';
 
 /**
  * Sets special json pointer characters in a value. Example:
@@ -6,5 +7,5 @@ import { replaceInString } from './_utils';
  * encodePointer('#/paths//users) => '#/paths/~1users'
  */
 export const encodePointer = (value: string): string => {
-  return replaceInString(replaceInString(value, '~', '~0'), '//', '/~1');
+  return encodeUriPointer(replaceInString(replaceInString(value, '~', '~0'), '//', '/~1'));
 };
