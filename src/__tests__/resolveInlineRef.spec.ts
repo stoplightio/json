@@ -250,4 +250,19 @@ describe('resolveInlineRef', () => {
       const: 'винни пух)',
     });
   });
+
+  it('gracefully handles unencoded characters', () => {
+    const doc = {
+      type: 'object',
+      $defs: {
+        'Cool Bear': {
+          type: 'string',
+        },
+      },
+    };
+
+    expect(resolveInlineRef(doc, '#/$defs/Cool Bear')).toStrictEqual({
+      type: 'string',
+    });
+  });
 });
