@@ -1021,6 +1021,60 @@ describe('bundleTargetPath()', () => {
     });
   });
 
+  it('should encode pointers', () => {
+    const document = {
+      definitions: {
+        'User Admin': {
+          id: 'foo',
+          address: {
+            $ref: '#/definitions/%25Address',
+          },
+        },
+        '%Address': {
+          street: 'foo',
+          user: {
+            $ref: '#/definitions/user',
+          },
+        },
+        card: {
+          zip: '20815',
+        },
+      },
+      __target__: {
+        entity: {
+          $ref: '#/definitions/User%20Admin',
+        },
+      },
+    };
+
+    const clone = cloneDeep(document);
+
+    const result = bundleTarget({
+      document: clone,
+      path: '#/__target__',
+    });
+
+    expect(result).toEqual({
+      __bundled__: {
+        '%Address': {
+          street: 'foo',
+          user: {
+            $ref: '#/definitions/user',
+          },
+        },
+        'User Admin': {
+          address: {
+            $ref: '#/__bundled__/%25Address',
+          },
+          id: 'foo',
+        },
+      },
+      entity: {
+        $ref: '#/__bundled__/User%20Admin',
+      },
+    });
+  });
+
   describe('when custom keyProvider is provided', () => {
     it('should work', () => {
       const document = {

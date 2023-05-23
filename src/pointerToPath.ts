@@ -1,6 +1,6 @@
 import { JsonPath } from '@stoplight/types';
 
-import { decodePointer } from './decodePointer';
+import { decodePointerUriFragment } from './decodePointerUriFragment';
 
 export const pointerToPath = (pointer: string): JsonPath => {
   return decodeUriFragmentIdentifier(pointer);
@@ -12,7 +12,7 @@ const decodeFragmentSegments = (segments: string[]): string[] => {
   let i = -1;
 
   while (++i < len) {
-    res.push(decodePointer(segments[i]));
+    res.push(decodePointerUriFragment(segments[i]));
   }
 
   return res;
