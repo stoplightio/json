@@ -1,10 +1,6 @@
-import { JsonPath, Segment } from '@stoplight/types';
+import { JsonPath } from '@stoplight/types';
 
 import { encodePointerUriFragment } from './encodePointerUriFragment';
-
-function encodePointerFragment(segment: Segment): Segment {
-  return typeof segment === 'number' ? segment : encodePointerUriFragment(segment);
-}
 
 export const pathToPointer = (path: JsonPath): string => {
   return encodeUriFragmentIdentifier(path);
@@ -19,5 +15,5 @@ const encodeUriFragmentIdentifier = (path: JsonPath): string => {
     return '#';
   }
 
-  return `#/${path.map(encodePointerFragment).join('/')}`;
+  return `#/${path.map(encodePointerUriFragment).join('/')}`;
 };

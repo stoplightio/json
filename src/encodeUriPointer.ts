@@ -1,4 +1,4 @@
-const ENCODABLE_CHAR = /[^a-zA–Z0–9_.!~*'()\/-]/g;
+const ENCODABLE_CHAR = /[^a-zA–Z0–9_.!~*'()\/\-\u{D800}-\u{DFFF}]/gu;
 
 /**
  * Percent-encode a JSON Pointer.

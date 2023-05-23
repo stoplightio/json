@@ -187,7 +187,7 @@ describe('bundleTargetPath()', () => {
     });
   });
 
-  it('should not throw error', () => {
+  it('should not throw erorr', () => {
     const document = {
       definitions: {
         user: {
@@ -1021,7 +1021,7 @@ describe('bundleTargetPath()', () => {
     });
   });
 
-  it('should generate valid pointers', () => {
+  it('should encode pointers', () => {
     const document = {
       definitions: {
         'User Admin': {
