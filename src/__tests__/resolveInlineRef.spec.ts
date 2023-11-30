@@ -265,4 +265,73 @@ describe('resolveInlineRef', () => {
       type: 'string',
     });
   });
+
+  it('does not override examples', () => {
+    const doc = {
+      AAAAA: {
+        $ref: '#/components/schemas/Referenced',
+        description: 'AAAAA',
+        examples: ['AAAAA'],
+      },
+      BBBBB: {
+        $ref: '#/components/schemas/Referenced',
+        description: 'BBBBB',
+        examples: ['BBBBB'],
+      },
+      components: {
+        schemas: {
+          Referenced: {
+            description: 'AAAAA',
+            examples: ['AAAAA'],
+            title: 'referenced',
+            type: 'string',
+          },
+        },
+      },
+    };
+    const result = resolveInlineRef(doc, `#/BBBBB`);
+    expect(result).toStrictEqual({
+      type: 'string',
+      description: 'BBBBB',
+      examples: ['BBBBB'],
+      title: 'referenced',
+    });
+  });
+
+  it('description is pulled in from ref if not a ref sibling', () => {
+    const doc = {
+      AAAAA: {
+        $ref: '#/components/schemas/Referenced',
+        examples: ['AAAAA'],
+      },
+      BBBBB: {
+        $ref: '#/components/schemas/Referenced',
+        examples: ['BBBBB'],
+      },
+      components: {
+        schemas: {
+          Referenced: {
+            description: 'AAAAA',
+            examples: ['AAAAA'],
+            title: 'referenced',
+            type: 'string',
+          },
+        },
+      },
+    };
+    let result = resolveInlineRef(doc, `#/AAAAA`);
+    expect(result).toStrictEqual({
+      type: 'string',
+      description: 'AAAAA',
+      examples: ['AAAAA'],
+      title: 'referenced',
+    });
+    result = resolveInlineRef(doc, `#/BBBBB`);
+    expect(result).toStrictEqual({
+      type: 'string',
+      description: 'AAAAA',
+      examples: ['BBBBB'],
+      title: 'referenced',
+    });
+  });
 });

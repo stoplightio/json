@@ -6,7 +6,14 @@ import { isPlainObject } from '../isPlainObject';
 import { assertObjectWithValidRef, assertResolvableInput, hasSomeRef } from './guards';
 
 export function applyOverrides(document: unknown, value: unknown) {
-  if (isPlainObject(value) && isPlainObject(document) && ('summary' in document || 'description' in document)) {
+  if (isPlainObject(value) && isPlainObject(document)) {
+    //update value of unexpected $ref siblings
+    for (const key of Object.keys(value)) {
+      if (key in document) {
+        value[key] = document[key];
+      }
+    }
+    //ensure the value is preserved of expected $ref siblings
     return {
       ...value,
       ...('description' in document ? { description: document.description } : null),

@@ -141,4 +141,44 @@ describe('resolveExternalRef', () => {
 
     await expect(resolveExternalRef(inventory, 'a', '#')).rejects.toThrowError('$ref should be a string');
   });
+
+  it('the examples should not be changed', async () => {
+    const inventory = {
+      a: {
+        AAAAA: {
+          $ref: 'b#/components/schemas/referenced',
+          description: 'AAAAA',
+          examples: ['AAAAA'],
+        },
+        BBBBB: {
+          $ref: 'b#/components/schemas/referenced',
+          description: 'BBBBB',
+          examples: ['BBBBB'],
+        },
+      },
+      b: {
+        components: {
+          schemas: {
+            referenced: {
+              type: 'string',
+              title: 'referenced',
+            },
+          },
+        },
+      },
+    };
+
+    await expect(resolveExternalRef(inventory, 'a', '#')).resolves.toEqual({
+      AAAAA: {
+        $ref: 'b#/components/schemas/referenced',
+        description: 'AAAAA',
+        examples: ['AAAAA'],
+      },
+      BBBBB: {
+        $ref: 'b#/components/schemas/referenced',
+        description: 'BBBBB',
+        examples: ['BBBBB'],
+      },
+    });
+  });
 });
