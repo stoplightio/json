@@ -20,8 +20,9 @@ const _traverse = (obj: object, hooks: Partial<Hooks>, path: JsonPath) => {
     hooks.onEnter(ctx);
   }
 
-  for (const i of Object.keys(obj)) {
-    const value = obj[i];
+  const val: any = obj;
+  for (const i of Object.keys(val)) {
+    const value = val[i];
 
     if (hooks.onProperty) {
       hooks.onProperty({
