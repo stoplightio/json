@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { hasRef } from '../hasRef';
 
 describe('hasRef', () => {

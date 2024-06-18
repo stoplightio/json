@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { join } from 'path';
+import { describe, expect, it } from 'vitest';
 
 import { getLocationForJsonPath } from '../getLocationForJsonPath';
 import { parseWithPointers } from '../parseWithPointers';

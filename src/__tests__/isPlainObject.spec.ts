@@ -1,3 +1,5 @@
+import { expect, test } from 'vitest';
+
 import { isPlainObject } from '../isPlainObject';
 
 test('isPlainObject', () => {
