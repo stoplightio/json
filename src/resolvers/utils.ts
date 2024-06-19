@@ -43,6 +43,7 @@ export function* traverse(
   for (const [i, segment] of path.entries()) {
     assertResolvableInput(ctx.value, segment, pointer);
 
+    //@ts-expect-error
     ctx.value = ctx.value[segment];
 
     if (hasSomeRef(ctx.value)) {

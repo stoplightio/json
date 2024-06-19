@@ -1,3 +1,5 @@
+import { expect, test } from 'vitest';
+
 import { decodePointerFragment } from '../decodePointerFragment';
 
 test('decodePointerFragment', () => {

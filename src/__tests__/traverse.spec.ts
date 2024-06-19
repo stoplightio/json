@@ -1,3 +1,5 @@
+import { describe, expect, it, vitest } from 'vitest';
+
 import { traverse } from '../traverse';
 
 describe('traverse', () => {
@@ -8,7 +10,7 @@ describe('traverse', () => {
       },
     };
 
-    const mockFunc = jest.fn();
+    const mockFunc = vitest.fn();
     traverse(obj, mockFunc);
     expect(mockFunc).toHaveBeenCalled();
   });
@@ -16,7 +18,7 @@ describe('traverse', () => {
   it('should not call function', () => {
     const obj = 'foo';
 
-    const mockFunc = jest.fn();
+    const mockFunc = vitest.fn();
     traverse(obj, mockFunc);
     expect(mockFunc).toHaveBeenCalledTimes(0);
   });
@@ -28,8 +30,8 @@ describe('traverse', () => {
       },
     };
 
-    const onEnter = jest.fn();
-    const onLeave = jest.fn();
+    const onEnter = vitest.fn();
+    const onLeave = vitest.fn();
     traverse(obj, {
       onEnter,
       onLeave,

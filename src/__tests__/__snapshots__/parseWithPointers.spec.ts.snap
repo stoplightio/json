@@ -1,0 +1,556 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`json parser > fixtures > parses petstore.oas2.json 1`] = `
+{
+  "ast": Any<Object>,
+  "data": {
+    "basePath": "/v2",
+    "definitions": {
+      "Category": {
+        "properties": {
+          "name": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+        ],
+        "title": "Category",
+        "type": "object",
+      },
+      "Error": {
+        "properties": {
+          "code": {
+            "type": "string",
+          },
+          "message": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "code",
+        ],
+        "type": "object",
+      },
+      "Pet": {
+        "properties": {
+          "category": {
+            "$ref": "#/definitions/Category",
+          },
+          "id": {
+            "format": "int64",
+            "type": "integer",
+          },
+          "name": {
+            "example": "doggie",
+            "type": "string",
+          },
+          "photoUrls": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+            "xml": {
+              "name": "photoUrl",
+              "wrapped": true,
+            },
+          },
+          "status": {
+            "description": "pet status in the store",
+            "enum": [
+              "available",
+              "pending",
+              "sold",
+            ],
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+          "photoUrls",
+        ],
+        "type": "object",
+        "xml": {
+          "name": "Pet",
+        },
+      },
+    },
+    "externalDocs": {
+      "description": "Find out more about Swagger",
+      "url": "http://swagger.io",
+    },
+    "host": "petstore.swagger.io",
+    "info": {
+      "contact": {
+        "email": "apiteam@swagger.io",
+      },
+      "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key \`special-key\` to test the authorization filters.",
+      "license": {
+        "name": "Apache 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.html",
+      },
+      "termsOfService": "http://swagger.io/terms/",
+      "title": "Swagger Petstore",
+      "version": "1.0.0",
+    },
+    "parameters": {
+      "limit": {
+        "in": "query",
+        "name": "limit",
+        "type": "string",
+      },
+      "pet-id": {
+        "in": "path",
+        "name": "petId",
+        "required": true,
+        "type": "string",
+      },
+      "rate-limit": {
+        "in": "header",
+        "name": "Rate-Limit",
+        "type": "string",
+      },
+      "skip": {
+        "in": "query",
+        "name": "skip",
+        "type": "string",
+      },
+    },
+    "paths": {
+      "/pet/{petId}": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/pet-id",
+          },
+        ],
+        "put": {
+          "consumes": [
+            "application/json",
+            "application/xml",
+          ],
+          "description": "",
+          "operationId": "updatePet",
+          "parameters": [
+            {
+              "description": "Pet object that needs to be added to the store",
+              "in": "body",
+              "name": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Pet",
+              },
+            },
+          ],
+          "produces": [
+            "application/xml",
+            "application/json",
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid ID supplied",
+            },
+            "404": {
+              "$ref": "#/responses/404",
+            },
+            "405": {
+              "description": "Validation exception",
+            },
+          },
+          "security": [
+            {
+              "petstore_auth": [
+                "write:pets",
+                "read:pets",
+              ],
+            },
+          ],
+          "summary": "Update an existing pet",
+          "tags": [
+            "pet",
+          ],
+        },
+      },
+      "/pets": {
+        "get": {
+          "parameters": [
+            {
+              "$ref": "#/parameters/skip",
+            },
+            {
+              "$ref": "#/parameters/limit",
+            },
+            {
+              "$ref": "#/parameters/rate-limit",
+            },
+          ],
+          "responses": {
+            "200": {
+              "description": "",
+              "schema": {
+                "properties": {},
+                "type": "object",
+              },
+            },
+          },
+          "summary": "List pets",
+        },
+        "post": {
+          "consumes": [
+            "application/json",
+            "application/xml",
+          ],
+          "description": "",
+          "operationId": "addPet",
+          "parameters": [
+            {
+              "description": "Pet object that needs to be added to the store",
+              "in": "body",
+              "name": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Pet",
+              },
+            },
+          ],
+          "produces": [
+            "application/xml",
+            "application/json",
+          ],
+          "responses": {
+            "405": {
+              "description": "Invalid input",
+            },
+          },
+          "security": [
+            {
+              "petstore_auth": [
+                "write:pets",
+                "read:pets",
+              ],
+            },
+          ],
+          "summary": "Add a new pet to the store",
+          "tags": [
+            "pet",
+          ],
+        },
+      },
+    },
+    "responses": {
+      "404": {
+        "description": "Our shared 404 response.",
+        "schema": {
+          "$ref": "#/definitions/Error",
+        },
+      },
+    },
+    "schemes": [
+      "https",
+      "http",
+    ],
+    "securityDefinitions": {
+      "api_key": {
+        "in": "header",
+        "name": "api_key",
+        "type": "apiKey",
+      },
+      "petstore_auth": {
+        "authorizationUrl": "https://petstore.swagger.io/oauth/dialog",
+        "flow": "implicit",
+        "scopes": {
+          "read:pets": "read your pets",
+          "write:pets": "modify pets in your account",
+        },
+        "type": "oauth2",
+      },
+    },
+    "swagger": "2.0",
+    "tags": [
+      {
+        "description": "Everything about your Pets",
+        "externalDocs": {
+          "description": "Find out more",
+          "url": "http://swagger.io",
+        },
+        "name": "pet",
+      },
+      {
+        "description": "Access to Petstore orders",
+        "name": "store",
+      },
+      {
+        "description": "Operations about user",
+        "externalDocs": {
+          "description": "Find out more about our store",
+          "url": "http://swagger.io",
+        },
+        "name": "user",
+      },
+    ],
+  },
+  "diagnostics": [],
+  "lineMap": Any<Array>,
+}
+`;
+
+exports[`json parser > fixtures > parses user.jschema.json 1`] = `
+{
+  "ast": Any<Object>,
+  "data": {
+    "properties": {
+      "age": {
+        "maximum": 150,
+        "minimum": 0,
+        "type": "number",
+      },
+      "completed_at": {
+        "format": "date-time",
+        "type": "string",
+      },
+      "email": {
+        "format": "email",
+        "minLength": 2,
+        "type": "string",
+      },
+      "items": {
+        "items": {
+          "type": [
+            "string",
+            "number",
+          ],
+        },
+        "type": [
+          "null",
+          "array",
+        ],
+      },
+      "name": {
+        "description": "The user's full name.",
+        "type": "string",
+      },
+      "permissions": {
+        "properties": {
+          "ids": {
+            "items": {
+              "type": "integer",
+            },
+            "type": "array",
+          },
+        },
+        "type": [
+          "string",
+          "object",
+        ],
+      },
+      "plan": {
+        "anyOf": [
+          {
+            "properties": {
+              "bar": {
+                "type": "string",
+              },
+              "foo": {
+                "type": "string",
+              },
+            },
+            "required": [
+              "foo",
+              "bar",
+            ],
+            "type": "object",
+          },
+          {
+            "items": {
+              "type": "integer",
+            },
+            "type": "array",
+          },
+        ],
+      },
+      "ref": {
+        "$ref": "#/definitions/error-response",
+      },
+    },
+    "required": [
+      "name",
+      "age",
+      "completed_at",
+    ],
+    "title": "User",
+    "type": "object",
+  },
+  "diagnostics": [],
+  "lineMap": Any<Array>,
+}
+`;
+
+exports[`json parser > invalid fixtures > parses characters.json 1`] = `
+{
+  "ast": Any<Object>,
+  "data": {
+    "valid-escape": "\\n",
+    "valid-unicode": "ż",
+  },
+  "diagnostics": [
+    {
+      "code": 1,
+      "message": "InvalidSymbol",
+      "range": {
+        "end": {
+          "character": 19,
+          "line": 3,
+        },
+        "start": {
+          "character": 13,
+          "line": 3,
+        },
+      },
+      "severity": 0,
+    },
+    {
+      "code": 12,
+      "message": "UnexpectedEndOfString",
+      "range": {
+        "end": {
+          "character": 21,
+          "line": 3,
+        },
+        "start": {
+          "character": 19,
+          "line": 3,
+        },
+      },
+      "severity": 0,
+    },
+    {
+      "code": 5,
+      "message": "ColonExpected",
+      "range": {
+        "end": {
+          "character": 21,
+          "line": 3,
+        },
+        "start": {
+          "character": 19,
+          "line": 3,
+        },
+      },
+      "severity": 0,
+    },
+    {
+      "code": 15,
+      "message": "InvalidEscapeCharacter",
+      "range": {
+        "end": {
+          "character": 24,
+          "line": 4,
+        },
+        "start": {
+          "character": 20,
+          "line": 4,
+        },
+      },
+      "severity": 0,
+    },
+  ],
+  "lineMap": Any<Array>,
+}
+`;
+
+exports[`json parser > invalid fixtures > parses schema.json 1`] = `
+{
+  "ast": Any<Object>,
+  "data": {
+    "address": {},
+    "hello": "world",
+    "paths": {
+      "/users/{id}": {
+        "get": {
+          "operationId": "get-user",
+        },
+      },
+    },
+  },
+  "diagnostics": [
+    {
+      "code": 4,
+      "message": "ValueExpected",
+      "range": {
+        "end": {
+          "character": 3,
+          "line": 4,
+        },
+        "start": {
+          "character": 2,
+          "line": 4,
+        },
+      },
+      "severity": 0,
+    },
+    {
+      "code": 6,
+      "message": "CommaExpected",
+      "range": {
+        "end": {
+          "character": 9,
+          "line": 5,
+        },
+        "start": {
+          "character": 2,
+          "line": 5,
+        },
+      },
+      "severity": 0,
+    },
+  ],
+  "lineMap": Any<Array>,
+}
+`;
+
+exports[`json parser > parse complex 1`] = `
+{
+  "ast": Any<Object>,
+  "data": {
+    "users": [
+      {
+        "address": {
+          "city": "Helsinki",
+          "country": "Finland",
+        },
+        "adult": false,
+        "age": 17,
+        "name": "Markku",
+      },
+      {
+        "adult": true,
+        "age": 18,
+        "country": "Denmark",
+        "name": "Dennis",
+      },
+    ],
+  },
+  "diagnostics": [],
+  "lineMap": Any<Array>,
+}
+`;
+
+exports[`json parser > parse simple 1`] = `
+{
+  "ast": Any<Object>,
+  "data": {
+    "address": {
+      "street": 123,
+    },
+    "hello": "world",
+    "paths": {
+      "/users/{id}": {
+        "get": {
+          "operationId": "get-user",
+        },
+      },
+    },
+  },
+  "diagnostics": [],
+  "lineMap": Any<Array>,
+}
+`;
