@@ -32,39 +32,39 @@
     "lint.fix": "yarn lint --fix",
     "release": "sl-scripts release",
     "release.dryRun": "sl-scripts release --dry-run --debug",
-    "test": "jest",
-    "test.prod": "yarn lint && yarn test --coverage --no-cache --max-workers=2",
-    "test.update": "yarn test --updateSnapshot",
-    "test.watch": "yarn test --watch"
+    "test": "vitest run",
+    "test.prod": "yarn lint && vitest run --coverage",
+    "test.update": "vitest run --update",
+    "test.watch": "vitest",
+    "prepare": "husky"
   },
   "dependencies": {
     "@stoplight/ordered-object-literal": "^1.0.3",
     "@stoplight/path": "^1.3.2",
     "@stoplight/types": "^13.6.0",
-    "jsonc-parser": "~2.2.1",
+    "jsonc-parser": "~3.2.1",
     "lodash": "^4.17.21",
     "safe-stable-stringify": "^1.1"
   },
   "devDependencies": {
-    "@stoplight/eslint-config": "^3.0.0",
-    "@stoplight/scripts": "^7.0.4",
-    "@types/jest": "^28.1.6",
+    "@stoplight/eslint-config": "3.0.0",
+    "@stoplight/scripts": "^10.0.0",
     "@types/lodash": "^4.14.144",
     "@types/node": "^12.12.5",
-    "@typescript-eslint/eslint-plugin": "^5.32.0",
-    "@typescript-eslint/parser": "^5.32.0",
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
+    "@vitest/coverage-v8": "^1.6.0",
     "benchmark": "^2.1.4",
     "eslint": "^8.21.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.7.0",
+    "eslint-plugin-jest": "^28.6.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "jest": "^28.1.3",
     "prettier": "^2.3.1",
-    "ts-jest": "^28.0.7",
-    "typescript": "^4.7.4"
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
   },
   "lint-staged": {
     "*.{ts,tsx}$": [

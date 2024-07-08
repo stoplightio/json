@@ -1,6 +1,7 @@
 import { DiagnosticSeverity } from '@stoplight/types';
 import * as fs from 'fs';
 import { join } from 'path';
+import { describe, expect, it } from 'vitest';
 
 import { parseWithPointers } from '../parseWithPointers';
 

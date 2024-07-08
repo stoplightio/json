@@ -40,7 +40,7 @@ function isObject(maybeObj: unknown): maybeObj is Record<string, unknown> | unkn
  * @param from - the root to move from
  * @param to - the root to migrate to
  */
-export function reparentBundleTarget(document: Record<string, unknown>, from: string, to: string): void {
+export function reparentBundleTarget(document: Record<string | number, unknown>, from: string, to: string): void {
   if (to.length <= 1 || from.length <= 1) {
     throw Error('Source/target path must not be empty and point at root');
   }
@@ -50,12 +50,13 @@ export function reparentBundleTarget(document: Record<string, unknown>, from: st
   }
 
   const sourcePath = pointerToPath(from);
-  let value: unknown = document;
+  let value: any = document;
   for (const segment of sourcePath) {
     if (!isObject(value)) {
       return;
     }
 
+    //@ts-expect-error
     value = value[segment];
   }
 
@@ -71,6 +72,7 @@ export function reparentBundleTarget(document: Record<string, unknown>, from: st
     }
 
     const newValue = i === targetPath.length - 1 ? value : {};
+    //@ts-expect-error
     newTarget[segment] = newValue;
     newTarget = newValue;
   }
@@ -80,12 +82,11 @@ export function reparentBundleTarget(document: Record<string, unknown>, from: st
 }
 
 function _reparentBundleTarget(document: Record<string, unknown> | unknown[], from: string, to: string): void {
-  for (const key of Object.keys(document)) {
-    const value = document[key];
-
+  for (const [key, value] of Object.entries(document)) {
     if (key === '$ref') {
       if (typeof value !== 'string' || !isLocalRef(value)) continue;
       if (value.indexOf(from) === 0) {
+        //@ts-expect-error
         document[key] = value.replace(from, to);
       }
 

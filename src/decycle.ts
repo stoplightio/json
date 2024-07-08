@@ -3,13 +3,13 @@ import { pathToPointer } from './pathToPointer';
 
 export function decycle(obj: unknown, replacer?: (value: any) => any) {
   const objs = new WeakMap<object, string>();
+  const objectsToDelete: object[] = []; // To keep track of objects to delete later
+
   function derez(value: any, path: (string | number)[]): any {
     if (replacer) {
       value = replacer(value);
     }
-
     if (isPlainObject(value) || Array.isArray(value)) {
-      // The path of an earlier occurance of value
       const oldPath = objs.get(value);
 
       // If the value is an object or array, look to see if we have already
@@ -17,25 +17,30 @@ export function decycle(obj: unknown, replacer?: (value: any) => any) {
       if (oldPath) {
         return { $ref: oldPath };
       }
-
       objs.set(value, pathToPointer(path));
       // If it is an array, replicate the array.
       if (Array.isArray(value)) {
         return value.map((element, i) => derez(element, [...path, i]));
       }
-
       const newObj: Record<string, any> = {};
       for (const name in value) {
         if (Object.prototype.hasOwnProperty.call(value, name)) {
           newObj[name] = derez(value[name], [...path, name]);
         }
       }
-      objs.delete(value);
+      // Schedule object for deletion after derez completes
+      objectsToDelete.push(value);
       return newObj;
     }
-
     return value;
   }
 
-  return derez(obj, []);
+  const result = derez(obj, []);
+
+  // Clean up objs for objects that were processed
+  objectsToDelete.forEach(obj => {
+    objs.delete(obj);
+  });
+
+  return result;
 }

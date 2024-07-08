@@ -1,0 +1,10 @@
+{
+  "extends": ["@stoplight"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "no-param-reassign": "warn"
+  }
+}
