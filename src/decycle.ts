@@ -3,7 +3,7 @@ import { pathToPointer } from './pathToPointer';
 
 export function decycle(obj: unknown, replacer?: (value: any) => any) {
   const objs = new WeakMap<object, string>();
-  const objectsToDelete: object[] = []; // To keep track of objects to delete later
+  const objectsToBeDeleted: object[] = []; // To keep track of objects to delete later
 
   function derez(value: any, path: (string | number)[]): any {
     if (replacer) {
@@ -29,7 +29,7 @@ export function decycle(obj: unknown, replacer?: (value: any) => any) {
         }
       }
       // Schedule object for deletion after derez completes
-      objectsToDelete.push(value);
+      objectsToBeDeleted.push(value);
       return newObj;
     }
     return value;
@@ -38,7 +38,7 @@ export function decycle(obj: unknown, replacer?: (value: any) => any) {
   const result = derez(obj, []);
 
   // Clean up objs for objects that were processed
-  objectsToDelete.forEach(obj => {
+  objectsToBeDeleted.forEach(obj => {
     objs.delete(obj);
   });
 
