@@ -56,7 +56,6 @@ export function reparentBundleTarget(document: Record<string | number, unknown>,
       return;
     }
 
-    //@ts-expect-error
     value = value[segment];
   }
 
@@ -72,7 +71,6 @@ export function reparentBundleTarget(document: Record<string | number, unknown>,
     }
 
     const newValue = i === targetPath.length - 1 ? value : {};
-    //@ts-expect-error
     newTarget[segment] = newValue;
     newTarget = newValue;
   }
@@ -86,7 +84,6 @@ function _reparentBundleTarget(document: Record<string, unknown> | unknown[], fr
     if (key === '$ref') {
       if (typeof value !== 'string' || !isLocalRef(value)) continue;
       if (value.indexOf(from) === 0) {
-        //@ts-expect-error
         document[key] = value.replace(from, to);
       }
 
