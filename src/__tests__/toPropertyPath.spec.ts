@@ -1,5 +1,3 @@
-import { expect, test } from 'vitest';
-
 import { toPropertyPath } from '../toPropertyPath';
 
 test('toPropertyPath', () => {

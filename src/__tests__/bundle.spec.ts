@@ -1,5 +1,4 @@
 import { cloneDeep, get as _get } from 'lodash';
-import { describe, expect, it } from 'vitest';
 
 import { BUNDLE_ROOT as BUNDLE_ROOT_POINTER, bundleTarget } from '../bundle';
 import { safeStringify } from '../safeStringify';

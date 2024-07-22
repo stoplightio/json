@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { KEYS, trapAccess } from '../trapAccess';
 
 describe('trapAccess', () => {

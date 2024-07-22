@@ -1,5 +1,3 @@
-import { expect, test } from 'vitest';
-
 import { resolveSource } from '../utils';
 
 test.each`

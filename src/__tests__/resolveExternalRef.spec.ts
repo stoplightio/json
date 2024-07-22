@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { resolveExternalRef, resolveExternalRefWithLocation } from '../resolvers/resolveExternalRef';
 
 describe('resolveExternalRef', () => {

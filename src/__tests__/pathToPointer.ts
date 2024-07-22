@@ -1,5 +1,3 @@
-import { expect, test } from 'vitest';
-
 import { pathToPointer } from '../pathToPointer';
 
 test('pathToPointer', () => {

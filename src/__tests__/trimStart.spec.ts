@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { trimStart } from '../trimStart';
 
 describe('trimStart', () => {
