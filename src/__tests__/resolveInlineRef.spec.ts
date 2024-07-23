@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { resolveInlineRef, resolveInlineRefWithLocation } from '../resolvers/resolveInlineRef';
 
 describe('resolveInlineRef', () => {

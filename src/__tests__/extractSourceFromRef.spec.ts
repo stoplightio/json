@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { extractSourceFromRef } from '../extractSourceFromRef';
 
 describe('extractSourceFromRef', () => {

@@ -40,7 +40,7 @@ function isObject(maybeObj: unknown): maybeObj is Record<string, unknown> | unkn
  * @param from - the root to move from
  * @param to - the root to migrate to
  */
-export function reparentBundleTarget(document: Record<string | number, unknown>, from: string, to: string): void {
+export function reparentBundleTarget(document: Record<string, unknown>, from: string, to: string): void {
   if (to.length <= 1 || from.length <= 1) {
     throw Error('Source/target path must not be empty and point at root');
   }
@@ -50,7 +50,7 @@ export function reparentBundleTarget(document: Record<string | number, unknown>,
   }
 
   const sourcePath = pointerToPath(from);
-  let value: any = document;
+  let value: unknown = document;
   for (const segment of sourcePath) {
     if (!isObject(value)) {
       return;
@@ -80,7 +80,9 @@ export function reparentBundleTarget(document: Record<string | number, unknown>,
 }
 
 function _reparentBundleTarget(document: Record<string, unknown> | unknown[], from: string, to: string): void {
-  for (const [key, value] of Object.entries(document)) {
+  for (const key of Object.keys(document)) {
+    const value = document[key];
+
     if (key === '$ref') {
       if (typeof value !== 'string' || !isLocalRef(value)) continue;
       if (value.indexOf(from) === 0) {

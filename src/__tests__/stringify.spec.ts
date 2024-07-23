@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { safeStringify } from '../safeStringify';
 import { stringify } from '../stringify';
 

@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { safeStringify } from '../safeStringify';
 import * as jsonFixtures from './fixtures/json';
 

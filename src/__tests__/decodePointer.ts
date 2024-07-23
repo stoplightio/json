@@ -1,5 +1,3 @@
-import { expect, test } from 'vitest';
-
 import { decodePointer } from '../decodePointer';
 
 test('decodePointer', () => {
