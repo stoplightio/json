@@ -103,7 +103,7 @@ describe('decycle', () => {
     });
   });
 
-  it('should create refs circular objects and repeated values', () => {
+  it('should not create refs for objects that are not circular', () => {
     const obj2 = {
       circle: {},
     };
