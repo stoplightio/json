@@ -103,7 +103,7 @@ describe('decycle', () => {
     });
   });
 
-  it('should not create refs for objects that are not circular', () => {
+  it('should create refs circular objects and repeated values', () => {
     const obj2 = {
       circle: {},
     };
@@ -129,7 +129,7 @@ describe('decycle', () => {
         foo: 'bar',
       },
       obj3B: {
-        foo: 'bar',
+        $ref: '#/obj3A',
       },
       paths: {
         '/circle': {
