@@ -129,7 +129,7 @@ describe('decycle', () => {
         foo: 'bar',
       },
       obj3B: {
-        $ref: '#/obj3A',
+        foo: 'bar',
       },
       paths: {
         '/circle': {
