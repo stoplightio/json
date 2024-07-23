@@ -30,6 +30,7 @@ export function decycle(obj: unknown, replacer?: (value: any) => any) {
           newObj[name] = derez(value[name], [...path, name]);
         }
       }
+      // deleteing object before returing
       objs.delete(value);
       return newObj;
     }
