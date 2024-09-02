@@ -3,8 +3,6 @@ import { pathToPointer } from './pathToPointer';
 
 export const decycle = (obj: unknown, replacer?: (value: any) => any) => {
   const objs = new WeakMap<object, string>();
-  const processedObjs = new WeakSet<object>();
-
   return (function derez(value: any, path: string[]) {
     // The new object or array
     let curObj: any;
@@ -30,10 +28,7 @@ export const decycle = (obj: unknown, replacer?: (value: any) => any) => {
           curObj[name] = derez(value[name], [...path, name]);
         });
       }
-      if (!processedObjs.has(value)) {
-        objs.delete(value);
-      }
-      processedObjs.add(value);
+      objs.delete(value);
       return curObj;
     }
     return value;
