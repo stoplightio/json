@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  test_node_16:
+  test_node_18:
     docker:
       - image: circleci/node:16
     steps:
@@ -35,10 +35,10 @@ workflows:
   version: 2
   test_and_release:
     jobs:
-      - test_node_16
+      - test_node_18
       - release:
           filters:
             branches:
               only: master
           requires:
-            - test_node_16
+            - test_node_18
