@@ -90,5 +90,8 @@
   },
   "release": {
     "extends": "@stoplight/scripts/release"
+  },
+  "resolutions": {
+    "rollup": "4.22.4"
   }
 }
