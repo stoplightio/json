@@ -92,6 +92,7 @@
     "extends": "@stoplight/scripts/release"
   },
   "resolutions": {
-    "rollup": "4.22.4"
+    "rollup": "4.22.4",
+    "dot-prop": "4.2.1"
   }
 }
